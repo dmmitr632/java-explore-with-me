@@ -5,13 +5,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.dto.ViewStatsDto;
 import ru.practicum.stats.mapper.EndpointHitMapper;
-import ru.practicum.stats.model.EndpointHit;
 import ru.practicum.stats.repository.EndpointHitRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,11 +26,14 @@ public class EndPointHitService {
 
     public Collection<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
                                                  boolean unique) {
-        List<EndpointHit> endpointHits= endpointHitRepository.findDistinctByTimestampBetween(start, end);
-        List<ViewStatsDto> viewStatsDtos = new ArrayList<>();
-        for (EndpointHit endpointHit: endpointHits) {
-            viewStatsDtos.add(EndpointHitMapper.toViewStatsDto(endpointHit));
+        if (unique) {
+            return endpointHitRepository.findDistinctByUriInAndTimestampBetween(uris, start,
+                    end).stream().map(EndpointHitMapper::toViewStatsDto).collect(Collectors.toList());
+        } else {
+            return endpointHitRepository.findAllByUriInAndTimestampBetween(uris, start,
+                    end).stream().map(EndpointHitMapper::toViewStatsDto).collect(Collectors.toList());
         }
-        return viewStatsDtos;
+
+
     }
 }
