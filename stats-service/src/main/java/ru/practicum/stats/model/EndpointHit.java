@@ -1,5 +1,6 @@
 package ru.practicum.stats.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,8 +11,10 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
-@Table(name = "endpoint_hits", schema = "public")
+@Table(name = "endpoint_hits")
+
 
 public class EndpointHit {
     @Id
@@ -28,6 +31,7 @@ public class EndpointHit {
     @Column
     private String ip;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(nullable = false)
     private LocalDateTime timestamp;
 }
