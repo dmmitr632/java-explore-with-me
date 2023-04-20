@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.stats.dto.EndpointHitDto;
 import ru.practicum.stats.dto.ViewStatsDto;
-import ru.practicum.stats.service.EndPointHitService;
+import ru.practicum.stats.service.EndPointHitServiceImpl;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -18,9 +18,9 @@ import java.util.List;
 @ResponseStatus(HttpStatus.OK)
 @RestController
 public class StatsController {
-    private final EndPointHitService endPointHitService;
+    private final EndPointHitServiceImpl endPointHitService;
 
-    public StatsController(EndPointHitService endPointHitService) {
+    public StatsController(EndPointHitServiceImpl endPointHitService) {
         this.endPointHitService = endPointHitService;
     }
 
