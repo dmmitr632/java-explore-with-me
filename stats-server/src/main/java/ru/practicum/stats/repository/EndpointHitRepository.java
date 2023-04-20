@@ -1,16 +1,22 @@
 package ru.practicum.stats.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.practicum.stats.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 public interface EndpointHitRepository extends JpaRepository<EndpointHit, Integer> {
-    List<EndpointHit> findDistinctByUriInAndTimestampBetween(Collection<String> uris, LocalDateTime start,
-                                                            LocalDateTime end);
+    @Query("SELECT eh FROM EndpointHit eh " +
+            "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3")
+    Collection<EndpointHit> getStatistic(Collection<String> uris, LocalDateTime start, LocalDateTime end);
 
-    List<EndpointHit> findAllByUriInAndTimestampBetween(Collection<String> uris, LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT eh.uri FROM EndpointHit eh " +
+            "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3")
+    Collection<String> getUrisOnly(Collection<String> uris, LocalDateTime start, LocalDateTime end);
+
+    Collection<EndpointHit> getEndpointHitsByTimestampBetween(LocalDateTime sstart, LocalDateTime end);
 
 }

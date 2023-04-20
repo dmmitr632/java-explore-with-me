@@ -15,6 +15,12 @@ public class EndpointHitMapper {
                                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))).build();
     }
 
+    public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
+        return EndpointHitDto.builder().id(endpointHit.getId()).app(endpointHit.getApp())
+                .uri(endpointHit.getUri()).ip(endpointHit.getIp()).timestamp(
+                        endpointHit.getTimestamp().toString()).build();
+    }
+
     public static ViewStatsDto toViewStatsDto(EndpointHit endpointHit) {
         return ViewStatsDto.builder().app(endpointHit.getApp()).uri(endpointHit.getUri()).build();
     }

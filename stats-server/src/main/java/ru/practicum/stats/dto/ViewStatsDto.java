@@ -1,14 +1,12 @@
 package ru.practicum.stats.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
+@ToString
 
 public class ViewStatsDto {
 
