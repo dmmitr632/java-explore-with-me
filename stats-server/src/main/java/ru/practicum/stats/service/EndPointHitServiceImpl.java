@@ -39,12 +39,14 @@ public class EndPointHitServiceImpl implements EndPointHitService {
         if (uris != null) {
             Map<String, Integer> endpointHitsMap = new HashMap<>();
             Set<String> urisUnique = uris.stream().map(String::toLowerCase).collect(Collectors.toSet());
-            urisUnique.forEach(uri -> endpointHitsMap.put(uri, 0));
+            SortedSet<String> urisUniqueSorted = Collections.synchronizedSortedSet(new TreeSet<>(urisUnique));
+            urisUniqueSorted.forEach(uri -> endpointHitsMap.put(uri, 0));
+            log.info("Отсортированное множество URI urisUniqueSorted {}", urisUniqueSorted);
 
             if (unique) {
-                Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUnique, start, end);
+                Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUniqueSorted, start, end);
                 Map<String, Set<String>> uniqueIpsPerUriMap = new HashMap<>();
-                urisUnique.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
+                urisUniqueSorted.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
 
                 for (EndpointHit endpointHit : endpointHits) {
                     String uri = endpointHit.getUri();
@@ -53,10 +55,11 @@ public class EndPointHitServiceImpl implements EndPointHitService {
                         endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
                     }
                 }
-
+                log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             } else {
-                endpointHitRepository.getUrisOnly(urisUnique, start, end)
+                endpointHitRepository.getUrisOnly(urisUniqueSorted, start, end)
                         .forEach(uri -> endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1));
+                log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             }
             return uris.stream()
                     .map(uri -> ViewStatsDto.builder().app(app).uri(uri).hits(endpointHitsMap.get(uri)).build())
