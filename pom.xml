@@ -26,7 +26,7 @@
     </properties>
 
     <modules>
-        <module>stats-service</module>
+        <module>stats-server</module>
         <module>main-service</module>
     </modules>
 
