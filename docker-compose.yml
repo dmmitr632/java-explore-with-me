@@ -7,7 +7,7 @@ services:
     ports:
       - "127.0.0.1:9090:9090"
     depends_on:
-      - ewm-service
+#      - ewm-service
       - stats-db
     environment:
       - EWM_SERVICE_URL=http://server:8080
@@ -26,8 +26,9 @@ services:
   ewm-service:
     ports:
       - "127.0.0.1:8080:8080"
-    image: ewm_service_image
-    container_name: ewm_service_container
+    build: main-service
+    image: ewm-service
+    container_name: ewm-service-container
     depends_on:
       - ewm-db
     environment:
