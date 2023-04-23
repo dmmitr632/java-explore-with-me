@@ -34,19 +34,19 @@ public class EndPointHitServiceImpl implements EndPointHitService {
     public Collection<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
                                                  boolean unique) {
 
-        String app = "main-service";
+        String app = "ewm-main-service";
 
         if (uris != null) {
             Map<String, Integer> endpointHitsMap = new HashMap<>();
             Set<String> urisUnique = uris.stream().map(String::toLowerCase).collect(Collectors.toSet());
-            SortedSet<String> urisUniqueSorted = Collections.synchronizedSortedSet(new TreeSet<>(urisUnique));
-            urisUniqueSorted.forEach(uri -> endpointHitsMap.put(uri, 0));
-            log.info("Отсортированное множество URI urisUniqueSorted {}", urisUniqueSorted);
+
+            urisUnique.forEach(uri -> endpointHitsMap.put(uri, 0));
+            log.info("Отсортированное множество URI urisUnique {}", urisUnique);
 
             if (unique) {
-                Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUniqueSorted, start, end);
+                Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUnique, start, end);
                 Map<String, Set<String>> uniqueIpsPerUriMap = new HashMap<>();
-                urisUniqueSorted.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
+                urisUnique.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
 
 
                 for (EndpointHit endpointHit : endpointHits) {
@@ -59,7 +59,7 @@ public class EndPointHitServiceImpl implements EndPointHitService {
                 log.info("HashMap, ключ - URI, значение  - множество уникальных ip {}", uniqueIpsPerUriMap);
                 log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             } else {
-                endpointHitRepository.getUrisOnly(urisUniqueSorted, start, end)
+                endpointHitRepository.getUrisOnly(urisUnique, start, end)
                         .forEach(uri -> endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1));
                 log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             }

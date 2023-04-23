@@ -17,6 +17,6 @@ public interface EndpointHitRepository extends JpaRepository<EndpointHit, Intege
             "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3")
     Collection<String> getUrisOnly(Collection<String> uris, LocalDateTime start, LocalDateTime end);
 
-    Collection<EndpointHit> getEndpointHitsByTimestampBetween(LocalDateTime sstart, LocalDateTime end);
+    Collection<EndpointHit> getEndpointHitsByTimestampBetween(LocalDateTime start, LocalDateTime end);
 
 }
