@@ -1,11 +1,11 @@
-package ru.practicum.stats.controller;
+package ru.practicum.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.stats.dto.EndpointHitDto;
-import ru.practicum.stats.dto.ViewStatsDto;
-import ru.practicum.stats.service.EndPointHitService;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.service.EndPointHitService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
