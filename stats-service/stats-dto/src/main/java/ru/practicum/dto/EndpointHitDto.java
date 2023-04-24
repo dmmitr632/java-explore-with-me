@@ -1,12 +1,12 @@
 package ru.practicum.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 
 public class EndpointHitDto {
 
