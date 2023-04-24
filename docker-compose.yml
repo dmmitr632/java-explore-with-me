@@ -28,11 +28,14 @@ services:
   ewm-service:
     ports:
       - "127.0.0.1:8080:8080"
-    build: main-service
+    build:
+      context: .
+      dockerfile: main-service/Dockerfile
     image: ewm-service
     container_name: ewm-service-container
     depends_on:
       - ewm-db
+      - stats-server
     environment:
       - STATS_SERVER_URL=http://127.0.0.1:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
