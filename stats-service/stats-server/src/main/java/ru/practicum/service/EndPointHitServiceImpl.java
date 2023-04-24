@@ -63,7 +63,6 @@ public class EndPointHitServiceImpl implements EndPointHitService {
 //                        endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
 //                    }
 //                }
-                
                 log.info("HashMap, ключ - URI, значение  - множество уникальных ip {}", uniqueIpsPerUriMap);
                 log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             } else {
