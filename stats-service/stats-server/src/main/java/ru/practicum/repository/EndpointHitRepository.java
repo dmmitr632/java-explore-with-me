@@ -2,11 +2,13 @@ package ru.practicum.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.practicum.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+@Repository
 public interface EndpointHitRepository extends JpaRepository<EndpointHit, Integer> {
     @Query("SELECT eh FROM EndpointHit eh " +
             "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3")

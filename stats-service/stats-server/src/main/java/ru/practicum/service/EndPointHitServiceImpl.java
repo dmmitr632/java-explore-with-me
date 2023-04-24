@@ -1,11 +1,12 @@
 package ru.practicum.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.EndpointHitDto;
-import ru.practicum.mapper.EndpointHitMapper;
 import ru.practicum.dto.ViewStatsDto;
+import ru.practicum.mapper.EndpointHitMapper;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.repository.EndpointHitRepository;
 
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Transactional(readOnly = true)
 public class EndPointHitServiceImpl implements EndPointHitService {
+
     private final EndpointHitRepository endpointHitRepository;
 
     public EndPointHitServiceImpl(EndpointHitRepository endpointHitRepository) {
