@@ -49,12 +49,12 @@ public class StatsClient {
         try {
             HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(
                     json.writeValueAsString(endpointHitDto));
-            HttpRequest EndpointHitDtoRequest = HttpRequest.newBuilder().uri(URI.create(statsServiceUri + "/hit"))
+            HttpRequest endpointHitDtoRequest = HttpRequest.newBuilder().uri(URI.create(statsServiceUri + "/hit"))
                     .POST(bodyPublisher).header(
                             HttpHeaders.CONTENT_TYPE, "application/json")
                     .header(HttpHeaders.ACCEPT, "application/json").build();
 
-            HttpResponse<Void> response = httpClient.send(EndpointHitDtoRequest,
+            HttpResponse<Void> response = httpClient.send(endpointHitDtoRequest,
                     HttpResponse.BodyHandlers.discarding());
             logger.info("Ответ от stats-service: {}", response);
 
