@@ -5,10 +5,12 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
+@ToString
 
 public class EndpointHitDto {
+    public EndpointHitDto() {
+    }
 
     private Integer id;
 
