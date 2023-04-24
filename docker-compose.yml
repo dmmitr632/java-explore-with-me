@@ -2,7 +2,6 @@ version: '3.8'
 services:
   stats-server:
     build:
-      context: .
       dockerfile: stats-service/stats-server/Dockerfile
     image: stats-image
     container_name: stats-containers
@@ -28,7 +27,6 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     build:
-      context: .
       dockerfile: main-service/Dockerfile
     image: ewm-service
     container_name: ewm-service-container
