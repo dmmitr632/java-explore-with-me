@@ -49,7 +49,6 @@ public class StatsClient {
             HttpResponse<Void> response = httpClient.send(endpointHitRequest, HttpResponse.BodyHandlers.discarding());
             logger.info("Ответ от stats-service: {}", response);
 
-
         } catch (Exception e) {
             logger.warn("Не получается записать endpointHit");
         }
