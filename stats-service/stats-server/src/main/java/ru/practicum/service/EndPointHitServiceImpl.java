@@ -50,14 +50,20 @@ public class EndPointHitServiceImpl implements EndPointHitService {
                 Map<String, Set<String>> uniqueIpsPerUriMap = new HashMap<>();
                 urisUnique.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
 
-
-                for (EndpointHit endpointHit : endpointHits) {
+                endpointHits.forEach(endpointHit -> {
                     String uri = endpointHit.getUri();
-                    if (!(uniqueIpsPerUriMap.get(uri).contains(endpointHit.getIp()))) {
-                        uniqueIpsPerUriMap.get(uri).add(endpointHit.getIp());
-                        endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
-                    }
-                }
+                    uniqueIpsPerUriMap.get(uri).add(endpointHit.getIp());
+                    endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
+                });
+
+//                for (EndpointHit endpointHit : endpointHits) {
+//                    String uri = endpointHit.getUri();
+//                    if (!(uniqueIpsPerUriMap.get(uri).contains(endpointHit.getIp()))) {
+//                        uniqueIpsPerUriMap.get(uri).add(endpointHit.getIp());
+//                        endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
+//                    }
+//                }
+                
                 log.info("HashMap, ключ - URI, значение  - множество уникальных ip {}", uniqueIpsPerUriMap);
                 log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
             } else {
