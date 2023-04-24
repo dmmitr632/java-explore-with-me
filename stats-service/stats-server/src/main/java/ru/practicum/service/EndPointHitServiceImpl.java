@@ -46,6 +46,7 @@ public class EndPointHitServiceImpl implements EndPointHitService {
 
             if (unique) {
                 Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUnique, start, end);
+                log.info("endpointHits {}", endpointHits);
                 Map<String, Set<String>> uniqueIpsPerUriMap = new HashMap<>();
                 urisUnique.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
 

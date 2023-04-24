@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString
+//@AllArgsConstructor // почему-то EndpointHitRepository не видит этот конструктор, пришлось написать вручную
 @Entity
 @Table(name = "endpoint_hits")
 
@@ -39,4 +40,12 @@ public class EndpointHit {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    public EndpointHit(Integer id, String app, String uri, String ip, LocalDateTime timestamp) {
+        this.id = id;
+        this.app = app;
+        this.uri = uri;
+        this.ip = ip;
+        this.timestamp = timestamp;
+    }
 }
