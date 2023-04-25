@@ -10,7 +10,9 @@ import ru.practicum.model.EndpointHit;
 import ru.practicum.repository.EndpointHitRepository;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,50 +37,23 @@ public class EndPointHitServiceImpl implements EndPointHitService {
     public Collection<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
                                                  boolean unique) {
 
-        String app = "ewm-main-service";
-
         if (uris != null) {
-            Map<String, Integer> endpointHitsMap = new HashMap<>();
             Set<String> urisUnique = uris.stream().map(String::toLowerCase).collect(Collectors.toSet());
-
-            urisUnique.forEach(uri -> endpointHitsMap.put(uri, 0));
-            log.info("Отсортированное множество URI urisUnique {}", urisUnique);
+            log.info("Отсортированное множество URI {}", urisUnique);
 
             if (unique) {
-                Collection<EndpointHit> endpointHits = endpointHitRepository.getStatistic(urisUnique, start, end);
-                log.info("endpointHits {}", endpointHits);
-                Map<String, Set<String>> uniqueIpsPerUriMap = new HashMap<>();
-                urisUnique.forEach(uri -> uniqueIpsPerUriMap.put(uri, new HashSet<>()));
-
-                endpointHits.forEach(endpointHit -> {
-                    String uri = endpointHit.getUri();
-                    uniqueIpsPerUriMap.get(uri).add(endpointHit.getIp());
-                    endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
-                });
-
-//                for (EndpointHit endpointHit : endpointHits) {
-//                    String uri = endpointHit.getUri();
-//                    if (!(uniqueIpsPerUriMap.get(uri).contains(endpointHit.getIp()))) {
-//                        uniqueIpsPerUriMap.get(uri).add(endpointHit.getIp());
-//                        endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1);
-//                    }
-//                }
-                log.info("HashMap, ключ - URI, значение  - множество уникальных ip {}", uniqueIpsPerUriMap);
-                log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
+                return endpointHitRepository.getStatisticUniqueIps(start, end, urisUnique);
             } else {
-                endpointHitRepository.getUrisOnly(urisUnique, start, end)
-                        .forEach(uri -> endpointHitsMap.put(uri, endpointHitsMap.get(uri) + 1));
-                log.info("URI и количество посещений endpointHitsMap {}", endpointHitsMap);
+                return endpointHitRepository.getStatisticAllIps(start, end, urisUnique);
             }
-            return uris.stream()
-                    .map(uri -> ViewStatsDto.builder().app(app).uri(uri).hits(endpointHitsMap.get(uri)).build())
-                    .sorted(Comparator.comparingInt(ViewStatsDto::getHits).reversed())
-                    .collect(Collectors.toList());
         } else {
-            return endpointHitRepository.getEndpointHitsByTimestampBetween(start, end).stream()
-                    .map(EndpointHitMapper::toViewStatsDto).collect(
-                            Collectors.toList());
+            log.info("Отсортированное множество URI {}", new ArrayList<String>());
 
+            if (unique) {
+                return endpointHitRepository.getAllStatisticUniqueIps(start, end);
+            } else {
+                return endpointHitRepository.getAllStatisticAllIps(start, end);
+            }
         }
     }
 }

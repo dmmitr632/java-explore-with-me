@@ -3,27 +3,43 @@ package ru.practicum.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 @Repository
 public interface EndpointHitRepository extends JpaRepository<EndpointHit, Integer> {
-//    @Query("SELECT eh FROM EndpointHit eh " +
-//            "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3 ")
-//    Collection<EndpointHit> getStatistic(Collection<String> uris, LocalDateTime start, LocalDateTime end);
-//
 
-    @Query("SELECT new EndpointHit(eh.id, eh.app, eh.uri, eh.ip, eh.timestamp) FROM EndpointHit eh " +
-            "WHERE eh.id IN (SELECT MIN(eh.id) FROM EndpointHit eh " +
-            "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3 )")
-    Collection<EndpointHit> getStatistic(Collection<String> uris, LocalDateTime start, LocalDateTime end);
+    @Query("SELECT new ru.practicum.dto.ViewStatsDto(eh.app, eh.uri, count(distinct eh.ip)) " +
+            "FROM EndpointHit eh " +
+            "WHERE eh.timestamp >= ?1 AND eh.timestamp <= ?2 AND eh.uri in ?3 " +
+            "GROUP BY eh.app, eh.uri, eh.ip " +
+            "ORDER BY COUNT(eh) desc")
+    Collection<ViewStatsDto> getStatisticUniqueIps(LocalDateTime start, LocalDateTime end, Set<String> uris);
 
-    @Query("SELECT eh.uri FROM EndpointHit eh " +
-            "WHERE eh.uri IN ?1 AND ?2 <= eh.timestamp AND eh.timestamp <= ?3")
-    Collection<String> getUrisOnly(Collection<String> uris, LocalDateTime start, LocalDateTime end);
+    @Query("SELECT new ru.practicum.dto.ViewStatsDto(eh.app, eh.uri, count(eh)) " +
+            "FROM EndpointHit eh " +
+            "WHERE eh.timestamp >= ?1 AND eh.timestamp <= ?2 AND eh.uri in ?3 " +
+            "GROUP BY eh.app, eh.uri " +
+            "ORDER BY COUNT(eh) desc")
+    Collection<ViewStatsDto> getStatisticAllIps(LocalDateTime start, LocalDateTime end, Set<String> uris);
 
-    Collection<EndpointHit> getEndpointHitsByTimestampBetween(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT new ru.practicum.dto.ViewStatsDto(eh.app, eh.uri, count(distinct eh.ip)) " +
+            "FROM EndpointHit eh " +
+            "WHERE eh.timestamp >= ?1 AND eh.timestamp <= ?2 " +
+            "GROUP BY eh.app, eh.uri, eh.ip " +
+            "ORDER BY COUNT(eh) desc")
+    Collection<ViewStatsDto> getAllStatisticUniqueIps(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT new ru.practicum.dto.ViewStatsDto(eh.app, eh.uri, count(eh)) " +
+            "FROM EndpointHit eh " +
+            "WHERE eh.timestamp >= ?1 AND eh.timestamp <= ?2 " +
+            "GROUP BY eh.app, eh.uri " +
+            "ORDER BY COUNT(eh) desc")
+    Collection<ViewStatsDto> getAllStatisticAllIps(LocalDateTime start, LocalDateTime end);
 
 }

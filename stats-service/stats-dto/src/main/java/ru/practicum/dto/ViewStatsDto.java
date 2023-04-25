@@ -5,8 +5,8 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
+@NoArgsConstructor
 
 public class ViewStatsDto {
 
@@ -14,6 +14,11 @@ public class ViewStatsDto {
 
     private String uri;
 
-    private Integer hits;
+    private Long hits;
 
+    public ViewStatsDto(String app, String uri, Long hits) {
+        this.app = app;
+        this.uri = uri;
+        this.hits = hits;
+    }
 }
