@@ -6,12 +6,8 @@ import ru.practicum.ewm.dto.CategoryDto;
 import java.util.Collection;
 
 @Service
-public class CategoryPublicService {
-    public CategoryDto getCategory(Integer catId) {
-        return null;
-    }
+public interface CategoryPublicService {
+    public CategoryDto getCategory(Integer catId);
 
-    public Collection<CategoryDto> getCategories(Integer from, Integer size) {
-        return null;
-    }
+    public Collection<CategoryDto> getCategories(Integer from, Integer size);
 }

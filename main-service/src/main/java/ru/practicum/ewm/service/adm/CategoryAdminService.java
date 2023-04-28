@@ -5,15 +5,10 @@ import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
 
 @Service
-public class CategoryAdminService {
-    public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
-        return null;
-    }
+public interface CategoryAdminService {
+    public CategoryDto addCategory(NewCategoryDto newCategoryDto);
 
-    public CategoryDto editCategory(CategoryDto categoryDto) {
-        return null;
-    }
+    public CategoryDto editCategory(CategoryDto categoryDto);
 
-    public void deleteCategory(Integer catId) {
-    }
+    public void deleteCategory(Integer catId);
 }

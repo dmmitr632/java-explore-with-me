@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS categories, compilations, events, events_users, locations, users CASCADE;
+DROP TABLE IF EXISTS categories, compilations, events, events_users, users CASCADE;
 
 CREATE TABLE categories
 (
