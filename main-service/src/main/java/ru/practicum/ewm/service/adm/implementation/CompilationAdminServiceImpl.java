@@ -1,11 +1,12 @@
 package ru.practicum.ewm.service.adm.implementation;
 
 import ru.practicum.ewm.dto.CompilationDto;
+import ru.practicum.ewm.dto.NewCompilationDto;
 import ru.practicum.ewm.service.adm.CompilationAdminService;
 
 public class CompilationAdminServiceImpl implements CompilationAdminService {
     @Override
-    public CompilationDto addCompilation(Integer compId) {
+    public CompilationDto addCompilation(@Valid NewCompilationDto compId) {
         return null;
     }
 

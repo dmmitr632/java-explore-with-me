@@ -1,12 +1,14 @@
 package ru.practicum.ewm.controller.pub;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.EventDto;
 import ru.practicum.ewm.service.pub.EventPublicService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class EventPublicController {
@@ -16,7 +18,7 @@ public class EventPublicController {
         this.eventPublicService = eventPublicService;
     }
 
-    @GetMapping(path = "/events/{catId}")
+    @GetMapping(path = "/events")
     public List<EventDto> getEvents(@RequestParam List<Integer> users,
                                     @RequestParam List<String> states,
                                     @RequestParam List<Integer> categories,
@@ -27,9 +29,9 @@ public class EventPublicController {
         return eventPublicService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
-    @PatchMapping(path = "/events/{eventId}")
-    public List<EventDto> editEvent(@RequestParam Integer eventId,
-                                    @RequestBody EventDto eventDto) {
-        return eventPublicService.editEvent(eventId, eventDto);
+    @PatchMapping(path = "/events/{id}")
+    public List<EventDto> editEvent(@PathVariable Integer id,
+                                    @Autowired HttpServletRequest servletRequest) {
+        return eventPublicService.editEvent(id, servletRequest.getRemoteAddr());
     }
 }

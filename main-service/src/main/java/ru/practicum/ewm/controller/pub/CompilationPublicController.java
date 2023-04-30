@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller.pub;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.service.pub.CompilationPublicService;
@@ -22,7 +23,7 @@ public class CompilationPublicController {
     }
 
     @GetMapping(path = "/compilations/{compId}")
-    public Collection<CategoryDto> getCompilation(@RequestParam Integer compId) {
+    public Collection<CategoryDto> getCompilation(@PathVariable Integer compId) {
         return compilationPublicService.getCompilation(compId);
     }
 }

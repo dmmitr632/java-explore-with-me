@@ -6,9 +6,9 @@ import ru.practicum.ewm.dto.NewCategoryDto;
 
 @Service
 public interface CategoryAdminService {
-    public CategoryDto addCategory(NewCategoryDto newCategoryDto);
+    CategoryDto addCategory(NewCategoryDto newCategoryDto);
 
-    public CategoryDto editCategory(CategoryDto categoryDto);
+    CategoryDto editCategory(CategoryDto categoryDto);
 
-    public void deleteCategory(Integer catId);
+    void deleteCategory(Integer catId);
 }

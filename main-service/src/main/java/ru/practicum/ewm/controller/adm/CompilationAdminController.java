@@ -2,7 +2,10 @@ package ru.practicum.ewm.controller.adm;
 
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
+import ru.practicum.ewm.dto.NewCompilationDto;
 import ru.practicum.ewm.service.adm.CompilationAdminService;
+
+import javax.validation.Valid;
 
 public class CompilationAdminController {
     private final CompilationAdminService compilationAdminService;
@@ -12,8 +15,8 @@ public class CompilationAdminController {
     }
 
     @PostMapping(path = "/admin/compilations")
-    public CompilationDto addCompilation(@PathVariable Integer compId) {
-        return compilationAdminService.addCompilation(compId);
+    public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDto) {
+        return compilationAdminService.addCompilation(newCompilationDto);
     }
 
     @DeleteMapping(path = "/admin/compilations/{compId}")

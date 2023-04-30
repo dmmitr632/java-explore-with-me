@@ -1,11 +1,16 @@
 package ru.practicum.ewm.service.priv.implementation;
 
 import ru.practicum.ewm.dto.EventDto;
+import ru.practicum.ewm.dto.EventShortDto;
+import ru.practicum.ewm.dto.NewEventDto;
+import ru.practicum.ewm.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.service.priv.EventPrivateService;
+
+import java.util.Collection;
 
 public class EventPrivateServiceImpl implements EventPrivateService {
     @Override
-    public EventDto getEventsAddedByUser(Integer userId) {
+    public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
         return null;
     }
 
@@ -20,17 +25,17 @@ public class EventPrivateServiceImpl implements EventPrivateService {
     }
 
     @Override
-    public EventDto editEventAddedByUser(Integer userId) {
+    public EventDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId) {
         return null;
     }
 
     @Override
-    public EventDto getEventAddedByUser(Integer userId) {
+    public EventDto getEventAddedByUser(Integer userId, Integer eventId) {
         return null;
     }
 
     @Override
-    public EventDto addEvent(Integer userId) {
+    public EventDto addEvent(NewEventDto newEventDto, Integer userId) {
         return null;
     }
 }

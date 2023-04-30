@@ -7,17 +7,17 @@ import java.util.List;
 
 public class UserRequestPrivateServiceImpl implements UserRequestPrivateService {
     @Override
-    public List<UserRequestDto> getUserRequests(List<Integer> users, List<String> states, List<Integer> categories, String rangeStart, String rangeEnd, Integer from, Integer size) {
+    public List<UserRequestDto> getUserRequests(Integer userId) {
         return null;
     }
 
     @Override
-    public List<UserRequestDto> addUserRequest(Integer eventId, UserRequestDto eventDto) {
+    public UserRequestDto addUserRequest(Integer eventId, UserRequestDto eventDto) {
         return null;
     }
 
     @Override
-    public List<UserRequestDto> cancelUserRequest(Integer eventId, UserRequestDto eventDto) {
+    public UserRequestDto cancelUserRequest(Integer requestId, Integer userId) {
         return null;
     }
 }

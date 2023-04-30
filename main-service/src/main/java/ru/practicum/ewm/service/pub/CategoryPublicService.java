@@ -7,7 +7,7 @@ import java.util.Collection;
 
 @Service
 public interface CategoryPublicService {
-    public CategoryDto getCategory(Integer catId);
+    CategoryDto getCategory(Integer catId);
 
-    public Collection<CategoryDto> getCategories(Integer from, Integer size);
+    Collection<CategoryDto> getCategories(Integer from, Integer size);
 }

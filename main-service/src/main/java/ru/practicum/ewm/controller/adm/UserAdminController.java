@@ -1,9 +1,11 @@
 package ru.practicum.ewm.controller.adm;
 
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.NewUserDto;
 import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.service.adm.UserAdminService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 public class UserAdminController {
@@ -13,26 +15,23 @@ public class UserAdminController {
         this.userAdminService = userAdminService;
     }
 
-    @GetMapping(path = "/admin/users/{userId}")
-    public List<UserDto> getUsers(@RequestParam List<Integer> users,
-                                  @RequestParam List<String> states,
-                                  @RequestParam List<Integer> categories,
-                                  @RequestParam String rangeStart,
-                                  @RequestParam String rangeEnd,
-                                  @RequestParam(defaultValue = "0") Integer from,
-                                  @RequestParam(defaultValue = "10") Integer size) {
-        return userAdminService.getUsers(users, states, categories, rangeStart, rangeEnd, from, size);
+    @GetMapping
+    public UserDto getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
+                           @RequestParam(name = "from", defaultValue = "0") Integer from,
+                            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return userAdminService.getUsers(ids, from, size);
     }
 
-    @PostMapping(path = "/admin/users/{userId}")
-    public UserDto addUser(@RequestParam Integer userId,
-                           @RequestBody UserDto userDto) {
-        return userAdminService.editUser(userId, userDto);
+    @PostMapping("/admin/users")
+    public UserDto addUser(@RequestBody @Valid NewUserDto newUserDto) {
+        return userAdminService.addUser(newUserDto);
     }
 
-    @DeleteMapping(path = "/admin/users/{userId}")
-    public void deleteUser(@RequestParam Integer userId,
-                           @RequestBody UserDto userDto) {
+    @DeleteMapping("/admin/users{userId}")
+    public void deleteUser(@PathVariable Long userId) {
+        userAdminService.deleteUser(userId);
     }
+
+
 
 }
