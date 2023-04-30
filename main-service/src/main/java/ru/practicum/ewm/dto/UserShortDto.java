@@ -1,14 +1,13 @@
 package ru.practicum.ewm.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
-public class UserDto {
-    private String email;
+@NoArgsConstructor
+public class UserShortDto {
     private Integer id;
     private String name;
 }

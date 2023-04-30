@@ -1,11 +1,11 @@
 package ru.practicum.ewm.service.pub;
 
-import ru.practicum.ewm.dto.CategoryDto;
+import ru.practicum.ewm.dto.CompilationDto;
 
 import java.util.Collection;
 
 public interface CompilationPublicService {
-    Collection<CategoryDto> getCompilation(Integer compId);
+    CompilationDto getCompilation(Integer compId);
 
-    CategoryDto getCompilations(Boolean pinned, Integer from, Integer size);
+    Collection<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size);
 }

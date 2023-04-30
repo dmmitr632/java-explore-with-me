@@ -3,6 +3,7 @@ package ru.practicum.ewm.controller.adm;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationDto;
 import ru.practicum.ewm.service.adm.CompilationAdminService;
 
 import javax.validation.Valid;
@@ -25,7 +26,8 @@ public class CompilationAdminController {
     }
 
     @PatchMapping(path = "/admin/compilations/{compId}")
-    public CompilationDto editCompilation(@PathVariable Integer compId, @RequestBody CompilationDto compilationDto) {
-        return compilationAdminService.editCompilation(compId, compilationDto);
+    public CompilationDto editCompilation(@PathVariable Integer compId,
+                                          @RequestBody UpdateCompilationDto updateCompilationDto) {
+        return compilationAdminService.editCompilation(compId, updateCompilationDto);
     }
 }

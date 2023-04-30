@@ -11,5 +11,5 @@ public interface UserAdminService {
 
     UserDto addUser(NewUserDto newUserDto);
 
-    void deleteUser(Long userId);
+    void deleteUser(Integer userId);
 }

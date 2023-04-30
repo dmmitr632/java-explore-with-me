@@ -18,7 +18,7 @@ public class UserAdminServiceImpl implements UserAdminService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUser(Integer userId) {
 
     }
 }
