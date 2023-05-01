@@ -1,24 +1,113 @@
 package ru.practicum.ewm.service.adm.implementation;
 
-import ru.practicum.ewm.dto.EventDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.enumeration.EventState;
+import ru.practicum.ewm.enumeration.StateAction;
+import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.exception.PublishingException;
+import ru.practicum.ewm.exception.TimeException;
+import ru.practicum.ewm.mapper.EventMapper;
+import ru.practicum.ewm.model.Event;
+import ru.practicum.ewm.repository.CategoryRepository;
+import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.adm.EventAdminService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class EventAdminServiceImpl implements EventAdminService {
-    @Override
-    public List<EventDto> getSelectedEvents(List<Integer> users,
-                                            List<String> states,
-                                            List<Integer> categories,
-                                            String rangeStart,
-                                            String rangeEnd,
-                                            Integer from,
-                                            Integer size) {
-        return null;
+    private EventRepository eventRepository;
+    private CategoryRepository categoryRepository;
+
+    public EventAdminServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository) {
+        this.eventRepository = eventRepository;
+        this.categoryRepository = categoryRepository;
     }
 
+    public Collection<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
+                                                      List<Integer> categories,
+                                                      String start, String end, Integer from, Integer size) {
+        Pageable pageable = PageRequest.of(from, size);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime startTime = null;
+        LocalDateTime endTime = null;
+        if (start != null) {
+            startTime = LocalDateTime.parse(start, dateTimeFormatter);
+        }
+        if (end != null) {
+            endTime = LocalDateTime.parse(end, dateTimeFormatter);
+        }
+        Page<Event> events = eventRepository.getSelectedEvents(usersIds, states, categories, startTime,
+                endTime, pageable);
+        return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+    }
+
+
     @Override
-    public List<EventDto> approveOrRejectEvent(Integer eventId, EventDto eventDto) {
-        return null;
+    @Transactional
+    public EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEvent, Integer eventId) {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
+        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new TimeException("Cannot publish event if start in less than 1 hour");
+        }
+        if (event.getEventState().equals(EventState.PUBLISHED) || event.getEventState().equals(EventState.CANCELED)) {
+            throw new PublishingException("Already published/canceled");
+        }
+        if (updateEvent.getTitle() != null) {
+
+            event.setTitle(updateEvent.getTitle());
+        }
+        if (updateEvent.getAnnotation() != null) {
+            event.setAnnotation(updateEvent.getAnnotation());
+        }
+        if (updateEvent.getDescription() != null) {
+            event.setDescription(updateEvent.getDescription());
+        }
+        if (updateEvent.getEventDate() != null) {
+            event.setEventDate(LocalDateTime.parse(updateEvent.getEventDate(), dateTimeFormatter));
+        }
+        if (updateEvent.getCategory() != null) {
+            event.setCategory(categoryRepository.findById(updateEvent.getCategory()).get());
+        }
+        if (updateEvent.getPaid() != null) {
+
+            event.setPaid(updateEvent.getPaid());
+        }
+        if (updateEvent.getParticipantLimit() != null) {
+
+            event.setParticipantLimit(updateEvent.getParticipantLimit());
+        }
+        if (updateEvent.getLon() != null && updateEvent.getLat() != null) {
+            event.setLon(updateEvent.getLon());
+            event.setLat(updateEvent.getLat());
+        }
+        if (updateEvent.getRequestModeration() != null) {
+
+            event.setRequestModeration(updateEvent.getRequestModeration());
+        }
+        if (updateEvent.getStateAction() != null) {
+            if (updateEvent.getStateAction() == StateAction.SEND_TO_REVIEW) {
+
+                event.setEventState(EventState.PENDING);
+            } else if (updateEvent.getStateAction() == StateAction.CANCEL_REVIEW
+                    || updateEvent.getStateAction() == StateAction.REJECT_EVENT) {
+                event.setEventState(EventState.CANCELED);
+            } else {
+                event.setEventState(EventState.PUBLISHED);
+                event.setPublishedOn(LocalDateTime.now());
+            }
+        }
+        return EventMapper.toEventFullDto(eventRepository.save(event));
     }
 }

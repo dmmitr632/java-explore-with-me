@@ -1,12 +1,15 @@
 package ru.practicum.ewm.service.adm;
 
-import ru.practicum.ewm.dto.EventDto;
+import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.enumeration.EventState;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface EventAdminService {
-    List<EventDto> getSelectedEvents(List<Integer> users, List<String> states, List<Integer> categories,
-                                     String rangeStart, String rangeEnd, Integer from, Integer size);
+    Collection<EventFullDto> getSelectedEvents(List<Integer> users, List<EventState> states, List<Integer> categories,
+                                               String rangeStart, String rangeEnd, Integer from, Integer size);
 
-    List<EventDto> approveOrRejectEvent(Integer eventId, EventDto eventDto);
+    EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEventAdminRequest, Integer eventId);
 }

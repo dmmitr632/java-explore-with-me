@@ -1,6 +1,7 @@
 package ru.practicum.ewm.dto;
 
 import lombok.Data;
+import ru.practicum.ewm.enumeration.StateAction;
 
 @Data
 public class UpdateEventAdminRequest {
@@ -26,4 +27,6 @@ public class UpdateEventAdminRequest {
     private String title;
 
     private Boolean path;
+
+    StateAction stateAction;
 }
