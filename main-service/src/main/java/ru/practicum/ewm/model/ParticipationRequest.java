@@ -1,9 +1,6 @@
 package ru.practicum.ewm.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 import ru.practicum.ewm.enumeration.RequestStatus;
 
@@ -11,14 +8,14 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
+@Builder
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "events_users")
-public class Request {
+public class ParticipationRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +33,9 @@ public class Request {
     private LocalDateTime created;
 
     @Column(name = "status")
-    private RequestStatus requestStatus;
+    private RequestStatus status;
 
-    public Request(User requester, Event event, LocalDateTime created) {
+    public ParticipationRequest(User requester, Event event, LocalDateTime created) {
         this.requester = requester;
         this.event = event;
         this.created = created;
@@ -50,8 +47,8 @@ public class Request {
             return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
             return false;
-        Request request = (Request) o;
-        return getId() != null && Objects.equals(getId(), request.getId());
+        ParticipationRequest participationRequest = (ParticipationRequest) o;
+        return getId() != null && Objects.equals(getId(), participationRequest.getId());
     }
 
     @Override
