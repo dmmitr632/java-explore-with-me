@@ -3,6 +3,7 @@ package ru.practicum.ewm.service;
 import ru.practicum.ewm.dto.NewUserDto;
 import ru.practicum.ewm.dto.UserDto;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserService {
@@ -11,6 +12,6 @@ public interface UserService {
 
     String deleteUser(Integer userId);
 
-    List<UserDto> getUsers(List<Integer> ids, Integer from, Integer size);
+    Collection<UserDto> getUsers(List<Integer> ids, Integer from, Integer size);
 
 }

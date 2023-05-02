@@ -1,14 +1,12 @@
 package ru.practicum.ewm.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+@Builder
 @AllArgsConstructor
 @Setter
 @Getter
@@ -19,12 +17,10 @@ public class NewEventDto {
     private Integer category;
     @NotEmpty
     private String description;
-    @NotEmpty(message = "Для создания события необходимо указать дату его проведения")
+    @NotEmpty
     private String eventDate;
     @NotNull
-    private Float lat;
-    @NotNull
-    private Float lon;
+    private LocationDto location;
     @NotNull
     private Boolean paid;
     @Value("0")

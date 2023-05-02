@@ -119,7 +119,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
-        return eventRepository.findAllByInitiatorId(userId, PageRequest.of(from/size, size))
+        return eventRepository.findAllByInitiatorId(userId, PageRequest.of(from / size, size))
                 .stream()
                 .map(EventMapper::toEventShortDto)
                 .collect(Collectors.toList());

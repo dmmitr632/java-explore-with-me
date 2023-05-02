@@ -6,7 +6,6 @@ import ru.practicum.ewm.dto.NewCompilationDto;
 import ru.practicum.ewm.dto.UpdateCompilationDto;
 import ru.practicum.ewm.service.CompilationService;
 
-
 import javax.validation.Valid;
 
 public class CompilationAdminController {

@@ -6,6 +6,7 @@ import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.service.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdminController {
@@ -16,10 +17,10 @@ public class UserAdminController {
     }
 
     @GetMapping
-    public UserDto getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
-                            @RequestParam(name = "from", defaultValue = "0") Integer from,
-                            @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return userService.getUsers(ids, from, size);
+    public List<UserDto> getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
+                                  @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                  @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return new ArrayList<>(userService.getUsers(ids, from, size));
     }
 
     @PostMapping("/admin/users")
