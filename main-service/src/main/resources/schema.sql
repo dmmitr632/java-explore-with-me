@@ -45,7 +45,7 @@ CREATE TABLE events
     published_in       TIMESTAMP WITHOUT TIME ZONE,
     request_moderation BOOLEAN,
     state              VARCHAR(64),
-    title              INT,
+    title              VARCHAR(256),
     views              INT
 
 );
