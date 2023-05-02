@@ -20,24 +20,18 @@ import java.util.Objects;
 public class Compilation {
 
     @Id
-    @Column(name = "compilation_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "title")
+    @Column(length = 64, nullable = false)
     private String title;
 
-    @Column(name = "pinned")
     private Boolean pinned;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST
-    })
-    @JoinTable(name = "events_compilatio",
-            joinColumns = {@JoinColumn(name = "compilation_id")
-            },
-            inverseJoinColumns = {@JoinColumn(name = "event_id")
-            })
+    @ManyToMany
+    @JoinTable(name = "events_compilationst",
+            joinColumns = {@JoinColumn(name = "compilation_id")},
+            inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> events;
 
     public Compilation(String title, Boolean pinned) {
