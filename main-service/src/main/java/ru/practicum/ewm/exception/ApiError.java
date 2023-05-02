@@ -17,9 +17,9 @@ public class ApiError {
 
     private String message;
 
-    private String description;
+    private String reason;
 
-    private HttpStatus httpStatus;
+    private HttpStatus status;
 
     @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")

@@ -20,8 +20,8 @@ public class RestExceptionHandler {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
-                .description("Не найден объект" + request.getDescription(false))
-                .httpStatus(HttpStatus.NOT_FOUND)
+                .reason("Не найден объект" + request.getDescription(false))
+                .status(HttpStatus.NOT_FOUND)
                 .build();
     }
 
@@ -31,8 +31,8 @@ public class RestExceptionHandler {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
-                .description(request.getDescription(false))
-                .httpStatus(HttpStatus.FORBIDDEN)
+                .reason(request.getDescription(false))
+                .status(HttpStatus.FORBIDDEN)
                 .build();
     }
 
@@ -43,8 +43,8 @@ public class RestExceptionHandler {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
-                .description(request.getDescription(false))
-                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .reason(request.getDescription(false))
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .build();
     }
 
@@ -54,8 +54,8 @@ public class RestExceptionHandler {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
-                .description("Bad Request")
-                .httpStatus(HttpStatus.BAD_REQUEST)
+                .reason("Bad Request")
+                .status(HttpStatus.BAD_REQUEST)
                 .build();
     }
 }
