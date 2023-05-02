@@ -1,7 +1,7 @@
 package ru.practicum.ewm.service.implementation;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.UserRequestDto;
+import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.service.RequestService;
 
 import java.util.List;
@@ -9,17 +9,17 @@ import java.util.List;
 @Service
 public class RequestServiceImpl implements RequestService {
     @Override
-    public List<UserRequestDto> getUserRequests(Integer userId) {
+    public List<ParticipationRequestDto> getUserRequests(Integer userId) {
         return null;
     }
 
     @Override
-    public UserRequestDto addUserRequest(Integer eventId, UserRequestDto eventDto) {
+    public ParticipationRequestDto addUserRequest(Integer userId, Integer eventId) {
         return null;
     }
 
     @Override
-    public UserRequestDto cancelUserRequest(Integer requestId, Integer userId) {
+    public ParticipationRequestDto cancelUserRequest(Integer userId, Integer requestId) {
         return null;
     }
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @ToString
 @NoArgsConstructor
-public class NewUserDto {
+public class NewUserRequestDto {
     @NotEmpty
     @NotNull
     @Email

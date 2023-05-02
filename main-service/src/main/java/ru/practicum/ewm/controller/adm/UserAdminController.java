@@ -1,7 +1,7 @@
 package ru.practicum.ewm.controller.adm;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.NewUserDto;
+import ru.practicum.ewm.dto.NewUserRequestDto;
 import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.service.UserService;
 
@@ -24,8 +24,8 @@ public class UserAdminController {
     }
 
     @PostMapping("/admin/users")
-    public UserDto addUser(@RequestBody @Valid NewUserDto newUserDto) {
-        return userService.addUser(newUserDto);
+    public UserDto addUser(@RequestBody @Valid NewUserRequestDto newUserRequestDto) {
+        return userService.addUser(newUserRequestDto);
     }
 
     @DeleteMapping("/admin/users{userId}")

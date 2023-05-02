@@ -9,8 +9,10 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-public class UpdateCompilationDto {
+public class UpdateCompilationRequest {
     private List<Integer> events;
+
     private Boolean pinned;
+
     private String title;
 }

@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class CompilationDto {
+
     private Integer id;
 
     private String title;

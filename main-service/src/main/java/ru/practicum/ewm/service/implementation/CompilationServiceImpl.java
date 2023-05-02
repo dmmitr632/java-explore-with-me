@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
-import ru.practicum.ewm.dto.UpdateCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationRequest;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
@@ -48,17 +48,17 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     @Transactional
-    public CompilationDto editCompilation(Integer compId, UpdateCompilationDto updateCompilationDto) {
+    public CompilationDto editCompilation(Integer compId, UpdateCompilationRequest updateCompilationRequest) {
 
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation not found"));
-        if (updateCompilationDto.getPinned() != null) {
-            compilation.setPinned(updateCompilationDto.getPinned());
+        if (updateCompilationRequest.getPinned() != null) {
+            compilation.setPinned(updateCompilationRequest.getPinned());
         }
-        if (updateCompilationDto.getTitle() != null) {
-            compilation.setTitle(updateCompilationDto.getTitle());
+        if (updateCompilationRequest.getTitle() != null) {
+            compilation.setTitle(updateCompilationRequest.getTitle());
         }
-        compilation.setEvents(eventRepository.findAllById(updateCompilationDto.getEvents()));
+        compilation.setEvents(eventRepository.findAllById(updateCompilationRequest.getEvents()));
         return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
     }
 

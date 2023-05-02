@@ -1,7 +1,7 @@
 package ru.practicum.ewm.controller.priv;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.UserRequestDto;
+import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.service.RequestService;
 
 import java.util.List;
@@ -14,20 +14,19 @@ public class RequestPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/requests")
-    public List<UserRequestDto> getUserRequests(@PathVariable Integer userId) {
+    public List<ParticipationRequestDto> getUserRequests(@PathVariable Integer userId) {
         return requestService.getUserRequests(userId);
     }
 
     @PostMapping(path = "/users/{userId}/requests")
-    public UserRequestDto addUserRequest(@RequestParam Integer eventId,
-                                         @RequestBody UserRequestDto eventDto) {
-        return requestService.addUserRequest(eventId, eventDto);
+    public ParticipationRequestDto addUserRequest(@PathVariable Integer userId, @RequestParam Integer eventId) {
+        return requestService.addUserRequest(userId, eventId);
     }
 
 
     @PatchMapping(path = "/users/{userId}/requests/{requestId}/cancel")
-    public UserRequestDto cancelUserRequest(@PathVariable Integer requestId,
-                                            @PathVariable Integer userId) {
-        return requestService.cancelUserRequest(requestId, userId);
+    public ParticipationRequestDto cancelUserRequest(@PathVariable Integer userId,
+                                                     @PathVariable Integer requestId) {
+        return requestService.cancelUserRequest(userId, requestId);
     }
 }

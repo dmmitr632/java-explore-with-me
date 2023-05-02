@@ -2,7 +2,7 @@ package ru.practicum.ewm.service;
 
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
-import ru.practicum.ewm.dto.UpdateCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationRequest;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -13,7 +13,7 @@ public interface CompilationService {
 
     void deleteCompilation(Integer compId);
 
-    CompilationDto editCompilation(Integer compId, UpdateCompilationDto updateCompilationDto);
+    CompilationDto editCompilation(Integer compId, UpdateCompilationRequest updateCompilationRequest);
 
     CompilationDto getCompilation(Integer compId);
 

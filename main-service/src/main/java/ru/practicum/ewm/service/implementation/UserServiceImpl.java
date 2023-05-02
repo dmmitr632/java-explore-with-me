@@ -1,7 +1,7 @@
 package ru.practicum.ewm.service.implementation;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.NewUserDto;
+import ru.practicum.ewm.dto.NewUserRequestDto;
 import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.service.UserService;
 
@@ -10,13 +10,13 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     @Override
-    public UserDto addUser(NewUserDto newUserDto) {
+    public UserDto addUser(NewUserRequestDto newUserRequestDto) {
         return null;
     }
 
     @Override
-    public String deleteUser(Integer userId) {
-        return null;
+    public void deleteUser(Integer userId) {
+
     }
 
     @Override
