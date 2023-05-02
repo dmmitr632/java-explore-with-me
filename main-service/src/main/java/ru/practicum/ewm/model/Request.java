@@ -17,7 +17,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "participants")
+@Table(name = "events_users")
 public class Request {
 
     @Id

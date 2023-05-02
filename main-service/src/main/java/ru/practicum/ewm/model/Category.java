@@ -15,11 +15,11 @@ import javax.persistence.*;
 public class Category {
 
     @Id
-    @Column(name = "category_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "category_name")
+    @Column(name = "name")
     private String name;
 
     public Category(String name) {
