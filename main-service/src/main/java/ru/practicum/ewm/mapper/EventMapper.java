@@ -1,6 +1,6 @@
 package ru.practicum.ewm.mapper;
 
-import ru.practicum.ewm.dto.EventDto;
+import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.dto.NewEventDto;
 import ru.practicum.ewm.enumeration.EventState;
@@ -15,8 +15,8 @@ public class EventMapper {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static EventDto toEventDto(Event event) {
-        return EventDto
+    public static EventFullDto toEventDto(Event event) {
+        return EventFullDto
                 .builder()
                 .id(event.getId())
                 .annotation(event.getAnnotation())
@@ -36,21 +36,21 @@ public class EventMapper {
                 .build();
     }
 
-    public static Event toEvent(EventDto eventDto) {
+    public static Event toEvent(EventFullDto eventFullDto) {
         return Event
                 .builder()
-                .id(eventDto.getId())
-                .annotation(eventDto.getAnnotation())
-                .category(CategoryMapper.toCategory(eventDto.getCategory()))
-                .createdOn(LocalDateTime.parse(eventDto.getCreatedOn(), dateTimeFormatter))
-                .description(eventDto.getDescription())
-                .eventDate(LocalDateTime.parse(eventDto.getEventDate(), dateTimeFormatter))
-                .paid(eventDto.getPaid())
-                .participantLimit(eventDto.getParticipantLimit())
-                .publishedOn(eventDto.getPublishedOn())
-                .requestModeration(eventDto.getRequestModeration())
-                .state(eventDto.getState())
-                .title(eventDto.getTitle())
+                .id(eventFullDto.getId())
+                .annotation(eventFullDto.getAnnotation())
+                .category(CategoryMapper.toCategory(eventFullDto.getCategory()))
+                .createdOn(LocalDateTime.parse(eventFullDto.getCreatedOn(), dateTimeFormatter))
+                .description(eventFullDto.getDescription())
+                .eventDate(LocalDateTime.parse(eventFullDto.getEventDate(), dateTimeFormatter))
+                .paid(eventFullDto.getPaid())
+                .participantLimit(eventFullDto.getParticipantLimit())
+                .publishedOn(eventFullDto.getPublishedOn())
+                .requestModeration(eventFullDto.getRequestModeration())
+                .state(eventFullDto.getState())
+                .title(eventFullDto.getTitle())
                 .build();
     }
 
