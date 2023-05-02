@@ -27,13 +27,16 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
 
-    private EventRepository eventRepository;
-    private CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
+    private final CategoryRepository categoryRepository;
 
     public EventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
     }
+
+
+    //Admin services
 
     public Collection<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
                                                       List<Integer> categories,
@@ -112,6 +115,8 @@ public class EventServiceImpl implements EventService {
         return EventMapper.toEventFullDto(eventRepository.save(event));
     }
 
+    // Private Services
+
 
     @Override
     public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
@@ -142,6 +147,9 @@ public class EventServiceImpl implements EventService {
     public EventDto addEvent(NewEventDto newEventDto, Integer userId) {
         return null;
     }
+
+
+    // Public services
 
     @Override
     public List<EventDto> editEvent(Integer id, String remoteAddr) {
