@@ -15,25 +15,25 @@ public interface EventService {
 
     Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size);
 
-    EventDto editEventsUserRequest(Integer userId, Integer eventId);
+    EventFullDto editEventsUserRequest(Integer userId, Integer eventId);
 
-    EventDto getEventsUserRequest(Integer userId, Integer eventId);
+    EventFullDto getEventsUserRequest(Integer userId, Integer eventId);
 
-    EventDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId);
+    EventFullDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId);
 
-    EventDto getEventAddedByUser(Integer userId, Integer eventId);
+    EventFullDto getEventAddedByUser(Integer userId, Integer eventId);
 
-    EventDto addEvent(NewEventDto newEventDto, Integer userId);
+    EventFullDto addEvent(NewEventDto newEventDto, Integer userId);
 
-    List<EventDto> editEvent(Integer id, String remoteAddr);
+    List<EventFullDto> editEvent(Integer id, String remoteAddr);
 
-    List<EventDto> getEvents(List<Integer> users,
-                             List<String> states,
-                             List<Integer> categories,
-                             String rangeStart,
-                             String rangeEnd,
-                             Integer from,
-                             Integer size);
+    List<EventFullDto> getEvents(List<Integer> users,
+                                 List<String> states,
+                                 List<Integer> categories,
+                                 String rangeStart,
+                                 String rangeEnd,
+                                 Integer from,
+                                 Integer size);
 
 
 }

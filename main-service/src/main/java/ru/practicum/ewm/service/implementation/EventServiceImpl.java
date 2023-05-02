@@ -53,7 +53,7 @@ public class EventServiceImpl implements EventService {
         }
         Page<Event> events = eventRepository.getSelectedEvents(usersIds, states, categories, startTime,
                 endTime, pageable);
-        return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+        return events.stream().map(EventMapper::toEventDto).collect(Collectors.toList());
     }
 
 
@@ -111,7 +111,7 @@ public class EventServiceImpl implements EventService {
                 event.setPublishedOn(LocalDateTime.now());
             }
         }
-        return EventMapper.toEventFullDto(eventRepository.save(event));
+        return EventMapper.toEventDto(eventRepository.save(event));
     }
 
     // Private Services
@@ -126,27 +126,27 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto editEventsUserRequest(Integer userId, Integer eventId) {
+    public EventFullDto editEventsUserRequest(Integer userId, Integer eventId) {
         return null;
     }
 
     @Override
-    public EventDto getEventsUserRequest(Integer userId, Integer eventId) {
+    public EventFullDto getEventsUserRequest(Integer userId, Integer eventId) {
         return null;
     }
 
     @Override
-    public EventDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId) {
+    public EventFullDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId) {
         return null;
     }
 
     @Override
-    public EventDto getEventAddedByUser(Integer userId, Integer eventId) {
+    public EventFullDto getEventAddedByUser(Integer userId, Integer eventId) {
         return null;
     }
 
     @Override
-    public EventDto addEvent(NewEventDto newEventDto, Integer userId) {
+    public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
         return null;
     }
 
@@ -154,13 +154,13 @@ public class EventServiceImpl implements EventService {
     // Public services
 
     @Override
-    public List<EventDto> editEvent(Integer id, String remoteAddr) {
+    public List<EventFullDto> editEvent(Integer id, String remoteAddr) {
         return null;
     }
 
     @Override
-    public List<EventDto> getEvents(List<Integer> users, List<String> states, List<Integer> categories,
-                                    String rangeStart, String rangeEnd, Integer from, Integer size) {
+    public List<EventFullDto> getEvents(List<Integer> users, List<String> states, List<Integer> categories,
+                                        String rangeStart, String rangeEnd, Integer from, Integer size) {
         return null;
     }
 }

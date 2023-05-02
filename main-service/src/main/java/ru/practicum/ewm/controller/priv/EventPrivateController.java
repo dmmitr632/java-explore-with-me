@@ -1,7 +1,7 @@
 package ru.practicum.ewm.controller.priv;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.EventDto;
+import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.dto.NewEventDto;
 import ru.practicum.ewm.dto.UpdateEventUserRequest;
@@ -25,31 +25,31 @@ public class EventPrivateController {
     }
 
     @PostMapping(path = "/users/{userId}/events")
-    public EventDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
-                             @PathVariable Integer userId) {
+    public EventFullDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
+                                 @PathVariable Integer userId) {
         return eventService.addEvent(newEventDto, userId);
     }
 
     @GetMapping(path = "/users/{userId}/events/{eventId}")
-    public EventDto getEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId) {
+    public EventFullDto getEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId) {
         return eventService.getEventAddedByUser(userId, eventId);
     }
 
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}")
-    public EventDto editEventAddedByUser(@RequestBody @Valid UpdateEventUserRequest request,
-                                         @PathVariable Integer userId, @PathVariable String eventId) {
+    public EventFullDto editEventAddedByUser(@RequestBody @Valid UpdateEventUserRequest request,
+                                             @PathVariable Integer userId, @PathVariable String eventId) {
         return eventService.editEventAddedByUser(request, userId);
     }
 
 
     @GetMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventDto getEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId) {
+    public EventFullDto getEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId) {
         return eventService.getEventsUserRequest(userId, eventId);
     }
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventDto editEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId) {
+    public EventFullDto editEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId) {
         return eventService.editEventsUserRequest(userId, eventId);
     }
 
