@@ -7,7 +7,7 @@ import ru.practicum.ewm.mapper.ParticipationRequestMapper;
 import ru.practicum.ewm.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.service.ParticipationRequestService;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,15 +20,15 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     @Transactional
-    public List<ParticipationRequestDto> getUserRequests(Integer userId) {
+    public Collection<ParticipationRequestDto> getUserRequests(Integer userId) {
         return participationRequestRepository.findAllByRequesterId(userId)
                 .stream()
-                .map(ParticipationRequestMapper::toParticipationRequestDto)
-                .collect(Collectors.toList());
+                .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
     }
 
     @Override
     public ParticipationRequestDto addUserRequest(Integer userId, Integer eventId) {
+
         return null;
     }
 

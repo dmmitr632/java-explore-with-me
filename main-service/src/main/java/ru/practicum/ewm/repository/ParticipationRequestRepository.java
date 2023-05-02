@@ -18,5 +18,4 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
 
     Collection<ParticipationRequest> findAllByIdInOrderById(Collection<Integer> requestIds);
 
-
 }

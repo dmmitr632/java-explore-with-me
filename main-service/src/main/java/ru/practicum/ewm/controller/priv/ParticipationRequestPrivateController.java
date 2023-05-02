@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.service.ParticipationRequestService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipationRequestPrivateController {
@@ -15,7 +16,7 @@ public class ParticipationRequestPrivateController {
 
     @GetMapping(path = "/users/{userId}/requests")
     public List<ParticipationRequestDto> getUserRequests(@PathVariable Integer userId) {
-        return participationRequestService.getUserRequests(userId);
+        return new ArrayList<>(participationRequestService.getUserRequests(userId));
     }
 
     @PostMapping(path = "/users/{userId}/requests")
