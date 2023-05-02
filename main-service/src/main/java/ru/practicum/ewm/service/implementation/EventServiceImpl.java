@@ -65,7 +65,7 @@ public class EventServiceImpl implements EventService {
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
             throw new TimeException("Cannot publish event if start in less than 1 hour");
         }
-        if (event.getEventState().equals(EventState.PUBLISHED) || event.getEventState().equals(EventState.CANCELED)) {
+        if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new PublishingException("Already published/canceled");
         }
         if (updateEvent.getTitle() != null) {
@@ -92,9 +92,8 @@ public class EventServiceImpl implements EventService {
 
             event.setParticipantLimit(updateEvent.getParticipantLimit());
         }
-        if (updateEvent.getLon() != null && updateEvent.getLat() != null) {
-            event.setLon(updateEvent.getLon());
-            event.setLat(updateEvent.getLat());
+        if (updateEvent.getLocation() != null) {
+            event.setLocation(updateEvent.getLocation());
         }
         if (updateEvent.getRequestModeration() != null) {
 
@@ -103,12 +102,12 @@ public class EventServiceImpl implements EventService {
         if (updateEvent.getStateAction() != null) {
             if (updateEvent.getStateAction() == StateAction.SEND_TO_REVIEW) {
 
-                event.setEventState(EventState.PENDING);
+                event.setState(EventState.PENDING);
             } else if (updateEvent.getStateAction() == StateAction.CANCEL_REVIEW
                     || updateEvent.getStateAction() == StateAction.REJECT_EVENT) {
-                event.setEventState(EventState.CANCELED);
+                event.setState(EventState.CANCELED);
             } else {
-                event.setEventState(EventState.PUBLISHED);
+                event.setState(EventState.PUBLISHED);
                 event.setPublishedOn(LocalDateTime.now());
             }
         }
@@ -120,7 +119,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
-        return null;
+        return eventRepository.findAllByInitiatorId(userId, PageRequest.of(from/size, size))
+                .stream()
+                .map(EventMapper::toEventShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override

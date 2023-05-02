@@ -2,6 +2,7 @@ package ru.practicum.ewm.dto;
 
 import lombok.Data;
 import ru.practicum.ewm.enumeration.StateAction;
+import ru.practicum.ewm.model.Location;
 
 @Data
 public class UpdateEventAdminRequest {
@@ -14,9 +15,7 @@ public class UpdateEventAdminRequest {
 
     private String eventDate;
 
-    private Float lat;
-
-    private Float lon;
+    private Location location;
 
     private Boolean paid;
 
