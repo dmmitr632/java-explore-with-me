@@ -54,7 +54,7 @@ public class Event {
     private Float lat;
 
     @Column(name = "lon")
-    private  Float lon;
+    private Float lon;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category")
@@ -75,7 +75,7 @@ public class Event {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "events_compilations",
-            joinColumns = { @JoinColumn(name = "event_id")
+            joinColumns = {@JoinColumn(name = "event_id")
             },
             inverseJoinColumns = {@JoinColumn(name = "compilation_id")
             })

@@ -3,7 +3,7 @@ package ru.practicum.ewm.controller.pub;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
-import ru.practicum.ewm.service.pub.CategoryPublicService;
+import ru.practicum.ewm.service.CategoryService;
 
 import java.util.Collection;
 
@@ -11,20 +11,20 @@ import java.util.Collection;
 @ResponseStatus(HttpStatus.OK)
 public class CategoryPublicController {
 
-    private final CategoryPublicService categoryPublicService;
+    private final CategoryService categoryService;
 
-    public CategoryPublicController(CategoryPublicService categoryPublicService) {
-        this.categoryPublicService = categoryPublicService;
+    public CategoryPublicController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @GetMapping(path = "/categories/{catId}")
     public CategoryDto getCategory(@PathVariable Integer catId) {
-        return categoryPublicService.getCategory(catId);
+        return categoryService.getCategory(catId);
     }
 
     @GetMapping(path = "/categories")
     public Collection<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
                                                  @RequestParam(defaultValue = "10") Integer size) {
-        return categoryPublicService.getCategories(from, size);
+        return categoryService.getCategories(from, size);
     }
 }

@@ -6,16 +6,16 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.EventDto;
-import ru.practicum.ewm.service.pub.EventPublicService;
+import ru.practicum.ewm.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public class EventPublicController {
-    private final EventPublicService eventPublicService;
+    private final EventService eventService;
 
-    public EventPublicController(EventPublicService eventPublicService) {
-        this.eventPublicService = eventPublicService;
+    public EventPublicController(EventService eventService) {
+        this.eventService = eventService;
     }
 
     @GetMapping(path = "/events")
@@ -26,12 +26,12 @@ public class EventPublicController {
                                     @RequestParam String rangeEnd,
                                     @RequestParam(defaultValue = "0") Integer from,
                                     @RequestParam(defaultValue = "10") Integer size) {
-        return eventPublicService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        return eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
     @PatchMapping(path = "/events/{id}")
     public List<EventDto> editEvent(@PathVariable Integer id,
                                     @Autowired HttpServletRequest servletRequest) {
-        return eventPublicService.editEvent(id, servletRequest.getRemoteAddr());
+        return eventService.editEvent(id, servletRequest.getRemoteAddr());
     }
 }

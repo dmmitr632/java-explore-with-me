@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
-import ru.practicum.ewm.service.adm.CategoryAdminService;
+import ru.practicum.ewm.service.CategoryService;
 
 import javax.validation.Valid;
 
@@ -12,24 +12,24 @@ import javax.validation.Valid;
 @ResponseStatus(HttpStatus.OK)
 public class CategoryAdminController {
 
-    private final CategoryAdminService categoryAdminService;
+    private final CategoryService categoryService;
 
-    public CategoryAdminController(CategoryAdminService categoryAdminService) {
-        this.categoryAdminService = categoryAdminService;
+    public CategoryAdminController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @PostMapping(path = "/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
-        return categoryAdminService.addCategory(newCategoryDto);
+        return categoryService.addCategory(newCategoryDto);
     }
 
     @PatchMapping(path = "/admin/categories")
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        return categoryAdminService.editCategory(categoryDto);
+        return categoryService.editCategory(categoryDto);
     }
 
     @DeleteMapping(path = "/admin/categories/{catId}")
     public void deleteCategory(@PathVariable Integer catId) {
-        categoryAdminService.deleteCategory(catId);
+        categoryService.deleteCategory(catId);
     }
 }

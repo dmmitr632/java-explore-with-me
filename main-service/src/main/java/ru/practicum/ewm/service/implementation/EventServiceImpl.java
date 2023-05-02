@@ -1,12 +1,11 @@
-package ru.practicum.ewm.service.adm.implementation;
+package ru.practicum.ewm.service.implementation;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.dto.EventFullDto;
-import ru.practicum.ewm.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.enumeration.EventState;
 import ru.practicum.ewm.enumeration.StateAction;
 import ru.practicum.ewm.exception.NotFoundException;
@@ -16,7 +15,7 @@ import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
-import ru.practicum.ewm.service.adm.EventAdminService;
+import ru.practicum.ewm.service.EventService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,11 +24,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EventAdminServiceImpl implements EventAdminService {
+public class EventServiceImpl implements EventService {
+
+
     private EventRepository eventRepository;
     private CategoryRepository categoryRepository;
 
-    public EventAdminServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository) {
+    public EventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -109,5 +110,47 @@ public class EventAdminServiceImpl implements EventAdminService {
             }
         }
         return EventMapper.toEventFullDto(eventRepository.save(event));
+    }
+
+
+    @Override
+    public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
+        return null;
+    }
+
+    @Override
+    public EventDto editEventsUserRequest(Integer userId, Integer eventId) {
+        return null;
+    }
+
+    @Override
+    public EventDto getEventsUserRequest(Integer userId, Integer eventId) {
+        return null;
+    }
+
+    @Override
+    public EventDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public EventDto getEventAddedByUser(Integer userId, Integer eventId) {
+        return null;
+    }
+
+    @Override
+    public EventDto addEvent(NewEventDto newEventDto, Integer userId) {
+        return null;
+    }
+
+    @Override
+    public List<EventDto> editEvent(Integer id, String remoteAddr) {
+        return null;
+    }
+
+    @Override
+    public List<EventDto> getEvents(List<Integer> users, List<String> states, List<Integer> categories,
+                                    String rangeStart, String rangeEnd, Integer from, Integer size) {
+        return null;
     }
 }
