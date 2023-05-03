@@ -27,7 +27,6 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
 
 
-
     public CompilationServiceImpl(CompilationRepository compilationRepository, EventRepository eventRepository,
                                   ParticipationRequestRepository participationRequestRepository) {
         this.compilationRepository = compilationRepository;

@@ -11,18 +11,19 @@ import ru.practicum.ewm.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
-    Collection<Event> findAllByInitiatorId(Integer id, Pageable pageable);
+    Page<Event> findAllByInitiatorId(Integer id, Pageable pageable);
 
-    Collection<Event> findAllByCategoryId(Integer id);
+    List<Event> findAllByCategoryId(Integer id);
 
-    Collection<Event> findAllByIdAndInitiator(Integer id, User user);
+    List<Event> findAllByIdAndInitiator(Integer id, User user);
 
-    Collection<Event> findAllByIdIn(Collection<Integer> eventsId);
+    List<Event> findAllByIdIn(Collection<Integer> eventsId);
 
-    Collection<Event> findAllByInitiatorOrderByIdAsc(User user, Pageable pageable);
+    Page<Event> findAllByInitiatorOrderByIdAsc(User user, Pageable pageable);
 
 
     //    @Query("select e from Event as e " +
@@ -33,9 +34,11 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 //            "AND :states IS null OR e.state in :states ")
     @Query("SELECT e FROM Event AS e " +
             "WHERE ((:users) IS NULL OR e.initiator.id IN :users) " +
-            "AND ((:categories) IS NULL OR e.category.id IN :categories)" +
-            "AND ((:states) IS NULL OR e.state IN :states) ")
-    Page<Event> getSelectedEvents(Collection<Integer> usersIds, Collection<EventState> states,
+            "AND ((:categories) IS NULL OR e.category.id IN :categories) " +
+            "AND ((:states) IS NULL OR e.state IN :states) " +
+            "AND ((:start) IS null OR e.eventDate >= :start) " +
+            "AND ((:end) IS null OR e.eventDate <= :end) ")
+    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
                                   Collection<Integer> categories,
                                   LocalDateTime start, LocalDateTime end, Pageable pageable);
 
@@ -51,7 +54,9 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "OR lower(e.description) LIKE %:text% " +
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND (:paid IS null OR e.paid = :paid) " +
-            "AND e.state IN :eventState")
+            "AND ((e.state) IN :eventState) " +
+            "AND ((:start) IS null OR e.eventDate >= :start) " +
+            "AND ((:end) IS null OR e.eventDate <= :end) ")
     Page<Event> getEvents(String text, Collection<Integer> categories, Boolean paid, LocalDateTime start,
                           LocalDateTime end, EventState eventState, Pageable pageable);
 }
