@@ -72,6 +72,7 @@ public class CompilationServiceImpl implements CompilationService {
         return CompilationMapper.toCompilationDto(compilationRepository.findById(compId).orElseThrow(()
                 -> new NotFoundException("Компиляции не существут")));
     }
+
     @Override
     public Collection<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
         Page<Compilation> compilations;
