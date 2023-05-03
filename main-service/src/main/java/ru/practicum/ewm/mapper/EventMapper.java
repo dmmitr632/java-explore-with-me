@@ -15,7 +15,7 @@ public class EventMapper {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public static EventFullDto toEventDto(Event event) {
+    public static EventFullDto toEventFullDto(Event event) {
         return EventFullDto
                 .builder()
                 .id(event.getId())
