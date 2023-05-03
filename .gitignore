@@ -34,5 +34,6 @@ build/
 
 /sqlscr/
 sqlscr/
+github_logs/
 commands_history.txt
 
