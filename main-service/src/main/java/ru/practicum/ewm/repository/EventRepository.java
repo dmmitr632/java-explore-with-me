@@ -25,15 +25,22 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     Page<Event> findAllByInitiatorOrderByIdAsc(User user, Pageable pageable);
 
-    @Query("SELECT e FROM Event AS e " +
-            "WHERE ((:users) IS NULL OR e.initiator.id IN :users) " +
-            "AND ((:categories) IS NULL OR e.category.id IN :categories) " +
-            "AND ((:states) IS NULL OR e.state IN :states) " +
-            "AND ((:start) IS null OR e.eventDate >= :start) " +
-            "AND ((:end) IS null OR e.eventDate <= :end) ")
-    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
-                                  Collection<Integer> categories,
-                                  LocalDateTime start, LocalDateTime end, Pageable pageable);
+//    @Query("SELECT e FROM Event AS e " +
+//            "WHERE ((:users) IS NULL OR e.initiator.id IN :users) " +
+//            "AND ((:categories) IS NULL OR e.category.id IN :categories) " +
+//            "AND ((:states) IS NULL OR e.state IN :states) " +
+//            "AND ((:start) IS null OR e.eventDate >= :start) " +
+//            "AND ((:end) IS null OR e.eventDate <= :end) ")
+//    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
+//                                  Collection<Integer> categories,
+//                                  LocalDateTime start, LocalDateTime end, Pageable pageable);
+//
+
+    Page<Event> findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
+            Collection<Integer> users, Collection<EventState> states,
+            Collection<Integer> categories,
+            LocalDateTime start, LocalDateTime end, Pageable pageable);
+
 
     @Query("SELECT e FROM Event AS e " +
             "WHERE lower(e.annotation) like %:text% " +

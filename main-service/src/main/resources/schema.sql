@@ -42,7 +42,7 @@ CREATE TABLE events
     location_id        INT REFERENCES locations (id),
     paid               BOOLEAN,
     participant_limit  INT,
-    published_in       TIMESTAMP WITHOUT TIME ZONE,
+    published_on       TIMESTAMP WITHOUT TIME ZONE,
     request_moderation BOOLEAN,
     state              VARCHAR(64),
     title              VARCHAR(256),

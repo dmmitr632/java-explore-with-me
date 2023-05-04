@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@RestController
 public class UserAdminController {
     private final UserService userService;
 
@@ -16,7 +17,7 @@ public class UserAdminController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/admin/users")
     public List<UserDto> getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {

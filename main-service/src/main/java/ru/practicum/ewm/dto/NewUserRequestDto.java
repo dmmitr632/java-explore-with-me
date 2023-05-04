@@ -1,8 +1,6 @@
 package ru.practicum.ewm.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +9,8 @@ import javax.validation.constraints.NotNull;
 @Data
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class NewUserRequestDto {
     @NotEmpty
     @NotNull

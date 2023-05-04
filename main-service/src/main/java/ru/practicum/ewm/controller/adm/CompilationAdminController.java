@@ -8,6 +8,7 @@ import ru.practicum.ewm.service.CompilationService;
 
 import javax.validation.Valid;
 
+@RestController
 public class CompilationAdminController {
     private final CompilationService compilationService;
 

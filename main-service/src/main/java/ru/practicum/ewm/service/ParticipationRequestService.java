@@ -1,8 +1,8 @@
 package ru.practicum.ewm.service;
 
-import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.ewm.dto.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
-import ru.practicum.ewm.dto.UpdateEventUserRequest;
 
 import java.util.Collection;
 
@@ -19,9 +19,6 @@ public interface ParticipationRequestService {
 
     Collection<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId);
 
-    EventFullDto confirmUserRequestForEvent(Integer userId, Integer eventId,
-                                            UpdateEventUserRequest updateEventUserRequest);
-
-    EventFullDto rejectUserRequestForEvent(Integer userId, Integer eventId,
-                                           UpdateEventUserRequest updateEventUserRequest);
+    EventRequestStatusUpdateResult confirmOrRejectUserRequestForEvent(Integer userId, Integer eventId,
+                                                                      EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest);
 }

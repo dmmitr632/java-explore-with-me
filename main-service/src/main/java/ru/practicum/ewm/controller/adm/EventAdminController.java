@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@RestController
 public class EventAdminController {
     private final EventService eventService;
 
@@ -20,11 +21,11 @@ public class EventAdminController {
 
     @GetMapping(path = "/admin/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getSelectedEvents(@RequestParam List<Integer> users,
-                                                @RequestParam List<EventState> states,
-                                                @RequestParam List<Integer> categories,
-                                                @RequestParam String rangeStart,
-                                                @RequestParam String rangeEnd,
+    public List<EventFullDto> getSelectedEvents(@RequestParam(required = false) List<Integer> users,
+                                                @RequestParam(required = false) List<EventState> states,
+                                                @RequestParam(required = false) List<Integer> categories,
+                                                @RequestParam(required = false) String rangeStart,
+                                                @RequestParam(required = false) String rangeEnd,
                                                 @RequestParam(defaultValue = "0") Integer from,
                                                 @RequestParam(defaultValue = "10") Integer size) {
         return new ArrayList<>(eventService.getSelectedEvents(users, states, categories, rangeStart, rangeEnd,

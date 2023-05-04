@@ -23,5 +23,6 @@ public interface EventService {
 
     EventFullDto getEvent(Integer eventId);
 
-    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean available, String sort, Integer from, Integer size);
+    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart,
+                                 String rangeEnd, Boolean available, String sort, Integer from, Integer size);
 }

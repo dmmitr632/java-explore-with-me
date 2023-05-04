@@ -7,6 +7,7 @@ import ru.practicum.ewm.service.ParticipationRequestService;
 import java.util.ArrayList;
 import java.util.List;
 
+@RestController
 public class ParticipationRequestPrivateController {
     private final ParticipationRequestService participationRequestService;
 
@@ -20,7 +21,8 @@ public class ParticipationRequestPrivateController {
     }
 
     @PostMapping(path = "/users/{userId}/requests")
-    public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId, @RequestParam Integer eventId) {
+    public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId,
+                                                               @RequestParam Integer eventId) {
         return participationRequestService.addUserParticipationRequest(userId, eventId);
     }
 

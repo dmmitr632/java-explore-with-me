@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@RestController
 public class EventPrivateController {
     private final EventService eventService;
     private final ParticipationRequestService participationRequestService;
@@ -52,15 +53,11 @@ public class EventPrivateController {
     }
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventFullDto confirmUserRequestForEvent(@PathVariable Integer userId, @PathVariable Integer eventId,
-                                                   @RequestBody UpdateEventUserRequest updateEventUserRequest) {
-        return participationRequestService.confirmUserRequestForEvent(userId, eventId, updateEventUserRequest);
-    }
-
-    @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventFullDto rejectUserRequestForEvent(@PathVariable Integer userId, @PathVariable Integer eventId,
-                                                  @RequestBody UpdateEventUserRequest updateEventUserRequest) {
-        return participationRequestService.rejectUserRequestForEvent(userId, eventId, updateEventUserRequest);
+    public EventRequestStatusUpdateResult confirmOrRejectUserRequestForEvent(@PathVariable Integer userId,
+                                                                             @PathVariable Integer eventId,
+                                                                             @RequestBody @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+        return participationRequestService.confirmOrRejectUserRequestForEvent(userId, eventId,
+                eventRequestStatusUpdateRequest);
     }
 
 }

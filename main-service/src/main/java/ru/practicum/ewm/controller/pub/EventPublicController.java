@@ -3,6 +3,7 @@ package ru.practicum.ewm.controller.pub;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.service.EventService;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+@RestController
 public class EventPublicController {
     private final EventService eventService;
 

@@ -67,8 +67,10 @@ public class EventServiceImpl implements EventService {
         if (end != null) {
             endTime = LocalDateTime.parse(end, dateTimeFormatter);
         }
-        Page<Event> events = eventRepository.getSelectedEvents(usersIds, states, categories, startTime,
-                endTime, pageable);
+        Page<Event> events =
+                eventRepository.findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
+                        usersIds, states, categories,
+                        startTime, endTime, pageable);
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
@@ -260,7 +262,7 @@ public class EventServiceImpl implements EventService {
             end = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
         }
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
-                start,end, pageable);
+                start, end, pageable);
 
         List<EventFullDto> eventFullDtoList =
                 events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
