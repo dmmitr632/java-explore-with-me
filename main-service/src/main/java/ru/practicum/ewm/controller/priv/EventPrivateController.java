@@ -1,15 +1,14 @@
 package ru.practicum.ewm.controller.priv;
 
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.EventFullDto;
-import ru.practicum.ewm.dto.EventShortDto;
-import ru.practicum.ewm.dto.NewEventDto;
-import ru.practicum.ewm.dto.UpdateEventUserRequest;
+import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.service.ParticipationRequestService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class EventPrivateController {
     private final EventService eventService;
@@ -47,8 +46,9 @@ public class EventPrivateController {
 
     // ParticipationRequestService
     @GetMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventFullDto getUserRequestsForEvent(@PathVariable Integer userId, @PathVariable Integer eventId) {
-        return participationRequestService.getUserRequestsForEvent(userId, eventId);
+    public List<ParticipationRequestDto> getUserRequestsForEvent(@PathVariable Integer userId,
+                                                                 @PathVariable Integer eventId) {
+        return new ArrayList<>(participationRequestService.getUserRequestsForEvent(userId, eventId));
     }
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")

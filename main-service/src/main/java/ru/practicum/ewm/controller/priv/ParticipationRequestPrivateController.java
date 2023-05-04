@@ -15,19 +15,19 @@ public class ParticipationRequestPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/requests")
-    public List<ParticipationRequestDto> getUserRequests(@PathVariable Integer userId) {
-        return new ArrayList<>(participationRequestService.getUserRequests(userId));
+    public List<ParticipationRequestDto> getUserParticipationRequests(@PathVariable Integer userId) {
+        return new ArrayList<>(participationRequestService.getUserParticipationRequests(userId));
     }
 
     @PostMapping(path = "/users/{userId}/requests")
-    public ParticipationRequestDto addUserRequest(@PathVariable Integer userId, @RequestParam Integer eventId) {
-        return participationRequestService.addUserRequest(userId, eventId);
+    public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId, @RequestParam Integer eventId) {
+        return participationRequestService.addUserParticipationRequest(userId, eventId);
     }
 
 
     @PatchMapping(path = "/users/{userId}/requests/{requestId}/cancel")
-    public ParticipationRequestDto cancelUserRequest(@PathVariable Integer userId,
-                                                     @PathVariable Integer requestId) {
-        return participationRequestService.cancelUserRequest(userId, requestId);
+    public ParticipationRequestDto cancelUserParticipationRequest(@PathVariable Integer userId,
+                                                                  @PathVariable Integer requestId) {
+        return participationRequestService.cancelUserParticipationRequest(userId, requestId);
     }
 }

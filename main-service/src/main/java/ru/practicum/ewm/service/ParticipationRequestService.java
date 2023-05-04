@@ -9,15 +9,15 @@ import java.util.Collection;
 public interface ParticipationRequestService {
 
     // Used by ParticipationRequestPrivateController
-    Collection<ParticipationRequestDto> getUserRequests(Integer userId);
+    Collection<ParticipationRequestDto> getUserParticipationRequests(Integer userId);
 
-    ParticipationRequestDto addUserRequest(Integer userId, Integer eventId);
+    ParticipationRequestDto addUserParticipationRequest(Integer userId, Integer eventId);
 
-    ParticipationRequestDto cancelUserRequest(Integer userId, Integer requestId);
+    ParticipationRequestDto cancelUserParticipationRequest(Integer userId, Integer requestId);
 
     // Used by EventPrivateController
 
-    EventFullDto getUserRequestsForEvent(Integer userId, Integer eventId);
+    Collection<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId);
 
     EventFullDto confirmUserRequestForEvent(Integer userId, Integer eventId,
                                             UpdateEventUserRequest updateEventUserRequest);
