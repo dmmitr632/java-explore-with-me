@@ -21,16 +21,7 @@ public interface EventService {
 
     EventFullDto addEvent(NewEventDto newEventDto, Integer userId);
 
-    List<EventFullDto> editEvent(Integer id, String remoteAddr);
+    EventFullDto getEvent(Integer eventId);
 
-    List<EventFullDto> getEvents(List<Integer> users,
-                                 List<String> states,
-                                 List<Integer> categories,
-                                 String rangeStart,
-                                 String rangeEnd,
-                                 Integer from,
-                                 Integer size);
-
-
-
+    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart, String rangeEnd, Boolean available, String sort, Integer from, Integer size);
 }

@@ -24,6 +24,7 @@ import ru.practicum.ewm.service.EventService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -229,13 +230,62 @@ public class EventServiceImpl implements EventService {
     // Public services
 
     @Override
-    public List<EventFullDto> editEvent(Integer id, String remoteAddr) {
-        return null;
+    public EventFullDto getEvent(Integer eventId) {
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
+        if (!event.getState().equals(EventState.PUBLISHED)) {
+            throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
+        }
+        event.setViews(event.getViews() + 1);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setConfirmedRequests(
+                participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
+                        RequestStatus.CONFIRMED));
+        return eventFullDto;
     }
 
     @Override
-    public List<EventFullDto> getEvents(List<Integer> users, List<String> states, List<Integer> categories,
-                                        String rangeStart, String rangeEnd, Integer from, Integer size) {
-        return null;
+    public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart,
+                                        String rangeEnd, Boolean available, String sort, Integer from, Integer size) {
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Pageable pageable = PageRequest.of(from, size);
+
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+
+        if (rangeStart != null) {
+            start = LocalDateTime.parse(rangeStart, dateTimeFormatter);
+        }
+        if (rangeEnd != null) {
+            end = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
+        }
+        List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
+                start,end, pageable);
+
+        List<EventFullDto> eventFullDtoList =
+                events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+
+
+        eventFullDtoList.forEach(e -> e.setConfirmedRequests(
+                participationRequestRepository.countParticipationByEventIdAndStatus(
+                        e.getId(), RequestStatus.CONFIRMED))
+        );
+
+
+        if (sort != null) {
+            if (sort.equals("EVENT_DATE")) {
+                events.sort((Comparator.comparing(Event::getEventDate)));
+            } else if (sort.equals("VIEWS")) {
+                events.sort(Comparator.comparing(Event::getViews));
+            } else {
+                throw new BadRequestException("Неверный тип сортировки");
+            }
+        }
+
+        eventFullDtoList.forEach(e -> e.setViews(e.getViews() + 1));
+        events.forEach(e -> e.setViews(e.getViews() + 1));
+
+        return eventFullDtoList;
     }
 }
+
