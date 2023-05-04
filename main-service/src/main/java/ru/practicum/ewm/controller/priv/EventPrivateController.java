@@ -6,15 +6,18 @@ import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.dto.NewEventDto;
 import ru.practicum.ewm.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.service.EventService;
+import ru.practicum.ewm.service.ParticipationRequestService;
 
 import javax.validation.Valid;
 import java.util.Collection;
 
 public class EventPrivateController {
     private final EventService eventService;
+    private final ParticipationRequestService participationRequestService;
 
-    public EventPrivateController(EventService eventService) {
+    public EventPrivateController(EventService eventService, ParticipationRequestService participationRequestService) {
         this.eventService = eventService;
+        this.participationRequestService = participationRequestService;
     }
 
     @GetMapping(path = "/users/{userId}/events")
@@ -31,28 +34,33 @@ public class EventPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/events/{eventId}")
-    public EventFullDto getEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId) {
-        return eventService.getEventAddedByUser(userId, eventId);
+    public EventFullDto getSingleEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId) {
+        return eventService.getSingleEventAddedByUser(userId, eventId);
     }
 
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}")
-    public EventFullDto editEventAddedByUser(@RequestBody @Valid UpdateEventUserRequest request,
-                                             @PathVariable Integer userId, @PathVariable String eventId) {
-        return eventService.editEventAddedByUser(request, userId);
+    public EventFullDto editEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId,
+                                             @RequestBody @Valid UpdateEventUserRequest updateEventUserRequest) {
+        return eventService.editEventAddedByUser(userId, eventId, updateEventUserRequest);
     }
 
-
+    // ParticipationRequestService
     @GetMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventFullDto getEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId) {
-        return eventService.getEventsUserRequest(userId, eventId);
+    public EventFullDto getUserRequestsForEvent(@PathVariable Integer userId, @PathVariable Integer eventId) {
+        return participationRequestService.getUserRequestsForEvent(userId, eventId);
     }
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
-    public EventFullDto editEventsUserRequest(@PathVariable Integer userId, @PathVariable Integer eventId,
-                                              @RequestBody UpdateEventUserRequest updateEventUserRequest) {
-        return eventService.editEventsUserRequest(userId, eventId, updateEventUserRequest);
+    public EventFullDto confirmUserRequestForEvent(@PathVariable Integer userId, @PathVariable Integer eventId,
+                                                   @RequestBody UpdateEventUserRequest updateEventUserRequest) {
+        return participationRequestService.confirmUserRequestForEvent(userId, eventId, updateEventUserRequest);
     }
 
+    @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
+    public EventFullDto rejectUserRequestForEvent(@PathVariable Integer userId, @PathVariable Integer eventId,
+                                                  @RequestBody UpdateEventUserRequest updateEventUserRequest) {
+        return participationRequestService.rejectUserRequestForEvent(userId, eventId, updateEventUserRequest);
+    }
 
 }

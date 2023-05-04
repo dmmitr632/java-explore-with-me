@@ -14,11 +14,11 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.PublishingException;
 import ru.practicum.ewm.exception.TimeException;
 import ru.practicum.ewm.mapper.EventMapper;
+import ru.practicum.ewm.mapper.LocationMapper;
 import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.repository.CategoryRepository;
-import ru.practicum.ewm.repository.EventRepository;
-import ru.practicum.ewm.repository.ParticipationRequestRepository;
-import ru.practicum.ewm.repository.UserRepository;
+import ru.practicum.ewm.model.Location;
+import ru.practicum.ewm.model.User;
+import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 
 import java.time.LocalDateTime;
@@ -35,15 +35,19 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    private final ParticipationRequestRepository participationRequestRepositoryy;
+    private final LocationRepository locationRepository;
+
+    private final ParticipationRequestRepository participationRequestRepository;
 
     public EventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository,
                             UserRepository userRepository,
-                            ParticipationRequestRepository participationRequestRepositoryy) {
+                            LocationRepository locationRepository,
+                            ParticipationRequestRepository participationRequestRepository) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
-        this.participationRequestRepositoryy = participationRequestRepositoryy;
+        this.locationRepository = locationRepository;
+        this.participationRequestRepository = participationRequestRepository;
     }
 
 
@@ -139,8 +143,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto editEventsUserRequest(Integer userId, Integer eventId,
-                                              UpdateEventUserRequest updateEventUserRequest) {
+    public EventFullDto getSingleEventAddedByUser(Integer userId, Integer eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Такого события не существует"));
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new BadRequestException("Пользователь не является инициатором события");
+        }
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        eventFullDto.setConfirmedRequests(participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
+                RequestStatus.CONFIRMED));
+        return eventFullDto;
+    }
+
+
+    @Override
+    public EventFullDto editEventAddedByUser(Integer userId,
+                                             Integer eventId, UpdateEventUserRequest updateEventUserRequest) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
@@ -183,31 +201,28 @@ public class EventServiceImpl implements EventService {
             event.setState(EventState.PENDING);
         }
         EventFullDto eventFullDto = EventMapper.toEventFullDto(eventRepository.save(event));
-        eventFullDto.setConfirmedRequests(participationRequestRepositoryy
+        eventFullDto.setConfirmedRequests(participationRequestRepository
                 .countParticipationByEventIdAndStatus(eventFullDto.getId(),
                         RequestStatus.CONFIRMED));
 
         return eventFullDto;
     }
 
-    @Override
-    public EventFullDto getEventsUserRequest(Integer userId, Integer eventId) {
-        return null;
-    }
-
-    @Override
-    public EventFullDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId) {
-        return null;
-    }
-
-    @Override
-    public EventFullDto getEventAddedByUser(Integer userId, Integer eventId) {
-        return null;
-    }
 
     @Override
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
-        return null;
+        Event event = EventMapper.toEventFromNewEventDto(newEventDto);
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
+                "существует"));
+        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new BadRequestException("Событие должно произойти как минимум через 2 часа");
+        }
+        Location location = locationRepository.save(LocationMapper.toLocation(newEventDto.getLocation()));
+        event.setCategory(categoryRepository.findById(newEventDto.getCategory())
+                .orElseThrow(() -> new NotFoundException("Категории не существует")));
+        event.setInitiator(user);
+        event.setLocation(location);
+        return EventMapper.toEventFullDto(eventRepository.save(event));
     }
 
 

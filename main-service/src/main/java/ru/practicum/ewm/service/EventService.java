@@ -15,13 +15,9 @@ public interface EventService {
 
     Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size);
 
-    EventFullDto editEventsUserRequest(Integer userId, Integer eventId, UpdateEventUserRequest updateEventUserRequest);
+    EventFullDto editEventAddedByUser(Integer userId, Integer eventId, UpdateEventUserRequest updateEventUserRequest);
 
-    EventFullDto getEventsUserRequest(Integer userId, Integer eventId);
-
-    EventFullDto editEventAddedByUser(UpdateEventUserRequest request, Integer userId);
-
-    EventFullDto getEventAddedByUser(Integer userId, Integer eventId);
+    EventFullDto getSingleEventAddedByUser(Integer userId, Integer eventId);
 
     EventFullDto addEvent(NewEventDto newEventDto, Integer userId);
 
@@ -34,6 +30,7 @@ public interface EventService {
                                  String rangeEnd,
                                  Integer from,
                                  Integer size);
+
 
 
 }
