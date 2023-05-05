@@ -178,6 +178,11 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Такого события не существует"));
+
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl editEventAddedByUser, event.getEventDate {}", event.getEventDate());
+        log.info("---------------------------------------------------------------------------");
+
         if (!event.getInitiator().getId().equals(userId)) {
             throw new BadRequestException("Изменить событие может только его создатель");
         }
@@ -195,11 +200,14 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateEventUserRequest.getDescription());
         }
         if (updateEventUserRequest.getEventDate() != null) {
-            LocalDateTime date = updateEventUserRequest.getEventDate();
-            if (date.isBefore(LocalDateTime.now().plusHours(2))) {
+            LocalDateTime localDateTime = updateEventUserRequest.getEventDate();
+            log.info("---------------------------------------------------------------------------");
+            log.info("EventServiceImpl editEventAddedByUser, dateTime {}", localDateTime);
+            log.info("---------------------------------------------------------------------------");
+            if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new TimeException("Событие должно произойти как минимум через 2 часа");
             }
-            event.setEventDate(date);
+            event.setEventDate(localDateTime);
         }
         if (updateEventUserRequest.getPaid() != null) {
             event.setPaid(updateEventUserRequest.getPaid());

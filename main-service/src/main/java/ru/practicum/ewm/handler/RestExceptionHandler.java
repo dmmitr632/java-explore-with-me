@@ -36,9 +36,9 @@ public class RestExceptionHandler {
 //                .build();
 //    }
 
-    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 403 error
+    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 400 error
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(final BadRequestException e, WebRequest request) {
+    public ApiError handleValidationException(final RuntimeException e, WebRequest request) {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())

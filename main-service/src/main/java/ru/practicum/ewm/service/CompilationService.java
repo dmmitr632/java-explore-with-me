@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface CompilationService {
 
-    CompilationDto addCompilation(@Valid NewCompilationDto compId);
+    CompilationDto addCompilation(NewCompilationDto newCompilationDto);
 
     void deleteCompilation(Integer compId);
 

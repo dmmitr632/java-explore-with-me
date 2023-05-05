@@ -1,9 +1,11 @@
 package ru.practicum.ewm.service.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
+import ru.practicum.ewm.exception.FieldValidationException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CategoryMapper;
 import ru.practicum.ewm.model.Category;
@@ -14,6 +16,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
@@ -26,7 +29,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
-        return CategoryMapper.toCategoryDto(categoryRepository.save(CategoryMapper.toCategory(newCategoryDto)));
+        if (newCategoryDto.getName() == null) {
+            throw new FieldValidationException("Отстутствует необходимое поле name, у newCategoryDto " +
+                    newCategoryDto);
+        }
+        Category category = CategoryMapper.toCategory(newCategoryDto);
+        categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class ParticipationRequestMapper {
         return ParticipationRequestDto
                 .builder()
                 .id(participationRequest.getId())
-                .createdOn(participationRequest.getCreatedOn())
+                .created(participationRequest.getCreated())
                 .event(participationRequest.getEvent().getId())
                 .requester(participationRequest.getRequester().getId())
                 .status(participationRequest.getStatus())
@@ -24,7 +24,7 @@ public class ParticipationRequestMapper {
         return ParticipationRequest
                 .builder()
                 .id(participationRequestDto.getId())
-                .createdOn(participationRequestDto.getCreatedOn())
+                .created(participationRequestDto.getCreated())
                 .status(participationRequestDto.getStatus())
                 .build();
     }

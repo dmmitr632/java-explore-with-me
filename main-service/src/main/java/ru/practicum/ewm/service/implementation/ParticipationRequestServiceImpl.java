@@ -65,7 +65,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                         "пользователя не существует")))
                 .event(eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Такого события не " +
                         "существует")))
-                .createdOn(LocalDateTime.now())
+                .created(LocalDateTime.now())
                 .status(RequestStatus.CONFIRMED)
                 .build();
 

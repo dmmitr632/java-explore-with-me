@@ -22,23 +22,23 @@ public class ParticipationRequest {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "requester_id")
     private User requester;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(name = "created_on")
-    private LocalDateTime createdOn;
+    @Column
+    private LocalDateTime created;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    public ParticipationRequest(User requester, Event event, LocalDateTime createdOn) {
+    public ParticipationRequest(User requester, Event event, LocalDateTime created) {
         this.requester = requester;
         this.event = event;
-        this.createdOn = createdOn;
+        this.created = created;
     }
 
     @Override

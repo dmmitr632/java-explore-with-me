@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
 import ru.practicum.ewm.dto.UpdateCompilationRequest;
+import ru.practicum.ewm.exception.FieldValidationException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
@@ -38,6 +39,10 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
+        if (newCompilationDto.getTitle() == null) {
+            throw new FieldValidationException("Некоррректный newCompilationDto, отсутствует обязательное поле title " +
+                    newCompilationDto);
+        }
         Compilation compilation = CompilationMapper.toCompilation(newCompilationDto);
         compilation.setEvents(eventRepository.findAllById(newCompilationDto.getEvents()));
         log.info("---------------------------------------------------------------------------");

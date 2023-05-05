@@ -17,7 +17,7 @@ public class ParticipationRequestDto {
     private Integer id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
-    private LocalDateTime createdOn;
+    private LocalDateTime created;
 
     private Integer event;
 
