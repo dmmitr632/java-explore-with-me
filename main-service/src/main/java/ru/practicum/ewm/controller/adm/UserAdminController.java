@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller.adm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.NewUserRequestDto;
 import ru.practicum.ewm.dto.UserDto;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class UserAdminController {
     private final UserService userService;
 
@@ -21,16 +23,19 @@ public class UserAdminController {
     public List<UserDto> getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Получение списка пользователей администратором, ids {}, from {}, size {}", ids, from, size);
         return new ArrayList<>(userService.getUsers(ids, from, size));
     }
 
     @PostMapping("/admin/users")
     public UserDto addUser(@RequestBody @Valid NewUserRequestDto newUserRequestDto) {
+        log.info("Добавление пользователя администратором, newUserRequestDto {}", newUserRequestDto);
         return userService.addUser(newUserRequestDto);
     }
 
     @DeleteMapping("/admin/users{userId}")
     public void deleteUser(@PathVariable Integer userId) {
+        log.info("Удаление пользователя администратором, userId {}", userId);
         userService.deleteUser(userId);
     }
 

@@ -1,10 +1,12 @@
 package ru.practicum.ewm.dto;
 
 import lombok.Data;
+import lombok.ToString;
 import ru.practicum.ewm.enumeration.StateAction;
 import ru.practicum.ewm.model.Location;
 
 @Data
+@ToString
 public class UpdateEventAdminRequest {
 
     private String annotation;

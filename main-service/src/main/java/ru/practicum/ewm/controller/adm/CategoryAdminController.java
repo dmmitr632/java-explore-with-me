@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller.adm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @ResponseStatus(HttpStatus.OK)
+@Slf4j
 public class CategoryAdminController {
 
     private final CategoryService categoryService;
@@ -20,16 +22,19 @@ public class CategoryAdminController {
 
     @PostMapping(path = "/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
+        log.info("Добавление администраторомкатегории {}", newCategoryDto);
         return categoryService.addCategory(newCategoryDto);
     }
 
     @PatchMapping(path = "/admin/categories")
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        log.info("Изменение администратором категории {}", categoryDto);
         return categoryService.editCategory(categoryDto);
     }
 
     @DeleteMapping(path = "/admin/categories/{catId}")
     public void deleteCategory(@PathVariable Integer catId) {
+        log.info("Удаление администратором категории в id {}", catId);
         categoryService.deleteCategory(catId);
     }
 }
