@@ -1,5 +1,6 @@
 package ru.practicum.ewm.service.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class EventServiceImpl implements EventService {
 
 
@@ -57,12 +59,24 @@ public class EventServiceImpl implements EventService {
                                                       List<Integer> categories,
                                                       LocalDateTime start, LocalDateTime end, Integer from,
                                                       Integer size) {
+
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl getSelectedEvents: usersIds {}, states {}, categories {}, start {}, end {}, from " +
+                "{}, size {}", usersIds, states, categories, start, end, from, size);
+        log.info("---------------------------------------------------------------------------");
+
         Pageable pageable = PageRequest.of(from, size);
 
+//        Page<Event> events =
+//                eventRepository.getSelectedEvents(
+//                        usersIds, states, categories,
+//                        start, end, pageable);
+
         Page<Event> events =
-                eventRepository.getSelectedEvents(
+                eventRepository.findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
                         usersIds, states, categories,
                         start, end, pageable);
+
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
@@ -72,7 +86,11 @@ public class EventServiceImpl implements EventService {
     public EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEvent, Integer eventId) {
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
-        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+        event.setPublishedOn(LocalDateTime.now());
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl approveOrRejectEvent, event {}", event);
+        log.info("---------------------------------------------------------------------------");
+        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
             throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
         }
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
@@ -123,6 +141,7 @@ public class EventServiceImpl implements EventService {
         }
         return EventMapper.toEventFullDto(eventRepository.save(event));
     }
+
 
     // Private Services
 
@@ -205,6 +224,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl addEvent, добавление события, newEventDto {}, userId {}", newEventDto, userId);
+        log.info("---------------------------------------------------------------------------");
         Event event = EventMapper.toEventFromNewEventDto(newEventDto);
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
@@ -216,7 +238,11 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Категории не существует")));
         event.setInitiator(user);
         event.setLocation(location);
-        return EventMapper.toEventFullDto(eventRepository.save(event));
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl addEvent, cохранение event {}", event);
+        log.info("---------------------------------------------------------------------------");
+        eventRepository.save(event);
+        return EventMapper.toEventFullDto(event);
     }
 
 

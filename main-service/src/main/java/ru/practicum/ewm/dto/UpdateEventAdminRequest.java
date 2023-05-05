@@ -1,8 +1,9 @@
 package ru.practicum.ewm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import ru.practicum.ewm.enumeration.StateAction;
 import ru.practicum.ewm.model.Location;
 
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 
 @Data
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateEventAdminRequest {
 
     private String annotation;
@@ -19,7 +21,6 @@ public class UpdateEventAdminRequest {
     private Integer category;
 
     private String description;
-
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
     private LocalDateTime eventDate;

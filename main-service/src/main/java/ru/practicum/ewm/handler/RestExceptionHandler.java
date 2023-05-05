@@ -14,7 +14,7 @@ import java.util.List;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(NotFoundException.class) // 404 error
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final NotFoundException e, WebRequest request) {
         return ApiError.builder()
@@ -25,7 +25,7 @@ public class RestExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class})
+    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 403 error
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ApiError handleValidationException(final BadRequestException e, WebRequest request) {
         return ApiError.builder()
@@ -37,7 +37,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500 error
     public ApiError handleInternalServerErrorException(final HttpServerErrorException.InternalServerError e,
                                                        WebRequest request) {
         return ApiError.builder()
@@ -48,9 +48,9 @@ public class RestExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) // 400 error
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleThrowableExceptions(final Throwable e) {
+    public ApiError handleThrowableExceptions(final BadRequestException e) {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
@@ -58,4 +58,16 @@ public class RestExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .build();
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT) // 409 error
+    public ApiError handleConflictExceptions(final ConflictException e) {
+        return ApiError.builder()
+                .errors(List.of(e.getClass().getName()))
+                .message(e.getLocalizedMessage())
+                .reason("Conflict")
+                .status(HttpStatus.CONFLICT)
+                .build();
+    }
+
 }

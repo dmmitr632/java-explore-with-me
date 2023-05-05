@@ -27,9 +27,9 @@ public class EventAdminController {
 
     @GetMapping(path = "/admin/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getSelectedEvents(@RequestParam(required = false) List<Integer> users,
-                                                @RequestParam(required = false) List<EventState> states,
-                                                @RequestParam(required = false) List<Integer> categories,
+    public List<EventFullDto> getSelectedEvents(@RequestParam(defaultValue = "") List<Integer> users,
+                                                @RequestParam(defaultValue = "") List<EventState> states,
+                                                @RequestParam(defaultValue = "") List<Integer> categories,
                                                 @RequestParam(required = false) @DateTimeFormat(pattern =
                                                         DATE_TIME_FORMATTER) LocalDateTime rangeStart,
                                                 @RequestParam(required = false)@DateTimeFormat(pattern =

@@ -25,22 +25,23 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     Page<Event> findAllByInitiatorOrderByIdAsc(User user, Pageable pageable);
 
-    @Query("SELECT e FROM Event AS e " +
-            "WHERE ((:users) IS NULL OR e.initiator.id IN :users) " +
-            "AND ((:categories) IS NULL OR e.category.id IN :categories) " +
-            "AND ((:states) IS NULL OR e.state IN :states) " +
-            "AND ((:start) IS null OR e.eventDate >= :start) " +
-            "AND ((:end) IS null OR e.eventDate <= :end) ")
-    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
-                                  Collection<Integer> categories,
-                                  LocalDateTime start, LocalDateTime end, Pageable pageable);
+//    @Query("SELECT e FROM Event AS e " +
+//            "WHERE ((:users) IS NULL OR e.initiator.id IN :users) " +
+//            "AND ((:categories) IS NULL OR e.category.id IN :categories) " +
+//            "AND ((:states) IS NULL OR e.state IN :states) " +
+//            "AND ((:start) IS null OR e.eventDate >= :start) " +
+//            "AND ((:end) IS null OR e.eventDate <= :end) ")
+//    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
+//                                  Collection<Integer> categories,
+//                                  LocalDateTime start, LocalDateTime end, Pageable pageable);
 //
 
-//    Page<Event> findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
-//            Collection<Integer> users, Collection<EventState> states,
-//            Collection<Integer> categories,
-//            LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Page<Event> findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
+            Collection<Integer> users, Collection<EventState> states,
+            Collection<Integer> categories,
+            LocalDateTime start, LocalDateTime end, Pageable pageable);
 
+//error
 // select event0_.id as id1_2_, event0_.annotation as annotati2_2_,
 // event0_.category_id as categor13_2_,
 // event0_.created_on as created_3_2_,
@@ -60,7 +61,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 // and ($5 is null or event0_.state in ($6))
 // and ($7 is null or event0_.event_date>=$8)
 // and ($9 is null or event0_.event_date<=$10) limit $11
-
 
 
     @Query("SELECT e FROM Event AS e " +
