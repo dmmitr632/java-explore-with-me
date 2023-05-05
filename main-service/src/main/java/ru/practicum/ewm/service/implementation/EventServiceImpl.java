@@ -266,11 +266,21 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
                                         LocalDateTime end, Boolean available, String sort, Integer from, Integer size) {
 
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl getEvents");
+        log.info("---------------------------------------------------------------------------");
+
         Pageable pageable = PageRequest.of(from, size);
 
 
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
                 start, end, pageable);
+
+
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl получен список events из eventRepository, {}", events);
+        log.info("---------------------------------------------------------------------------");
+
 
         List<EventFullDto> eventFullDtoList =
                 events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
@@ -292,7 +302,15 @@ public class EventServiceImpl implements EventService {
             }
         }
 
+        eventFullDtoList.forEach(e -> {
+            if (e.getViews() == null)
+                e.setViews(0);
+        });
         eventFullDtoList.forEach(e -> e.setViews(e.getViews() + 1));
+        events.forEach(e -> {
+            if (e.getViews() == null)
+                e.setViews(0);
+        });
         events.forEach(e -> e.setViews(e.getViews() + 1));
 
         return eventFullDtoList;

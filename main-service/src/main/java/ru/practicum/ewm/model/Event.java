@@ -29,6 +29,7 @@ public class Event {
     private Category category;
 
     @Column(name = "created_on")
+    // @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime createdOn;
 
     @Column(length = 512)

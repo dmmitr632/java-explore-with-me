@@ -69,8 +69,9 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "AND (:categories IS NULL OR e.category.id IN :categories) " +
             "AND (:paid IS null OR e.paid = :paid) " +
             "AND ((e.state) IN :eventState) " +
-            "AND ((:start) IS null OR e.eventDate >= :start) " +
-            "AND ((:end) IS null OR e.eventDate <= :end) ")
+            "AND (coalesce(:start , null) IS NULL OR e.eventDate >= :start) " + // без coalesce ругается на
+            // неправильный тип данных
+            "AND (coalesce(:end , null) IS NULL OR e.eventDate <= :end) ")
     List<Event> getEvents(String text, Collection<Integer> categories, Boolean paid,
                           EventState eventState, LocalDateTime start,
                           LocalDateTime end, Pageable pageable);

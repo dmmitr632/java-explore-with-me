@@ -26,23 +26,24 @@ public class EventPublicController {
     }
 
     @GetMapping(path = "/events")
-    public List<EventFullDto> getEvents(@RequestParam(name = "text", required = false) String text,
-                                        @RequestParam(name = "categories", required = false) List<Integer> categories,
-                                        @RequestParam(name = "paid", required = false) Boolean paid,
-                                        @RequestParam(name = "rangeStart", required = false) @DateTimeFormat(pattern =
+    public List<EventFullDto> getEvents(@RequestParam(defaultValue = "", required = false) String text,
+                                        @RequestParam(defaultValue = "", required = false) List<Integer> categories,
+                                        @RequestParam(defaultValue = "false", required = false) Boolean paid,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern =
                                                 DATE_TIME_FORMATTER) LocalDateTime rangeStart,
-                                        @RequestParam(name = "rangeEnd", required = false) @DateTimeFormat(pattern =
+                                        @RequestParam(required = false) @DateTimeFormat(pattern =
                                                 DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
-                                        @RequestParam(name = "onlyAvailable", required = false) Boolean available,
-                                        @RequestParam(name = "sort", required = false) String sort,
-                                        @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                        @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
+                                        @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
+                                        @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                        @Positive @RequestParam(defaultValue = "10") Integer size) {
         log.info("----------------------------------------------------------");
-        log.info("Получение списка событий, text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, available " +
-                        "{}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd, available,
+        log.info("Получение списка событий, text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
+                        "onlyAvailable " +
+                        "{}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                 sort, from, size);
         log.info("----------------------------------------------------------");
-        return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, available,
+        return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                 sort, from, size);
     }
 

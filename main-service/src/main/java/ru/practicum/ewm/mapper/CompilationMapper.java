@@ -12,8 +12,15 @@ public class CompilationMapper {
     }
 
     public static CompilationDto toCompilationDto(Compilation compilation) {
-        return new CompilationDto(compilation.getId(), compilation.getTitle(),
-                compilation.getPinned(), compilation.getEvents().stream()
-                .map(EventMapper::toEventShortDto).collect(Collectors.toList()));
+//        return new CompilationDto(compilation.getId(), compilation.getTitle(),
+//                compilation.getPinned(), compilation.getEvents().stream()
+//                .map(EventMapper::toEventShortDto).collect(Collectors.toList()));
+
+        return CompilationDto.builder()
+                .id(compilation.getId())
+                .title(compilation.getTitle())
+                .pinned(compilation.getPinned())
+                .events(compilation.getEvents().stream().map(EventMapper::toEventShortDto).collect(Collectors.toList()))
+                .build();
     }
 }

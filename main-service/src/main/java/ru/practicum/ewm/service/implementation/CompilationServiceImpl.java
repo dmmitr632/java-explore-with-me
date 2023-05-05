@@ -1,5 +1,6 @@
 package ru.practicum.ewm.service.implementation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
@@ -38,8 +40,11 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
         Compilation compilation = CompilationMapper.toCompilation(newCompilationDto);
         compilation.setEvents(eventRepository.findAllById(newCompilationDto.getEvents()));
-
-        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation));
+        log.info("---------------------------------------------------------------------------");
+        log.info("CompilationServiceImpl addCompilation, compilation после setEvents {}", compilation);
+        log.info("---------------------------------------------------------------------------");
+        compilationRepository.save(compilation);
+        return CompilationMapper.toCompilationDto(compilation);
     }
 
     @Override

@@ -3,7 +3,6 @@ package ru.practicum.ewm.mapper;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.model.ParticipationRequest;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ParticipationRequestMapper {
@@ -14,7 +13,7 @@ public class ParticipationRequestMapper {
         return ParticipationRequestDto
                 .builder()
                 .id(participationRequest.getId())
-                .created(participationRequest.getCreated())
+                .createdOn(participationRequest.getCreatedOn())
                 .event(participationRequest.getEvent().getId())
                 .requester(participationRequest.getRequester().getId())
                 .status(participationRequest.getStatus())
@@ -25,7 +24,7 @@ public class ParticipationRequestMapper {
         return ParticipationRequest
                 .builder()
                 .id(participationRequestDto.getId())
-                .created(participationRequestDto.getCreated())
+                .createdOn(participationRequestDto.getCreatedOn())
                 .status(participationRequestDto.getStatus())
                 .build();
     }

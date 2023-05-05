@@ -12,13 +12,8 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
 
     List<ParticipationRequest> findAllByRequesterId(Integer userId);
 
-//    List<ParticipationRequest> findAllByRequesterOrderByIdAsc(User user);
-//
-//    List<ParticipationRequest> findAllByEventOrderByIdAsc(Event event);
-//
-//    List<ParticipationRequest> findAllByIdInOrderById(Collection<Integer> requestIds);
 
-    Integer countParticipationByEventIdAndStatus(Integer id, RequestStatus requestStatus);
+    Integer countParticipationByEventIdAndStatus(Integer id, RequestStatus status);
 
     List<ParticipationRequest> findAllByEventInitiatorIdAndEventId(Integer eventId, Integer userId);
 

@@ -29,16 +29,16 @@ public class ParticipationRequest {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @Column(name = "created")
-    private LocalDateTime created;
+    @Column(name = "created_on")
+    private LocalDateTime createdOn;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private RequestStatus status;
 
-    public ParticipationRequest(User requester, Event event, LocalDateTime created) {
+    public ParticipationRequest(User requester, Event event, LocalDateTime createdOn) {
         this.requester = requester;
         this.event = event;
-        this.created = created;
+        this.createdOn = createdOn;
     }
 
     @Override
