@@ -4,12 +4,11 @@ import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
-@Getter
-@Setter
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Data
 public class CategoryDto {
     Integer id;
 

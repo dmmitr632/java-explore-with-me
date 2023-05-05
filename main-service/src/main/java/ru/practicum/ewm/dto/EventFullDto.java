@@ -1,13 +1,18 @@
 package ru.practicum.ewm.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.ewm.enumeration.EventState;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
+
 @Builder
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventFullDto {
@@ -17,11 +22,13 @@ public class EventFullDto {
 
     private CategoryDto category;
 
-    private String createdOn;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
+    private LocalDateTime createdOn;
 
     private String description;
 
-    private String eventDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
+    private LocalDateTime eventDate;
 
     private UserShortDto initiator;
 
@@ -31,6 +38,7 @@ public class EventFullDto {
 
     private Integer participantLimit;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
     private LocalDateTime publishedOn;
 
     private Boolean requestModeration;

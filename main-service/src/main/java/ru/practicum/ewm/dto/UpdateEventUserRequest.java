@@ -1,9 +1,14 @@
 package ru.practicum.ewm.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
 import ru.practicum.ewm.enumeration.StateAction;
 import ru.practicum.ewm.model.Location;
+
+import java.time.LocalDateTime;
+
+import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 
 @Data
 @ToString
@@ -15,7 +20,8 @@ public class UpdateEventUserRequest {
 
     private String description;
 
-    private String eventDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
+    private LocalDateTime eventDate;
 
     private Location location;
 

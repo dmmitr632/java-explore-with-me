@@ -1,24 +1,29 @@
 package ru.practicum.ewm.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+
+import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
+
 @Builder
 @AllArgsConstructor
-@Setter
-@Getter
-@ToString
+@Data
+@NoArgsConstructor
 public class NewEventDto {
     @NotEmpty
     private String annotation;
     private Integer category;
     @NotEmpty
     private String description;
-    @NotEmpty
-    private String eventDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
+    private LocalDateTime eventDate;
     @NotNull
     private LocationDto location;
     @NotNull

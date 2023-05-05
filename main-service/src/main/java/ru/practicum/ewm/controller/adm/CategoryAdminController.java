@@ -22,7 +22,7 @@ public class CategoryAdminController {
 
     @PostMapping(path = "/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
-        log.info("Добавление администраторомкатегории {}", newCategoryDto);
+        log.info("Добавление администратором категории {}", newCategoryDto);
         return categoryService.addCategory(newCategoryDto);
     }
 

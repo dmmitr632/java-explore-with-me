@@ -1,18 +1,12 @@
 package ru.practicum.ewm.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-
+@Data
 @AllArgsConstructor
-@Getter
-@Setter
-@ToString
+@NoArgsConstructor
 public class NewCategoryDto {
-    @NotEmpty
-    String name;
-
+    private String name;
 }

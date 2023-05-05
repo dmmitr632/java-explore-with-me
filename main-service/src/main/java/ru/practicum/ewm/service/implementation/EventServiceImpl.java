@@ -68,7 +68,7 @@ public class EventServiceImpl implements EventService {
             endTime = LocalDateTime.parse(end, dateTimeFormatter);
         }
         Page<Event> events =
-                eventRepository.findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
+                eventRepository.getSelectedEvents(
                         usersIds, states, categories,
                         startTime, endTime, pageable);
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
@@ -97,7 +97,7 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
-            event.setEventDate(LocalDateTime.parse(updateEvent.getEventDate(), dateTimeFormatter));
+            event.setEventDate(updateEvent.getEventDate());
         }
         if (updateEvent.getCategory() != null) {
             event.setCategory(categoryRepository.findById(updateEvent.getCategory()).get());
@@ -184,8 +184,7 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateEventUserRequest.getDescription());
         }
         if (updateEventUserRequest.getEventDate() != null) {
-            LocalDateTime date = LocalDateTime.parse(updateEventUserRequest.getEventDate(),
-                    dateTimeFormatter);
+            LocalDateTime date =updateEventUserRequest.getEventDate();
             if (date.isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new TimeException("Событие должно произойти как минимум через 2 часа");
             }

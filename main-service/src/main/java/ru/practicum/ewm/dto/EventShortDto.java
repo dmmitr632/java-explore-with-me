@@ -1,10 +1,13 @@
 package ru.practicum.ewm.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
+import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
+
 @Builder
-@Getter
-@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +21,8 @@ public class EventShortDto {
 
     private Integer confirmedRequests;
 
-    private String eventDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
+    private LocalDateTime eventDate;
 
     private UserShortDto initiator;
 
