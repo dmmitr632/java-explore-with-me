@@ -22,7 +22,6 @@ import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -56,21 +55,14 @@ public class EventServiceImpl implements EventService {
 
     public Collection<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
                                                       List<Integer> categories,
-                                                      String start, String end, Integer from, Integer size) {
+                                                      LocalDateTime start, LocalDateTime end, Integer from,
+                                                      Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime startTime = null;
-        LocalDateTime endTime = null;
-        if (start != null) {
-            startTime = LocalDateTime.parse(start, dateTimeFormatter);
-        }
-        if (end != null) {
-            endTime = LocalDateTime.parse(end, dateTimeFormatter);
-        }
+
         Page<Event> events =
                 eventRepository.getSelectedEvents(
                         usersIds, states, categories,
-                        startTime, endTime, pageable);
+                        start, end, pageable);
         return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
     }
 
@@ -78,7 +70,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEvent, Integer eventId) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
             throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
@@ -162,7 +154,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto editEventAddedByUser(Integer userId,
                                              Integer eventId, UpdateEventUserRequest updateEventUserRequest) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
         Event event = eventRepository.findById(eventId)
@@ -184,7 +176,7 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateEventUserRequest.getDescription());
         }
         if (updateEventUserRequest.getEventDate() != null) {
-            LocalDateTime date =updateEventUserRequest.getEventDate();
+            LocalDateTime date = updateEventUserRequest.getEventDate();
             if (date.isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new TimeException("Событие должно произойти как минимум через 2 часа");
             }
@@ -245,21 +237,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart,
-                                        String rangeEnd, Boolean available, String sort, Integer from, Integer size) {
+    public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
+                                        LocalDateTime end, Boolean available, String sort, Integer from, Integer size) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         Pageable pageable = PageRequest.of(from, size);
 
-        LocalDateTime start = null;
-        LocalDateTime end = null;
 
-        if (rangeStart != null) {
-            start = LocalDateTime.parse(rangeStart, dateTimeFormatter);
-        }
-        if (rangeEnd != null) {
-            end = LocalDateTime.parse(rangeEnd, dateTimeFormatter);
-        }
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
                 start, end, pageable);
 

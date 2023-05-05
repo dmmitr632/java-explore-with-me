@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 
 @Data
-@ToString
 public class UpdateEventUserRequest {
 
     private String annotation;

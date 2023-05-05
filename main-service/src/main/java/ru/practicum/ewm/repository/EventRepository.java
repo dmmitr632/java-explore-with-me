@@ -41,6 +41,27 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 //            Collection<Integer> categories,
 //            LocalDateTime start, LocalDateTime end, Pageable pageable);
 
+// select event0_.id as id1_2_, event0_.annotation as annotati2_2_,
+// event0_.category_id as categor13_2_,
+// event0_.created_on as created_3_2_,
+// event0_.description as descript4_2_,
+// event0_.event_date as event_da5_2_,
+// event0_.initiator_id as initiat14_2_,
+// event0_.location_id as locatio15_2_,
+// event0_.paid as paid6_2_,
+// event0_.participant_limit as particip7_2_,
+// event0_.published_on as publishe8_2_,
+// event0_.request_moderation as request_9_2_,
+// event0_.state as state10_2_,
+// event0_.title as title11_2_,
+// event0_.views as views12_2_ from events event0_
+// where ($1 is null or event0_.initiator_id in ($2))
+// and ($3 is null or event0_.category_id in ($4))
+// and ($5 is null or event0_.state in ($6))
+// and ($7 is null or event0_.event_date>=$8)
+// and ($9 is null or event0_.event_date<=$10) limit $11
+
+
 
     @Query("SELECT e FROM Event AS e " +
             "WHERE lower(e.annotation) like %:text% " +

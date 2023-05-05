@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller.priv;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.service.ParticipationRequestService;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class ParticipationRequestPrivateController {
     private final ParticipationRequestService participationRequestService;
 
@@ -17,12 +19,20 @@ public class ParticipationRequestPrivateController {
 
     @GetMapping(path = "/users/{userId}/requests")
     public List<ParticipationRequestDto> getUserParticipationRequests(@PathVariable Integer userId) {
+        log.info("----------------------------------------------------------");
+        log.info("Получение пользователем списка заявок на события пользователя с userId {}",
+                userId);
+        log.info("----------------------------------------------------------");
         return new ArrayList<>(participationRequestService.getUserParticipationRequests(userId));
     }
 
     @PostMapping(path = "/users/{userId}/requests")
     public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId,
                                                                @RequestParam Integer eventId) {
+        log.info("----------------------------------------------------------");
+        log.info("Добавление пользователем заявки на событие, userId {}, eventId {}",
+                userId, eventId);
+        log.info("----------------------------------------------------------");
         return participationRequestService.addUserParticipationRequest(userId, eventId);
     }
 
@@ -30,6 +40,10 @@ public class ParticipationRequestPrivateController {
     @PatchMapping(path = "/users/{userId}/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelUserParticipationRequest(@PathVariable Integer userId,
                                                                   @PathVariable Integer requestId) {
+        log.info("----------------------------------------------------------");
+        log.info("Отмена пользователем заявки на событие, userId {}, requestId {}",
+                userId, requestId);
+        log.info("----------------------------------------------------------");
         return participationRequestService.cancelUserParticipationRequest(userId, requestId);
     }
 }

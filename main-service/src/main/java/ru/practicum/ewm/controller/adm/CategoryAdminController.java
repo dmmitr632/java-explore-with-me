@@ -22,19 +22,25 @@ public class CategoryAdminController {
 
     @PostMapping(path = "/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
+        log.info("----------------------------------------------------------");
         log.info("Добавление администратором категории {}", newCategoryDto);
+        log.info("----------------------------------------------------------");
         return categoryService.addCategory(newCategoryDto);
     }
 
     @PatchMapping(path = "/admin/categories")
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        log.info("----------------------------------------------------------");
         log.info("Изменение администратором категории {}", categoryDto);
+        log.info("----------------------------------------------------------");
         return categoryService.editCategory(categoryDto);
     }
 
     @DeleteMapping(path = "/admin/categories/{catId}")
     public void deleteCategory(@PathVariable Integer catId) {
+        log.info("----------------------------------------------------------");
         log.info("Удаление администратором категории в id {}", catId);
+        log.info("----------------------------------------------------------");
         categoryService.deleteCategory(catId);
     }
 }

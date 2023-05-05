@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller.pub;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class CompilationPublicController {
     private final CompilationService compilationService;
 
@@ -22,11 +24,17 @@ public class CompilationPublicController {
     public List<CompilationDto> getCompilations(@RequestParam Boolean pinned,
                                                 @RequestParam(defaultValue = "0") Integer from,
                                                 @RequestParam(defaultValue = "10") Integer size) {
+        log.info("----------------------------------------------------------");
+        log.info("Получение списка компиляций событий");
+        log.info("----------------------------------------------------------");
         return new ArrayList<>(compilationService.getCompilations(pinned, from, size));
     }
 
     @GetMapping(path = "/compilations/{compId}")
     public CompilationDto getCompilation(@PathVariable Integer compId) {
+        log.info("----------------------------------------------------------");
+        log.info("Получение события по compId {}", compId);
+        log.info("----------------------------------------------------------");
         return compilationService.getCompilation(compId);
     }
 }

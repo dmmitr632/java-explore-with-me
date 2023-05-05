@@ -3,13 +3,14 @@ package ru.practicum.ewm.service;
 import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.enumeration.EventState;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 public interface EventService {
 
     Collection<EventFullDto> getSelectedEvents(List<Integer> users, List<EventState> states, List<Integer> categories,
-                                               String rangeStart, String rangeEnd, Integer from, Integer size);
+                                               LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size);
 
     EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEventAdminRequest, Integer eventId);
 
@@ -23,6 +24,6 @@ public interface EventService {
 
     EventFullDto getEvent(Integer eventId);
 
-    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, String rangeStart,
-                                 String rangeEnd, Boolean available, String sort, Integer from, Integer size);
+    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
+                                 LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size);
 }

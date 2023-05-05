@@ -20,21 +20,27 @@ public class CompilationAdminController {
 
     @PostMapping(path = "/admin/compilations")
     public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDto) {
+        log.info("----------------------------------------------------------");
         log.info("Добавление администратором компиляции событий {}", newCompilationDto);
+        log.info("----------------------------------------------------------");
         return compilationService.addCompilation(newCompilationDto);
     }
 
     @DeleteMapping(path = "/admin/compilations/{compId}")
     public void deleteCompilation(@PathVariable Integer compId) {
+        log.info("----------------------------------------------------------");
         log.info("Удаление администратором компиляции событий с id {}", compId);
+        log.info("----------------------------------------------------------");
         compilationService.deleteCompilation(compId);
     }
 
     @PatchMapping(path = "/admin/compilations/{compId}")
     public CompilationDto editCompilation(@PathVariable Integer compId,
                                           @RequestBody UpdateCompilationRequest updateCompilationRequest) {
+        log.info("----------------------------------------------------------");
         log.info("Изменение администратором компиляции событий с id {}, updateCompilationRequest {}", compId,
                 updateCompilationRequest);
+        log.info("----------------------------------------------------------");
         return compilationService.editCompilation(compId, updateCompilationRequest);
     }
 }
