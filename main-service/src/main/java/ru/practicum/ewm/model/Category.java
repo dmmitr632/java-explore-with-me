@@ -17,11 +17,11 @@ import java.util.Objects;
 public class Category {
 
     @Id
-    @Column(name = "id")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
     public Category(String name) {

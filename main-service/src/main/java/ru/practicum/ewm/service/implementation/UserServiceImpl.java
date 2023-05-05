@@ -3,6 +3,7 @@ package ru.practicum.ewm.service.implementation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.NewUserRequestDto;
 import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.exception.BadRequestException;
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto addUser(NewUserRequestDto newUserRequestDto) {
         if (newUserRequestDto.getName() == null) {
             throw new BadRequestException("У пользователя нет имени");
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Integer userId) {
         if (userRepository.existsById(userId)) {
             userRepository.deleteById(userId);
@@ -45,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<UserDto> getUsers(List<Integer> ids, Integer from, Integer size) {
         Pageable pageRequest = PageRequest.of(from, size);
         if (ids.isEmpty()) {

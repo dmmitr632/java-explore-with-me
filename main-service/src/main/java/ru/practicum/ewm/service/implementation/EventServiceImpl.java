@@ -55,6 +55,8 @@ public class EventServiceImpl implements EventService {
 
     //Admin services
 
+    @Override
+    @Transactional
     public Collection<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
                                                       List<Integer> categories,
                                                       LocalDateTime start, LocalDateTime end, Integer from,
@@ -147,6 +149,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional
     public Collection<EventShortDto> getEventsAddedByUser(Integer userId, Integer from, Integer size) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
@@ -157,6 +160,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto getSingleEventAddedByUser(Integer userId, Integer eventId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Такого события не существует"));
@@ -171,6 +175,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional
     public EventFullDto editEventAddedByUser(Integer userId,
                                              Integer eventId, UpdateEventUserRequest updateEventUserRequest) {
 
@@ -231,6 +236,7 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
+    @Transactional
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl addEvent, добавление события, newEventDto {}, userId {}", newEventDto, userId);
@@ -257,6 +263,7 @@ public class EventServiceImpl implements EventService {
     // Public services
 
     @Override
+    @Transactional
     public EventFullDto getEvent(Integer eventId) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         if (!event.getState().equals(EventState.PUBLISHED)) {
@@ -271,6 +278,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional
     public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
                                         LocalDateTime end, Boolean available, String sort, Integer from, Integer size) {
 

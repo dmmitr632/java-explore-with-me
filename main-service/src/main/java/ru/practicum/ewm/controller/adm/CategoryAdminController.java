@@ -20,6 +20,7 @@ public class CategoryAdminController {
         this.categoryService = categoryService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("----------------------------------------------------------");
@@ -37,6 +38,7 @@ public class CategoryAdminController {
         return categoryService.editCategory(catId, categoryDto);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping(path = "/admin/categories/{catId}")
     public void deleteCategory(@PathVariable Integer catId) {
         log.info("----------------------------------------------------------");

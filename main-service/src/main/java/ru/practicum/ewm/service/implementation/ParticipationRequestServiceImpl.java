@@ -51,6 +51,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto addUserParticipationRequest(Integer userId, Integer eventId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
@@ -90,6 +91,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto cancelUserParticipationRequest(Integer userId, Integer requestId) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
@@ -109,6 +111,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     // Used by EventPrivateController
 
     @Override
+    @Transactional
     public Collection<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId) {
         return participationRequestRepository.findAllByEventInitiatorIdAndEventId(eventId, userId)
                 .stream().map(ParticipationRequestMapper::toParticipationRequestDto)
@@ -117,6 +120,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
 
     @Override
+    @Transactional
     public EventRequestStatusUpdateResult confirmOrRejectUserRequestForEvent(Integer userId, Integer eventId,
                                                                              EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
 

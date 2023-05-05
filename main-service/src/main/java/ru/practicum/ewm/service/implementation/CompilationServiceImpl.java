@@ -53,6 +53,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public void deleteCompilation(Integer compId) {
         if (!compilationRepository.existsById(compId)) {
             throw new NotFoundException("Compilation not found");
@@ -77,12 +78,14 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Override
+    @Transactional
     public CompilationDto getCompilation(Integer compId) {
         return CompilationMapper.toCompilationDto(compilationRepository.findById(compId).orElseThrow(()
                 -> new NotFoundException("Компиляции не существут")));
     }
 
     @Override
+    @Transactional
     public Collection<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
         Page<Compilation> compilations;
         Pageable pageable = PageRequest.of(from, size);

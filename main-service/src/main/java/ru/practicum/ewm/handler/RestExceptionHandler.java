@@ -1,5 +1,6 @@
 package ru.practicum.ewm.handler;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +10,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import ru.practicum.ewm.exception.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -48,7 +50,6 @@ public class RestExceptionHandler {
     }
 
 
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500 error
     public ApiError handleInternalServerErrorException(final HttpServerErrorException.InternalServerError e,
@@ -62,8 +63,7 @@ public class RestExceptionHandler {
     }
 
 
-
-    @ExceptionHandler
+    @ExceptionHandler({ConflictException.class})
     @ResponseStatus(HttpStatus.CONFLICT) // 409 error
     public ApiError handleConflictExceptions(final ConflictException e) {
         return ApiError.builder()
@@ -73,6 +73,19 @@ public class RestExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .build();
     }
+
+    @ExceptionHandler({SQLException.class})
+    @ResponseStatus(HttpStatus.CONFLICT) // 409 error
+    public ApiError handleConflictExceptions(SQLException e) {
+        return ApiError.builder()
+                .errors(List.of(e.getClass().getName()))
+                .message(e.getLocalizedMessage())
+                .reason("Conflict in database")
+                .status(HttpStatus.CONFLICT)
+                .build();
+    }
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class) // 400 error
     @ResponseStatus(HttpStatus.BAD_REQUEST)
