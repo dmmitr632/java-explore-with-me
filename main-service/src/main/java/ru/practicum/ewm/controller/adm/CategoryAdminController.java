@@ -28,12 +28,13 @@ public class CategoryAdminController {
         return categoryService.addCategory(newCategoryDto);
     }
 
-    @PatchMapping(path = "/admin/categories")
-    public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping(path = "/admin/categories/{catId}")
+    public CategoryDto editCategory(@PathVariable Integer catId, @RequestBody @Valid CategoryDto categoryDto) {
         log.info("----------------------------------------------------------");
         log.info("Изменение администратором категории {}", categoryDto);
         log.info("----------------------------------------------------------");
-        return categoryService.editCategory(categoryDto);
+        return categoryService.editCategory(catId, categoryDto);
     }
 
     @DeleteMapping(path = "/admin/categories/{catId}")

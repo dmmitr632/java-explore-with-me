@@ -9,7 +9,7 @@ public interface CategoryService {
 
     CategoryDto addCategory(NewCategoryDto newCategoryDto);
 
-    CategoryDto editCategory(CategoryDto categoryDto);
+    CategoryDto editCategory(Integer catId, CategoryDto categoryDto);
 
     void deleteCategory(Integer catId);
 

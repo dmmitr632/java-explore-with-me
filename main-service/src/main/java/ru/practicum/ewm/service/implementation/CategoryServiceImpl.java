@@ -30,11 +30,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto editCategory(CategoryDto categoryDto) {
-        categoryRepository.findById(categoryDto.getId()).orElseThrow(() -> new NotFoundException("Такой категории " +
+    public CategoryDto editCategory(Integer catId, CategoryDto categoryDto) {
+        categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Такой категории " +
                 "пока не существует, редактирование невозможно"));
-        Category category = Category.builder().id(categoryDto.getId()).name(categoryDto.getName()).build();
-        return CategoryMapper.toCategoryDto(categoryRepository.save(category));
+        Category category = Category.builder().id(catId).name(categoryDto.getName()).build();
+        categoryRepository.save(category);
+        return CategoryMapper.toCategoryDto(category);
     }
 
     @Override

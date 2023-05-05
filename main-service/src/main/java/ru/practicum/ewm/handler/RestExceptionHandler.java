@@ -25,16 +25,29 @@ public class RestExceptionHandler {
                 .build();
     }
 
+//    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 403 error
+//    @ResponseStatus(HttpStatus.FORBIDDEN)
+//    public ApiError handleValidationException(final BadRequestException e, WebRequest request) {
+//        return ApiError.builder()
+//                .errors(List.of(e.getClass().getName()))
+//                .message(e.getLocalizedMessage())
+//                .reason(request.getDescription(false))
+//                .status(HttpStatus.FORBIDDEN)
+//                .build();
+//    }
+
     @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 403 error
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleValidationException(final BadRequestException e, WebRequest request) {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
                 .reason(request.getDescription(false))
-                .status(HttpStatus.FORBIDDEN)
+                .status(HttpStatus.BAD_REQUEST)
                 .build();
     }
+
+
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500 error
@@ -48,16 +61,7 @@ public class RestExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class) // 400 error
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleThrowableExceptions(final BadRequestException e) {
-        return ApiError.builder()
-                .errors(List.of(e.getClass().getName()))
-                .message(e.getLocalizedMessage())
-                .reason("Bad Request")
-                .status(HttpStatus.BAD_REQUEST)
-                .build();
-    }
+
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT) // 409 error
@@ -69,5 +73,17 @@ public class RestExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .build();
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class) // 400 error
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleThrowableExceptions(final Throwable e) {
+        return ApiError.builder()
+                .errors(List.of(e.getClass().getName()))
+                .message(e.getLocalizedMessage())
+                .reason("Bad Request")
+                .status(HttpStatus.BAD_REQUEST)
+                .build();
+    }
+
 
 }
