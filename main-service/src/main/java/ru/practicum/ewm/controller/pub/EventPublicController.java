@@ -51,7 +51,7 @@ public class EventPublicController {
         log.info("                                                                           ");
         String ip = httpServletRequest.getRemoteAddr();
         String uri = httpServletRequest.getRequestURI();
-        return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
+        return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                 sort, from, size, ip, uri);
     }
 
@@ -65,6 +65,6 @@ public class EventPublicController {
         log.info("Получение события по event id {}, ip {}, uri {} ", id, ip, uri);
         log.info("========================================");
         log.info("                                                                           ");
-        return eventService.getEvent(id, ip, uri);
+        return eventService.getEventPublic(id, ip, uri);
     }
 }

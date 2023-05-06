@@ -22,14 +22,11 @@ import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.stats.statsclient.StatsClient;
-import ru.practicum.stats.statsdto.dto.EndpointHitDto;
-import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,7 +68,8 @@ public class EventServiceImpl implements EventService {
                                                       Integer size) {
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl getSelectedEventsAdmin: usersIds {}, states {}, categories {}, start {}, end {}, from " +
+        log.info("EventServiceImpl getSelectedEventsAdmin: usersIds {}, states {}, categories {}, start {}, end {}, " +
+                "from " +
                 "{}, size {}", usersIds, states, categories, start, end, from, size);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
@@ -259,7 +257,8 @@ public class EventServiceImpl implements EventService {
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl addEventPrivate, добавление события, newEventDto {}, userId {}", newEventDto, userId);
+        log.info("EventServiceImpl addEventPrivate, добавление события, newEventDto {}, userId {}", newEventDto,
+                userId);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
         Event event = EventMapper.toEventFromNewEventDto(newEventDto);
@@ -287,25 +286,38 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto getEvent(Integer eventId, String ip, String uri) {
+    public EventFullDto getEventPublic(Integer eventId, String ip, String uri) {
+//        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не
+//        найдено"));
+//        if (!event.getState().equals(EventState.PUBLISHED)) {
+//            throw new NotFoundException("Пока событие не опубликовано просмотр невозможен");
+//        }
+//        String timeNow = String.valueOf(LocalDateTime.now());
+//        statsClient.addHit(EndpointHitDto.builder()
+//                .app("${spring.application.name}")
+//                .uri(uri)
+//                .ip(ip)
+//                .timestamp(timeNow)
+//                .build());
+//        log.info("                                                                           ");
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("EventServiceImpl метод getEventPublic, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
+//                "$spring.application.name", uri, ip, timeNow);
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("                                                                           ");
+//
+//        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+//        eventFullDto.setConfirmedRequests(
+//                participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
+//                        RequestStatus.CONFIRMED));
+//        return eventFullDto;
+//    }
+
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new NotFoundException("Пока событие не опубликовано просмотр невозможен");
+            throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
         }
-        String timeNow = String.valueOf(LocalDateTime.now());
-        statsClient.addHit(EndpointHitDto.builder()
-                .app("${spring.application.name}")
-                .uri(uri)
-                .ip(ip)
-                .timestamp(timeNow)
-                .build());
-        log.info("                                                                           ");
-        log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl метод getEventPublic, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
-                "$spring.application.name", uri, ip, timeNow);
-        log.info("---------------------------------------------------------------------------");
-        log.info("                                                                           ");
-
+        event.setViews(event.getViews() + 1);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -313,17 +325,62 @@ public class EventServiceImpl implements EventService {
         return eventFullDto;
     }
 
+
     @Override
     @Transactional
-    public List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
-                                        LocalDateTime end, Boolean available, String sort, Integer from,
-                                        Integer size, String api, String uri) {
+    public List<EventShortDto> getEventsPublic(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
+                                               LocalDateTime end, Boolean available, String sort, Integer from,
+                                               Integer size, String api, String uri) {
 
-        log.info("                                                                           ");
+//        log.info("                                                                           ");
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("EventServiceImpl getEventsPublic");
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("                                                                           ");
+//
+//        Pageable pageable = PageRequest.of(from, size);
+//
+//
+//        List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
+//                start, end, pageable);
+//
+//
+//        log.info("                                                                           ");
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("EventServiceImpl получен список events из eventRepository, {}", events);
+//        log.info("---------------------------------------------------------------------------");
+//        log.info("                                                                           ");
+//
+//        List<EventShortDto> eventShortDtoList =
+//                events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
+//
+//
+//        eventShortDtoList.forEach(e -> e.setConfirmedRequests(
+//                participationRequestRepository.countParticipationByEventIdAndStatus(
+//                        e.getId(), RequestStatus.CONFIRMED))
+//        );
+//
+//
+//        if (sort != null) {
+//            if (sort.equals("EVENT_DATE")) {
+//                events.sort((Comparator.comparing(Event::getEventDate)));
+//            } else if (sort.equals("VIEWS")) {
+//                events.sort(Comparator.comparing(Event::getViews));
+//            } else {
+//                throw new BadRequestException("Неверный тип сортировки");
+//            }
+//        }
+//
+//        eventShortDtoList.forEach(e -> {
+//            if (e.getViews() == null)
+//                e.setViews(0);
+//        });
+//        eventShortDtoList.forEach(e -> e.setViews(e.getViews() + 1));
+//
+//        return eventShortDtoList;
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl getEventsPublic");
+        log.info("EventServiceImpl getEvents");
         log.info("---------------------------------------------------------------------------");
-        log.info("                                                                           ");
 
         Pageable pageable = PageRequest.of(from, size);
 
@@ -332,11 +389,10 @@ public class EventServiceImpl implements EventService {
                 start, end, pageable);
 
 
-        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
-        log.info("                                                                           ");
+
 
         List<EventShortDto> eventShortDtoList =
                 events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
@@ -363,12 +419,15 @@ public class EventServiceImpl implements EventService {
                 e.setViews(0);
         });
         eventShortDtoList.forEach(e -> e.setViews(e.getViews() + 1));
+        events.forEach(e -> {
+            if (e.getViews() == null)
+                e.setViews(0);
+        });
+        events.forEach(e -> e.setViews(e.getViews() + 1));
 
         return eventShortDtoList;
+
     }
-
-
-
 
 
 }

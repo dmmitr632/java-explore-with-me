@@ -65,7 +65,7 @@ public class Event {
     @Column(length = 256, nullable = false)
     private String title;
 
-    @Transient
+    @Column
     private Integer views = 0;
 
     @Override

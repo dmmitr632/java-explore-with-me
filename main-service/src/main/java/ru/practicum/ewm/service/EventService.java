@@ -22,9 +22,9 @@ public interface EventService {
 
     EventFullDto addEvent(NewEventDto newEventDto, Integer userId);
 
-    EventFullDto getEvent(Integer eventId, String ip, String uri);
+    EventFullDto getEventPublic(Integer eventId, String ip, String uri);
 
-    List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                 LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size,
-                                  String ip, String uri);
+    List<EventShortDto> getEventsPublic(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
+                                        LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size,
+                                        String ip, String uri);
 }
