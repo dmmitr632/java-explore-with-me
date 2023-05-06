@@ -22,6 +22,7 @@ import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.stats.statsclient.StatsClient;
+import ru.practicum.stats.statsdto.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -330,7 +331,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public List<EventShortDto> getEventsPublic(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
                                                LocalDateTime end, Boolean available, String sort, Integer from,
-                                               Integer size, String api, String uri) {
+                                               Integer size, String ip, String uri) {
 
 //        log.info("                                                                           ");
 //        log.info("---------------------------------------------------------------------------");
@@ -424,6 +425,9 @@ public class EventServiceImpl implements EventService {
                 e.setViews(0);
         });
         events.forEach(e -> e.setViews(e.getViews() + 1));
+        eventRepository.saveAll(events);
+        EndpointHitDto endpointHitDto = EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
+        statsClient.addHit(endpointHitDto);
 
         return eventShortDtoList;
 
