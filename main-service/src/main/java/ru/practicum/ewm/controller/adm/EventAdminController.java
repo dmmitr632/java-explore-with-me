@@ -39,8 +39,7 @@ public class EventAdminController {
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Получение информации о событиях администратором {} {} {} {} {} {} {}", users, states, categories,
-                rangeStart,
-                rangeEnd, from, size);
+                rangeStart, rangeEnd, from, size);
         log.info("========================================");
         log.info("                                                                           ");
         return new ArrayList<>(eventService.getSelectedEvents(users, states, categories, rangeStart, rangeEnd,

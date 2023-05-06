@@ -11,9 +11,8 @@ import ru.practicum.ewm.enumeration.EventState;
 import ru.practicum.ewm.enumeration.RequestStatus;
 import ru.practicum.ewm.enumeration.StateAction;
 import ru.practicum.ewm.exception.BadRequestException;
+import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.exception.PublishingException;
-import ru.practicum.ewm.exception.TimeException;
 import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.mapper.LocationMapper;
 import ru.practicum.ewm.model.Event;
@@ -70,11 +69,6 @@ public class EventServiceImpl implements EventService {
 
         Pageable pageable = PageRequest.of(from, size);
 
-//        Page<Event> events =
-//                eventRepository.getSelectedEvents(
-//                        usersIds, states, categories,
-//                        start, end, pageable);
-
         Page<Event> events =
                 eventRepository.findByInitiatorIdInAndStateInAndCategoryIdInAndEventDateIsAfterAndEventDateIsBefore(
                         usersIds, states, categories,
@@ -89,44 +83,21 @@ public class EventServiceImpl implements EventService {
     public EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEvent, Integer eventId) {
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
-        event.setPublishedOn(LocalDateTime.now());
+
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl approveOrRejectEvent, event {}", event);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
-        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
-            throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
-        }
+
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
-            throw new PublishingException("Событие уже подтверждено/отменено");
+            throw new ConflictException("Нельзя обновить уже опубликованое/отмененное событие");
         }
-
-//        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
-//            throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
-//        }
-
-
-
-
-
-        //        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
-        //            throw new TimeException("Неверное время события");
-        //        }
-        //        if (event.getEventDate().isAfter(LocalDateTime.now().plusHours(2))) {
-        //            throw new TimeException("Неверное время события");
-        //        }
-        //        if (event.getEventDate().isAfter(updateEvent.getEventDate())) {
-        //            throw new TimeException("Неверное время события");
-        //        }
-        //        if (event.getEventDate().isBefore(LocalDateTime.now())) {
-        //            throw new TimeException("Нельзя подтвердить/отменить событие, если оно произошло в прошлом");
-
-
-
+        if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new ConflictException("Нельзя опубликовать событие, если до начала меньше часа");
+        }
 
         if (updateEvent.getTitle() != null) {
-
             event.setTitle(updateEvent.getTitle());
         }
         if (updateEvent.getAnnotation() != null) {
@@ -136,29 +107,30 @@ public class EventServiceImpl implements EventService {
             event.setDescription(updateEvent.getDescription());
         }
         if (updateEvent.getEventDate() != null) {
+            if (updateEvent.getEventDate().isBefore(LocalDateTime.now())) {
+                throw new ConflictException("Событие в прошлом");
+            } else if (updateEvent.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new ConflictException("Промежуток меньше 2 часов");
+            }
             event.setEventDate(updateEvent.getEventDate());
         }
-        if (updateEvent.getCategory() != null) {
+        if (updateEvent.getCategory() != null && categoryRepository.findById(updateEvent.getCategory()).isPresent()) {
             event.setCategory(categoryRepository.findById(updateEvent.getCategory()).get());
         }
         if (updateEvent.getPaid() != null) {
-
             event.setPaid(updateEvent.getPaid());
         }
         if (updateEvent.getParticipantLimit() != null) {
-
             event.setParticipantLimit(updateEvent.getParticipantLimit());
         }
         if (updateEvent.getLocation() != null) {
             event.setLocation(updateEvent.getLocation());
         }
         if (updateEvent.getRequestModeration() != null) {
-
             event.setRequestModeration(updateEvent.getRequestModeration());
         }
         if (updateEvent.getStateAction() != null) {
             if (updateEvent.getStateAction() == StateAction.SEND_TO_REVIEW) {
-
                 event.setState(EventState.PENDING);
             } else if (updateEvent.getStateAction() == StateAction.CANCEL_REVIEW
                     || updateEvent.getStateAction() == StateAction.REJECT_EVENT) {
@@ -168,7 +140,14 @@ public class EventServiceImpl implements EventService {
                 event.setPublishedOn(LocalDateTime.now());
             }
         }
-        return EventMapper.toEventFullDto(eventRepository.save(event));
+        eventRepository.save(event);
+        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
+        log.info("                                                                           ");
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl approveOrRejectEvent eventFullDto: {}", eventFullDto);
+        log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
+        return eventFullDto;
     }
 
 
@@ -241,7 +220,7 @@ public class EventServiceImpl implements EventService {
             log.info("---------------------------------------------------------------------------");
             log.info("                                                                           ");
             if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
-                throw new TimeException("Событие должно произойти как минимум через 2 часа");
+                throw new ConflictException("Событие должно произойти как минимум через 2 часа");
             }
             event.setEventDate(localDateTime);
         }
