@@ -197,10 +197,10 @@ public class EventServiceImpl implements EventService {
         log.info("                                                                           ");
 
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new BadRequestException("Изменить событие может только его создатель");
+            throw new ConflictException("Изменить событие может только его создатель");
         }
         if (event.getState().equals(EventState.PUBLISHED)) {
-            throw new BadRequestException("Нельзя изменить уже опубликованное событие");
+            throw new ConflictException("Нельзя изменить уже опубликованное событие");
         }
         if (updateEventUserRequest.getAnnotation() != null) {
             event.setEventDate(LocalDateTime.parse(updateEventUserRequest.getAnnotation()));
@@ -257,7 +257,7 @@ public class EventServiceImpl implements EventService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
         if (event.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new BadRequestException("Событие должно произойти как минимум через 2 часа");
+            throw new ConflictException("Событие должно произойти как минимум через 2 часа");
         }
         Location location = locationRepository.save(LocationMapper.toLocation(newEventDto.getLocation()));
         event.setCategory(categoryRepository.findById(newEventDto.getCategory())
