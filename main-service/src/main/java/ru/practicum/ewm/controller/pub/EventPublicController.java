@@ -27,18 +27,18 @@ public class EventPublicController {
 
     @GetMapping(path = "/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventShortDto> getEvents(@RequestParam(defaultValue = "", required = false) String text,
-                                         @RequestParam(defaultValue = "", required = false) List<Integer> categories,
-                                         @RequestParam(defaultValue = "false", required = false) Boolean paid,
-                                         @RequestParam(required = false) @DateTimeFormat(pattern =
+    public List<EventShortDto> getEventsPublic(@RequestParam(defaultValue = "", required = false) String text,
+                                               @RequestParam(defaultValue = "", required = false) List<Integer> categories,
+                                               @RequestParam(defaultValue = "false", required = false) Boolean paid,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern =
                                                  DATE_TIME_FORMATTER) LocalDateTime rangeStart,
-                                         @RequestParam(required = false) @DateTimeFormat(pattern =
+                                               @RequestParam(required = false) @DateTimeFormat(pattern =
                                                  DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
-                                         @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
-                                         @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
-                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                         @Positive @RequestParam(defaultValue = "10") Integer size,
-                                         HttpServletRequest httpServletRequest) {
+                                               @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
+                                               @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
+                                               @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                               @Positive @RequestParam(defaultValue = "10") Integer size,
+                                               HttpServletRequest httpServletRequest) {
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Получение списка событий, text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
@@ -57,7 +57,7 @@ public class EventPublicController {
 
     @GetMapping(path = "/events/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto getEvent(@PathVariable Integer id, HttpServletRequest httpServletRequest) {
+    public EventFullDto getEventPublic(@PathVariable Integer id, HttpServletRequest httpServletRequest) {
         String ip = httpServletRequest.getRemoteAddr();
         String uri = httpServletRequest.getRequestURI();
         log.info("                                                                           ");

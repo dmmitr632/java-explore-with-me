@@ -71,7 +71,7 @@ public class EventServiceImpl implements EventService {
                                                       Integer size) {
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl getSelectedEvents: usersIds {}, states {}, categories {}, start {}, end {}, from " +
+        log.info("EventServiceImpl getSelectedEventsAdmin: usersIds {}, states {}, categories {}, start {}, end {}, from " +
                 "{}, size {}", usersIds, states, categories, start, end, from, size);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
@@ -95,7 +95,7 @@ public class EventServiceImpl implements EventService {
 
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl approveOrRejectEvent, event {}", event);
+        log.info("EventServiceImpl approveOrRejectEventAdmin, event {}", event);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
 
@@ -153,7 +153,7 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl approveOrRejectEvent eventFullDto: {}", eventFullDto);
+        log.info("EventServiceImpl approveOrRejectEventAdmin eventFullDto: {}", eventFullDto);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
         return eventFullDto;
@@ -259,7 +259,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl addEvent, добавление события, newEventDto {}, userId {}", newEventDto, userId);
+        log.info("EventServiceImpl addEventPrivate, добавление события, newEventDto {}, userId {}", newEventDto, userId);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
         Event event = EventMapper.toEventFromNewEventDto(newEventDto);
@@ -275,7 +275,7 @@ public class EventServiceImpl implements EventService {
         event.setLocation(location);
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl addEvent, cохранение event {}", event);
+        log.info("EventServiceImpl addEventPrivate, cохранение event {}", event);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
         eventRepository.save(event);
@@ -301,7 +301,7 @@ public class EventServiceImpl implements EventService {
                 .build());
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl метод getEvent, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
+        log.info("EventServiceImpl метод getEventPublic, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
                 "$spring.application.name", uri, ip, timeNow);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
@@ -321,7 +321,7 @@ public class EventServiceImpl implements EventService {
 
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl getEvents");
+        log.info("EventServiceImpl getEventsPublic");
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
 

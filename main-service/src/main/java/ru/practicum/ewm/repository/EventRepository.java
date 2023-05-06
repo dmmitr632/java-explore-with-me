@@ -31,7 +31,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 //            "AND ((:states) IS NULL OR e.state IN :states) " +
 //            "AND ((:start) IS null OR e.eventDate >= :start) " +
 //            "AND ((:end) IS null OR e.eventDate <= :end) ")
-//    Page<Event> getSelectedEvents(Collection<Integer> users, Collection<EventState> states,
+//    Page<Event> getSelectedEventsAdmin(Collection<Integer> users, Collection<EventState> states,
 //                                  Collection<Integer> categories,
 //                                  LocalDateTime start, LocalDateTime end, Pageable pageable);
 //

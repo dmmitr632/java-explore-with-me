@@ -38,8 +38,8 @@ public class EventPrivateController {
 
     @PostMapping(path = "/users/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
-                                 @PathVariable Integer userId) {
+    public EventFullDto addEventPrivate(@RequestBody @Valid NewEventDto newEventDto,
+                                        @PathVariable Integer userId) {
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Добавление пользователем события, userId {}, newEventDto {}", userId, newEventDto);

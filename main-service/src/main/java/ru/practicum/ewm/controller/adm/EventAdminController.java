@@ -27,15 +27,15 @@ public class EventAdminController {
 
     @GetMapping(path = "/admin/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getSelectedEvents(@RequestParam(defaultValue = "") List<Integer> users,
-                                                @RequestParam(defaultValue = "") List<EventState> states,
-                                                @RequestParam(defaultValue = "") List<Integer> categories,
-                                                @RequestParam(required = false) @DateTimeFormat(pattern =
+    public List<EventFullDto> getSelectedEventsAdmin(@RequestParam(defaultValue = "") List<Integer> users,
+                                                     @RequestParam(defaultValue = "") List<EventState> states,
+                                                     @RequestParam(defaultValue = "") List<Integer> categories,
+                                                     @RequestParam(required = false) @DateTimeFormat(pattern =
                                                         DATE_TIME_FORMATTER) LocalDateTime rangeStart,
-                                                @RequestParam(required = false)@DateTimeFormat(pattern =
+                                                     @RequestParam(required = false)@DateTimeFormat(pattern =
                                                         DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
-                                                @RequestParam(defaultValue = "0") Integer from,
-                                                @RequestParam(defaultValue = "10") Integer size) {
+                                                     @RequestParam(defaultValue = "0") Integer from,
+                                                     @RequestParam(defaultValue = "10") Integer size) {
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Получение информации о событиях администратором {} {} {} {} {} {} {}", users, states, categories,
@@ -48,8 +48,8 @@ public class EventAdminController {
 
     @PatchMapping(path = "/admin/events/{eventId}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto approveOrRejectEvent(@RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest,
-                                             @PathVariable(name = "eventId") Integer eventId) {
+    public EventFullDto approveOrRejectEventAdmin(@RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest,
+                                                  @PathVariable(name = "eventId") Integer eventId) {
         log.info("Подтверждение или отмена события администратором, eventId {}, updateEventAdminRequest {}", eventId,
                 updateEventAdminRequest);
         return eventService.approveOrRejectEvent(updateEventAdminRequest, eventId);
