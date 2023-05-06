@@ -23,25 +23,31 @@ public class UserAdminController {
     public List<UserDto> getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
                                   @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение списка пользователей администратором, ids {}, from {}, size {}", ids, from, size);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return new ArrayList<>(userService.getUsers(ids, from, size));
     }
 
     @PostMapping("/admin/users")
     public UserDto addUser(@RequestBody @Valid NewUserRequestDto newUserRequestDto) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Добавление пользователя администратором, newUserRequestDto {}", newUserRequestDto);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return userService.addUser(newUserRequestDto);
     }
 
     @DeleteMapping("/admin/users{userId}")
     public void deleteUser(@PathVariable Integer userId) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Удаление пользователя администратором, userId {}", userId);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         userService.deleteUser(userId);
     }
 

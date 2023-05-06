@@ -24,17 +24,21 @@ public class CompilationPublicController {
     public List<CompilationDto> getCompilations(@RequestParam(defaultValue = "false") Boolean pinned,
                                                 @RequestParam(defaultValue = "0") Integer from,
                                                 @RequestParam(defaultValue = "10") Integer size) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение списка компиляций событий");
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return new ArrayList<>(compilationService.getCompilations(pinned, from, size));
     }
 
     @GetMapping(path = "/compilations/{compId}")
     public CompilationDto getCompilation(@PathVariable Integer compId) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение события по compId {}", compId);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return compilationService.getCompilation(compId);
     }
 }

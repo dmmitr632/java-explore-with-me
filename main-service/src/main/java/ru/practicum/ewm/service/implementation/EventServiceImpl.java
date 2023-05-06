@@ -61,11 +61,12 @@ public class EventServiceImpl implements EventService {
                                                       List<Integer> categories,
                                                       LocalDateTime start, LocalDateTime end, Integer from,
                                                       Integer size) {
-
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl getSelectedEvents: usersIds {}, states {}, categories {}, start {}, end {}, from " +
                 "{}, size {}", usersIds, states, categories, start, end, from, size);
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
 
         Pageable pageable = PageRequest.of(from, size);
 
@@ -89,15 +90,41 @@ public class EventServiceImpl implements EventService {
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         event.setPublishedOn(LocalDateTime.now());
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl approveOrRejectEvent, event {}", event);
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
         if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
             throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
         }
         if (event.getState().equals(EventState.PUBLISHED) || event.getState().equals(EventState.CANCELED)) {
             throw new PublishingException("Событие уже подтверждено/отменено");
         }
+
+//        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
+//            throw new TimeException("Нельзя подтвердить событие, если старт меньше, чем через час");
+//        }
+
+
+
+
+
+        //        if (event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
+        //            throw new TimeException("Неверное время события");
+        //        }
+        //        if (event.getEventDate().isAfter(LocalDateTime.now().plusHours(2))) {
+        //            throw new TimeException("Неверное время события");
+        //        }
+        //        if (event.getEventDate().isAfter(updateEvent.getEventDate())) {
+        //            throw new TimeException("Неверное время события");
+        //        }
+        //        if (event.getEventDate().isBefore(LocalDateTime.now())) {
+        //            throw new TimeException("Нельзя подтвердить/отменить событие, если оно произошло в прошлом");
+
+
+
+
         if (updateEvent.getTitle() != null) {
 
             event.setTitle(updateEvent.getTitle());
@@ -184,9 +211,11 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Такого события не существует"));
 
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl editEventAddedByUser, event.getEventDate {}", event.getEventDate());
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
 
         if (!event.getInitiator().getId().equals(userId)) {
             throw new BadRequestException("Изменить событие может только его создатель");
@@ -206,9 +235,11 @@ public class EventServiceImpl implements EventService {
         }
         if (updateEventUserRequest.getEventDate() != null) {
             LocalDateTime localDateTime = updateEventUserRequest.getEventDate();
+            log.info("                                                                           ");
             log.info("---------------------------------------------------------------------------");
             log.info("EventServiceImpl editEventAddedByUser, dateTime {}", localDateTime);
             log.info("---------------------------------------------------------------------------");
+            log.info("                                                                           ");
             if (localDateTime.isBefore(LocalDateTime.now().plusHours(2))) {
                 throw new TimeException("Событие должно произойти как минимум через 2 часа");
             }
@@ -238,9 +269,11 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto addEvent(NewEventDto newEventDto, Integer userId) {
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl addEvent, добавление события, newEventDto {}, userId {}", newEventDto, userId);
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
         Event event = EventMapper.toEventFromNewEventDto(newEventDto);
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
@@ -252,9 +285,11 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NotFoundException("Категории не существует")));
         event.setInitiator(user);
         event.setLocation(location);
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl addEvent, cохранение event {}", event);
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
         eventRepository.save(event);
         return EventMapper.toEventFullDto(event);
     }
@@ -282,9 +317,11 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
                                         LocalDateTime end, Boolean available, String sort, Integer from, Integer size) {
 
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl getEvents");
         log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
 
         Pageable pageable = PageRequest.of(from, size);
 
@@ -293,10 +330,11 @@ public class EventServiceImpl implements EventService {
                 start, end, pageable);
 
 
+        log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
-
+        log.info("                                                                           ");
 
         List<EventFullDto> eventFullDtoList =
                 events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());

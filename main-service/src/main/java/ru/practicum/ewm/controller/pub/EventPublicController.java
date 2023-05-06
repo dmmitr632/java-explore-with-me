@@ -37,21 +37,25 @@ public class EventPublicController {
                                         @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
                                         @Positive @RequestParam(defaultValue = "10") Integer size) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение списка событий, text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
                         "onlyAvailable " +
                         "{}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                 sort, from, size);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
                 sort, from, size);
     }
 
     @GetMapping(path = "/events/{id}")
     public EventFullDto getEvent(@PathVariable Integer id) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение события по id {}", id);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return eventService.getEvent(id);
     }
 }

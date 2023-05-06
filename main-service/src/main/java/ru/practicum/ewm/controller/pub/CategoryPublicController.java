@@ -21,18 +21,22 @@ public class CategoryPublicController {
 
     @GetMapping(path = "/categories/{catId}")
     public CategoryDto getCategory(@PathVariable Integer catId) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение категории по catId {}", catId);
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return categoryService.getCategory(catId);
     }
 
     @GetMapping(path = "/categories")
     public Collection<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
                                                  @RequestParam(defaultValue = "10") Integer size) {
-        log.info("----------------------------------------------------------");
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение списка категорий");
-        log.info("----------------------------------------------------------");
+        log.info("========================================");
+        log.info("                                                                           ");
         return categoryService.getCategories(from, size);
     }
 }

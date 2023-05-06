@@ -36,9 +36,13 @@ public class EventAdminController {
                                                         DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
                                                 @RequestParam(defaultValue = "0") Integer from,
                                                 @RequestParam(defaultValue = "10") Integer size) {
+        log.info("                                                                           ");
+        log.info("========================================");
         log.info("Получение информации о событиях администратором {} {} {} {} {} {} {}", users, states, categories,
                 rangeStart,
                 rangeEnd, from, size);
+        log.info("========================================");
+        log.info("                                                                           ");
         return new ArrayList<>(eventService.getSelectedEvents(users, states, categories, rangeStart, rangeEnd,
                 from, size));
     }
