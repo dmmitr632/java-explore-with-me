@@ -59,7 +59,7 @@ public class StatsClient {
     }
 
     public List<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
-                                           boolean unique) {
+                                           Boolean unique) {
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         RestTemplate restTemplate = new RestTemplate();

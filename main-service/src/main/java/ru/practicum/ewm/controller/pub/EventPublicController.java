@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,34 +27,39 @@ public class EventPublicController {
 
     @GetMapping(path = "/events")
     @ResponseStatus(HttpStatus.OK)
-    public List<EventFullDto> getEvents(@RequestParam(defaultValue = "", required = false) String text,
-                                        @RequestParam(defaultValue = "", required = false) List<Integer> categories,
-                                        @RequestParam(defaultValue = "false", required = false) Boolean paid,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern =
-                                                DATE_TIME_FORMATTER) LocalDateTime rangeStart,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern =
-                                                DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
-                                        @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
-                                        @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
-                                        @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
-                                        @Positive @RequestParam(defaultValue = "10") Integer size) {
+    public List<EventShortDto> getEvents(@RequestParam(defaultValue = "", required = false) String text,
+                                         @RequestParam(defaultValue = "", required = false) List<Integer> categories,
+                                         @RequestParam(defaultValue = "false", required = false) Boolean paid,
+                                         @RequestParam(required = false) @DateTimeFormat(pattern =
+                                                 DATE_TIME_FORMATTER) LocalDateTime rangeStart,
+                                         @RequestParam(required = false) @DateTimeFormat(pattern =
+                                                 DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
+                                         @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
+                                         @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
+                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,
+                                         @Positive @RequestParam(defaultValue = "10") Integer size,
+                                         HttpServletRequest httpServletRequest) {
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Получение списка событий, text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, " +
                         "onlyAvailable " +
-                        "{}, sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
-                sort, from, size);
+                        "{}, sort {}, from {}, size {}, httpServletRequest {}", text, categories, paid, rangeStart,
+                rangeEnd,
+                onlyAvailable,
+                sort, from, size, httpServletRequest);
         log.info("========================================");
         log.info("                                                                           ");
+        String ip = httpServletRequest.getRemoteAddr();
+        String uri = httpServletRequest.getRequestURI();
         return eventService.getEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
-                sort, from, size);
+                sort, from, size, ip, uri);
     }
 
     @GetMapping(path = "/events/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public EventFullDto getEvent(@PathVariable Integer id, HttpServletRequest request) {
-        String ip = request.getRemoteAddr();
-        String uri = request.getRequestURI();
+    public EventFullDto getEvent(@PathVariable Integer id, HttpServletRequest httpServletRequest) {
+        String ip = httpServletRequest.getRemoteAddr();
+        String uri = httpServletRequest.getRequestURI();
         log.info("                                                                           ");
         log.info("========================================");
         log.info("Получение события по event id {}, ip {}, uri {} ", id, ip, uri);

@@ -306,7 +306,6 @@ public class EventServiceImpl implements EventService {
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
 
-        this.setViewsFromStatistic(List.of(event));
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -316,8 +315,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
-                                        LocalDateTime end, Boolean available, String sort, Integer from, Integer size) {
+    public List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime start,
+                                        LocalDateTime end, Boolean available, String sort, Integer from,
+                                        Integer size, String api, String uri) {
 
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
@@ -331,18 +331,18 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
                 start, end, pageable);
 
-        this.setViewsFromStatistic(events);
+
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
 
-        List<EventFullDto> eventFullDtoList =
-                events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+        List<EventShortDto> eventShortDtoList =
+                events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
 
 
-        eventFullDtoList.forEach(e -> e.setConfirmedRequests(
+        eventShortDtoList.forEach(e -> e.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(
                         e.getId(), RequestStatus.CONFIRMED))
         );
@@ -358,30 +358,17 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        eventFullDtoList.forEach(e -> {
+        eventShortDtoList.forEach(e -> {
             if (e.getViews() == null)
                 e.setViews(0);
         });
-        eventFullDtoList.forEach(e -> e.setViews(e.getViews() + 1));
+        eventShortDtoList.forEach(e -> e.setViews(e.getViews() + 1));
 
-        return eventFullDtoList;
+        return eventShortDtoList;
     }
 
 
-    private void setViewsFromStatistic(List<Event> events) {
-        LocalDateTime start = events.stream().min(Comparator.comparing(Event::getPublishedOn)).get().getPublishedOn();
-        LocalDateTime end = LocalDateTime.now();
-        List<String> uris = events.stream().map(e -> "/events/" + e.getId()).collect(Collectors.toList());
-        List<ViewStatsDto> viewStatsResponses = statsClient.getStatistic(start, end, uris, false);
 
-        Map<Integer, Long> allViews =
-                statsClient.getStatistic(start, end, uris, false).stream()
-                        .collect(Collectors.toMap(v -> Integer.parseInt(List.of(v.getUri().split("/")).get(2)),
-                                ViewStatsDto::getHits));
-        events.forEach(e -> e.setViews(Math.toIntExact(allViews.get(e.getId()))));
-        log.info("EventServiceImpl getViews viewStatsResponses {}", viewStatsResponses);
-
-    }
 
 
 }

@@ -24,6 +24,7 @@ public interface EventService {
 
     EventFullDto getEvent(Integer eventId, String ip, String uri);
 
-    List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                 LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size);
+    List<EventShortDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
+                                 LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size,
+                                  String ip, String uri);
 }
