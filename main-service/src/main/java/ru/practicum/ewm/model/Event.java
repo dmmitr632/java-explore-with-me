@@ -42,8 +42,8 @@ public class Event {
     @JoinColumn(name = "initiator_id")
     private User initiator;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
     @Column(nullable = false)

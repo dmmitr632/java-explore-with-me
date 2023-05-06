@@ -47,7 +47,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     @Transactional
-    public Collection<ParticipationRequestDto> getUserParticipationRequests(Integer userId) {
+    public List<ParticipationRequestDto> getUserParticipationRequests(Integer userId) {
         return participationRequestRepository.findAllByRequesterId(userId)
                 .stream()
                 .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
@@ -120,7 +120,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     @Transactional
-    public Collection<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId) {
+    public List<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId) {
         return participationRequestRepository.findAllByEventInitiatorIdAndEventId(eventId, userId)
                 .stream().map(ParticipationRequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
