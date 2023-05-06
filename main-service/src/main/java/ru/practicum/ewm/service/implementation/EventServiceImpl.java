@@ -1,6 +1,7 @@
 package ru.practicum.ewm.service.implementation;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +29,12 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@ComponentScan(basePackages = {"ru.practicum"})
 public class EventServiceImpl implements EventService {
 
 
@@ -303,7 +306,7 @@ public class EventServiceImpl implements EventService {
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
 
-
+        this.setViewsFromStatistic(List.of(event));
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -328,7 +331,7 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
                 start, end, pageable);
 
-
+        this.setViewsFromStatistic(events);
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
@@ -365,15 +368,19 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    private List<ViewStatsDto> getViews(List<Event> events) {
-        List<Event> eventsSorted =
-                events.stream().sorted(Comparator.comparing(Event::getPublishedOn)).collect(Collectors.toList());
+    private void setViewsFromStatistic(List<Event> events) {
         LocalDateTime start = events.stream().min(Comparator.comparing(Event::getPublishedOn)).get().getPublishedOn();
         LocalDateTime end = LocalDateTime.now();
-        List<String> uris = eventsSorted.stream().map(e -> "/events/" + e.getId()).collect(Collectors.toList());
+        List<String> uris = events.stream().map(e -> "/events/" + e.getId()).collect(Collectors.toList());
         List<ViewStatsDto> viewStatsResponses = statsClient.getStatistic(start, end, uris, false);
+
+        Map<Integer, Long> allViews =
+                statsClient.getStatistic(start, end, uris, false).stream()
+                        .collect(Collectors.toMap(v -> Integer.parseInt(List.of(v.getUri().split("/")).get(2)),
+                                ViewStatsDto::getHits));
+        events.forEach(e -> e.setViews(Math.toIntExact(allViews.get(e.getId()))));
         log.info("EventServiceImpl getViews viewStatsResponses {}", viewStatsResponses);
-        return viewStatsResponses;
+
     }
 
 
