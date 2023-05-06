@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller.adm;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.NewUserRequestDto;
 import ru.practicum.ewm.dto.UserDto;
@@ -19,6 +20,7 @@ public class UserAdminController {
         this.userService = userService;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/admin/users")
     public List<UserDto> getUsers(@RequestParam(required = false, name = "ids") List<Integer> ids,
                                   @RequestParam(name = "from", defaultValue = "0") Integer from,
@@ -31,6 +33,7 @@ public class UserAdminController {
         return new ArrayList<>(userService.getUsers(ids, from, size));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/admin/users")
     public UserDto addUser(@RequestBody @Valid NewUserRequestDto newUserRequestDto) {
         log.info("                                                                           ");
@@ -40,8 +43,8 @@ public class UserAdminController {
         log.info("                                                                           ");
         return userService.addUser(newUserRequestDto);
     }
-
-    @DeleteMapping("/admin/users{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/admin/users/{userId}")
     public void deleteUser(@PathVariable Integer userId) {
         log.info("                                                                           ");
         log.info("========================================");

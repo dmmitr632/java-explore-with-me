@@ -20,6 +20,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping(path = "/categories/{catId}")
+    @ResponseStatus(HttpStatus.OK)
     public CategoryDto getCategory(@PathVariable Integer catId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -30,6 +31,7 @@ public class CategoryPublicController {
     }
 
     @GetMapping(path = "/categories")
+    @ResponseStatus(HttpStatus.OK)
     public Collection<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
                                                  @RequestParam(defaultValue = "10") Integer size) {
         log.info("                                                                           ");

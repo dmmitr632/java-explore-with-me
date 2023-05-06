@@ -20,6 +20,9 @@ import ru.practicum.ewm.model.Location;
 import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
+import ru.practicum.stats.statsclient.StatsClient;
+import ru.practicum.stats.statsdto.dto.EndpointHitDto;
+import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -40,15 +43,18 @@ public class EventServiceImpl implements EventService {
 
     private final ParticipationRequestRepository participationRequestRepository;
 
+    private final StatsClient statsClient;
+
     public EventServiceImpl(EventRepository eventRepository, CategoryRepository categoryRepository,
                             UserRepository userRepository,
                             LocationRepository locationRepository,
-                            ParticipationRequestRepository participationRequestRepository) {
+                            ParticipationRequestRepository participationRequestRepository, StatsClient statsClient) {
         this.eventRepository = eventRepository;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.locationRepository = locationRepository;
         this.participationRequestRepository = participationRequestRepository;
+        this.statsClient = statsClient;
     }
 
 
@@ -278,12 +284,26 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public EventFullDto getEvent(Integer eventId) {
+    public EventFullDto getEvent(Integer eventId, String ip, String uri) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         if (!event.getState().equals(EventState.PUBLISHED)) {
-            throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
+            throw new NotFoundException("Пока событие не опубликовано просмотр невозможен");
         }
-        event.setViews(event.getViews() + 1);
+        String timeNow = String.valueOf(LocalDateTime.now());
+        statsClient.addHit(EndpointHitDto.builder()
+                .app("${spring.application.name}")
+                .uri(uri)
+                .ip(ip)
+                .timestamp(timeNow)
+                .build());
+        log.info("                                                                           ");
+        log.info("---------------------------------------------------------------------------");
+        log.info("EventServiceImpl метод getEvent, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
+                "$spring.application.name", uri, ip, timeNow);
+        log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
+
+
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -340,13 +360,22 @@ public class EventServiceImpl implements EventService {
                 e.setViews(0);
         });
         eventFullDtoList.forEach(e -> e.setViews(e.getViews() + 1));
-        events.forEach(e -> {
-            if (e.getViews() == null)
-                e.setViews(0);
-        });
-        events.forEach(e -> e.setViews(e.getViews() + 1));
 
         return eventFullDtoList;
     }
+
+
+    private List<ViewStatsDto> getViews(List<Event> events) {
+        List<Event> eventsSorted =
+                events.stream().sorted(Comparator.comparing(Event::getPublishedOn)).collect(Collectors.toList());
+        LocalDateTime start = events.stream().min(Comparator.comparing(Event::getPublishedOn)).get().getPublishedOn();
+        LocalDateTime end = LocalDateTime.now();
+        List<String> uris = eventsSorted.stream().map(e -> "/events/" + e.getId()).collect(Collectors.toList());
+        List<ViewStatsDto> viewStatsResponses = statsClient.getStatistic(start, end, uris, false);
+        log.info("EventServiceImpl getViews viewStatsResponses {}", viewStatsResponses);
+        return viewStatsResponses;
+    }
+
+
 }
 

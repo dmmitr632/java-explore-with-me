@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller.priv;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.service.EventService;
@@ -23,6 +24,7 @@ public class EventPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/events")
+    @ResponseStatus(HttpStatus.OK)
     public Collection<EventShortDto> getEventsAddedByUser(@PathVariable Integer userId,
                                                           @RequestParam(defaultValue = "0") Integer from,
                                                           @RequestParam(defaultValue = "10") Integer size) {
@@ -35,6 +37,7 @@ public class EventPrivateController {
     }
 
     @PostMapping(path = "/users/{userId}/events")
+    @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto addEvent(@RequestBody @Valid NewEventDto newEventDto,
                                  @PathVariable Integer userId) {
         log.info("                                                                           ");
@@ -46,6 +49,7 @@ public class EventPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public EventFullDto getSingleEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -57,6 +61,7 @@ public class EventPrivateController {
 
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}")
+    @ResponseStatus(HttpStatus.OK)
     public EventFullDto editEventAddedByUser(@PathVariable Integer userId, @PathVariable Integer eventId,
                                              @RequestBody @Valid UpdateEventUserRequest updateEventUserRequest) {
         log.info("                                                                           ");
@@ -70,6 +75,7 @@ public class EventPrivateController {
 
     // ParticipationRequestService
     @GetMapping(path = "/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getUserRequestsForEvent(@PathVariable Integer userId,
                                                                  @PathVariable Integer eventId) {
         log.info("                                                                           ");
@@ -82,6 +88,7 @@ public class EventPrivateController {
     }
 
     @PatchMapping(path = "/users/{userId}/events/{eventId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public EventRequestStatusUpdateResult confirmOrRejectUserRequestForEvent(@PathVariable Integer userId,
                                                                              @PathVariable Integer eventId,
                                                                              @RequestBody @Valid EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {

@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller.adm;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
@@ -19,6 +20,7 @@ public class CompilationAdminController {
     }
 
     @PostMapping(path = "/admin/compilations")
+    @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto newCompilationDto) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -29,6 +31,7 @@ public class CompilationAdminController {
     }
 
     @DeleteMapping(path = "/admin/compilations/{compId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCompilation(@PathVariable Integer compId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -39,6 +42,7 @@ public class CompilationAdminController {
     }
 
     @PatchMapping(path = "/admin/compilations/{compId}")
+    @ResponseStatus(HttpStatus.OK)
     public CompilationDto editCompilation(@PathVariable Integer compId,
                                           @RequestBody UpdateCompilationRequest updateCompilationRequest) {
         log.info("                                                                           ");

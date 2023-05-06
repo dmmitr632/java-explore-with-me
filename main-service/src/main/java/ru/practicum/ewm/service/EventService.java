@@ -22,7 +22,7 @@ public interface EventService {
 
     EventFullDto addEvent(NewEventDto newEventDto, Integer userId);
 
-    EventFullDto getEvent(Integer eventId);
+    EventFullDto getEvent(Integer eventId, String ip, String uri);
 
     List<EventFullDto> getEvents(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
                                  LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size);

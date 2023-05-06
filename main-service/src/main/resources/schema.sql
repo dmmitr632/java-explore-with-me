@@ -47,9 +47,7 @@ CREATE TABLE events
     published_on       TIMESTAMP WITHOUT TIME ZONE,
     request_moderation BOOLEAN                                      NOT NULL,
     state              VARCHAR(1024)                                NOT NULL,
-    title              VARCHAR(1024)                                NOT NULL,
-    views              INT
-
+    title              VARCHAR(1024)                                NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "events_compilations"

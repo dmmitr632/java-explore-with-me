@@ -2,13 +2,8 @@ package ru.practicum.stats.statsclient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.practicum.stats.statsdto.dto.EndpointHitDto;
@@ -22,11 +17,12 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @Slf4j
 public class StatsClient {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String application;
 
     private final String statsServiceUri;
@@ -43,8 +39,7 @@ public class StatsClient {
         this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
     }
 
-    public void addHit() {
-        EndpointHitDto endpointHitDto = new EndpointHitDto();
+    public void addHit(EndpointHitDto endpointHitDto) {
         endpointHitDto.setApp(application);
         try {
             HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(
@@ -56,25 +51,23 @@ public class StatsClient {
 
             HttpResponse<Void> response = httpClient.send(endpointHitDtoRequest,
                     HttpResponse.BodyHandlers.discarding());
-            logger.info("Ответ от stats-service: {}", response);
+            log.info("Ответ от stats-service: {}", response);
 
         } catch (Exception e) {
-            logger.warn("Не получается записать EndpointHitDto");
+            log.warn("Не получается записать EndpointHitDto");
         }
     }
 
-    public ResponseEntity<Collection<ViewStatsDto>> getStatistic(LocalDateTime start, LocalDateTime end,
-                                                                 Collection<String> uris,
-                                                                 boolean unique) {
+    public List<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
+                                           boolean unique) {
+
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         RestTemplate restTemplate = new RestTemplate();
         StringBuilder stringBuilder = new StringBuilder();
         uris.forEach(uri -> stringBuilder.append("uris=").append(uri).append("&"));
         String line = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(dateTimeFormatter),
                 end.format(dateTimeFormatter), stringBuilder, unique);
-        return restTemplate.exchange(line, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-        });
+        return List.of(Objects.requireNonNull(restTemplate.getForEntity(line, ViewStatsDto[].class).getBody()));
+
     }
-
-
 }

@@ -2,13 +2,12 @@ package ru.practicum.ewm.controller.pub;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.service.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -26,6 +25,7 @@ public class EventPublicController {
     }
 
     @GetMapping(path = "/events")
+    @ResponseStatus(HttpStatus.OK)
     public List<EventFullDto> getEvents(@RequestParam(defaultValue = "", required = false) String text,
                                         @RequestParam(defaultValue = "", required = false) List<Integer> categories,
                                         @RequestParam(defaultValue = "false", required = false) Boolean paid,
@@ -50,12 +50,15 @@ public class EventPublicController {
     }
 
     @GetMapping(path = "/events/{id}")
-    public EventFullDto getEvent(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.OK)
+    public EventFullDto getEvent(@PathVariable Integer id, HttpServletRequest request) {
+        String ip = request.getRemoteAddr();
+        String uri = request.getRequestURI();
         log.info("                                                                           ");
         log.info("========================================");
-        log.info("Получение события по id {}", id);
+        log.info("Получение события по event id {}, ip {}, uri {} ", id, ip, uri);
         log.info("========================================");
         log.info("                                                                           ");
-        return eventService.getEvent(id);
+        return eventService.getEvent(id, ip, uri);
     }
 }

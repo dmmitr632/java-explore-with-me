@@ -1,6 +1,7 @@
 package ru.practicum.ewm.controller.priv;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.service.ParticipationRequestService;
@@ -18,6 +19,7 @@ public class ParticipationRequestPrivateController {
     }
 
     @GetMapping(path = "/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.OK)
     public List<ParticipationRequestDto> getUserParticipationRequests(@PathVariable Integer userId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -29,6 +31,7 @@ public class ParticipationRequestPrivateController {
     }
 
     @PostMapping(path = "/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId,
                                                                @RequestParam Integer eventId) {
         log.info("                                                                           ");
@@ -42,6 +45,7 @@ public class ParticipationRequestPrivateController {
 
 
     @PatchMapping(path = "/users/{userId}/requests/{requestId}/cancel")
+    @ResponseStatus(HttpStatus.OK)
     public ParticipationRequestDto cancelUserParticipationRequest(@PathVariable Integer userId,
                                                                   @PathVariable Integer requestId) {
         log.info("                                                                           ");
