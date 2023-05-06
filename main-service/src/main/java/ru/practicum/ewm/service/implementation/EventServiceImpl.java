@@ -145,6 +145,7 @@ public class EventServiceImpl implements EventService {
                 event.setState(EventState.CANCELED);
             } else {
                 event.setState(EventState.PUBLISHED);
+                event.setViews(0);
                 event.setPublishedOn(LocalDateTime.now());
             }
         }
@@ -318,7 +319,15 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
         }
+
+//        if (event.getViews() == null) {
+//            event.setViews(0);
+//        }
         event.setViews(event.getViews() + 1);
+        eventRepository.save(event);
+        EndpointHitDto endpointHitDto =
+                EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
+        statsClient.addHit(endpointHitDto);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -426,7 +435,8 @@ public class EventServiceImpl implements EventService {
         });
         events.forEach(e -> e.setViews(e.getViews() + 1));
         eventRepository.saveAll(events);
-        EndpointHitDto endpointHitDto = EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
+        EndpointHitDto endpointHitDto =
+                EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
         statsClient.addHit(endpointHitDto);
 
         return eventShortDtoList;

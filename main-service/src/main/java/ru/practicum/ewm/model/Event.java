@@ -30,7 +30,6 @@ public class Event {
     private Category category;
 
     @Column(name = "created_on")
-    // @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     private LocalDateTime createdOn;
 
     @Column(length = 512)
@@ -67,6 +66,9 @@ public class Event {
 
     @Column
     private Integer views = 0;
+
+    @Column(name = "confirmed_requests")
+    private Integer confirmedRequests;
 
     @Override
     public boolean equals(Object o) {
