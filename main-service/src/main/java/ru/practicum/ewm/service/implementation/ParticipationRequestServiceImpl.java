@@ -54,16 +54,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("                                                                           ");
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
-        List<ParticipationRequestDto> participationRequestDtos = new ArrayList<>(); // нужно вернуть пустой лист с
-        // полями, если нечего не найдено
-//        return participationRequestRepository.findAllByRequesterId(userId)
-//                .stream()
-//                .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
-        participationRequestRepository.findAllByRequesterId(userId)
-                .forEach(r -> participationRequestDtos.add(ParticipationRequestMapper.toParticipationRequestDto(r)));
-        return participationRequestDtos;
 
-
+        return participationRequestRepository.findAllByRequesterId(userId)
+                .stream()
+                .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
     }
 
     @Override
@@ -151,8 +145,16 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("========================================");
         log.info("                                                                           ");
 
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
+        eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Такого события не существует"));
 
-        return participationRequestRepository.findAllByEventInitiatorIdAndEventId(eventId, userId)
+//        participationRequestRepository.findAllByRequesterIdAndEventId
+
+
+
+        return participationRequestRepository.findAllByEventInitiatorIdAndEventId(userId, eventId)
                 .stream().map(ParticipationRequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
     }
