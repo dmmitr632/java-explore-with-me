@@ -1,54 +1,30 @@
 package ru.practicum.ewm.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
-
-@Setter
+@Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Setter
 @ToString
+@AllArgsConstructor
 @Entity
 @Table(name = "compilations")
+@NoArgsConstructor
 public class Compilation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(length = 64, nullable = false)
+    @Column(nullable = false)
     private String title;
-
+    @Column(nullable = false)
     private Boolean pinned;
-
     @ManyToMany
     @JoinTable(name = "events_compilations",
-            joinColumns = {@JoinColumn(name = "compilation_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id")})
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
     private List<Event> events;
-
-    public Compilation(String title, Boolean pinned) {
-        this.title = title;
-        this.pinned = pinned;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-            return false;
-        Compilation that = (Compilation) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

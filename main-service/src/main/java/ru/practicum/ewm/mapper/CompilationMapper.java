@@ -8,13 +8,10 @@ import java.util.stream.Collectors;
 
 public class CompilationMapper {
     public static Compilation toCompilation(NewCompilationDto newCompilationDto) {
-        return new Compilation(newCompilationDto.getTitle(), newCompilationDto.getPinned());
+        return Compilation.builder().title(newCompilationDto.getTitle()).pinned(newCompilationDto.getPinned()).build();
     }
 
     public static CompilationDto toCompilationDto(Compilation compilation) {
-//        return new CompilationDto(compilation.getId(), compilation.getTitle(),
-//                compilation.getPinned(), compilation.getEventsPublic().stream()
-//                .map(EventMapper::toEventShortDto).collect(Collectors.toList()));
 
         return CompilationDto.builder()
                 .id(compilation.getId())

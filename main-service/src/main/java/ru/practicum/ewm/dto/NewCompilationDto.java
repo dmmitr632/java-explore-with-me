@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,5 +13,5 @@ import java.util.List;
 public class NewCompilationDto {
     private String title;
     private Boolean pinned;
-    private List<Integer> events;
+    private List<Integer> events = new ArrayList<>();
 }
