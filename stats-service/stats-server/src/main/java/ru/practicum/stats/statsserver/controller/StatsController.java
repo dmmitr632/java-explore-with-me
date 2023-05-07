@@ -50,7 +50,7 @@ public class StatsController {
         log.info("StatsController getStatistic, для URI {}, начиная с {}, заканчивая {}", uris, start, end);
         log.info("========================================");
         log.info("                                                                           ");
-        
+
         LocalDateTime startTime = LocalDateTime.parse(start, dateTimeFormatter);
         LocalDateTime endTime = LocalDateTime.parse(end, dateTimeFormatter);
 

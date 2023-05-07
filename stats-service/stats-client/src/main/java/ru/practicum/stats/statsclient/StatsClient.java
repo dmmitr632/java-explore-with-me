@@ -41,7 +41,8 @@ public class StatsClient extends BaseClient {
         return post("/hit", endPointHitDto);
     }
 
-    public ResponseEntity<Object> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+    public ResponseEntity<Object> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris,
+                                               Boolean unique) {
 
         String line = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(DATE_TIME_FORMATTER),
                 end.format(DATE_TIME_FORMATTER), "", unique);

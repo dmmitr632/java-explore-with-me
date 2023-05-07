@@ -10,13 +10,12 @@ import java.time.format.DateTimeFormatter;
 public class EndpointHitMapper {
 
 
-
     public static EndpointHit toEndpointHit(EndpointHitDto endpointHitDto) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime timestamp = LocalDateTime.parse(endpointHitDto.getTimestamp(), dateTimeFormatter);
         return EndpointHit.builder().id(endpointHitDto.getId()).app(endpointHitDto.getApp())
                 .uri(endpointHitDto.getUri()).ip(endpointHitDto.getIp()).timestamp(
-                       timestamp).build();
+                        timestamp).build();
     }
 
     public static EndpointHitDto toEndpointHitDto(EndpointHit endpointHit) {
