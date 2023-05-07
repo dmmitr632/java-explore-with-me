@@ -35,5 +35,6 @@ build/
 /sqlscr/
 sqlscr/
 github_logs/
+main-service/postman/newman
 commands_history.txt
 

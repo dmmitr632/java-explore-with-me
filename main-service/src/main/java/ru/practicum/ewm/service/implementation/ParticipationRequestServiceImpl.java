@@ -22,7 +22,6 @@ import ru.practicum.ewm.service.ParticipationRequestService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,9 +47,23 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Override
     @Transactional
     public List<ParticipationRequestDto> getUserParticipationRequests(Integer userId) {
-        return participationRequestRepository.findAllByRequesterId(userId)
-                .stream()
-                .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl getUserParticipationRequests, userId {}", userId);
+        log.info("========================================");
+        log.info("                                                                           ");
+        userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Такого пользователя не существует"));
+        List<ParticipationRequestDto> participationRequestDtos = new ArrayList<>(); // нужно вернуть пустой лист с
+        // полями, если нечего не найдено
+//        return participationRequestRepository.findAllByRequesterId(userId)
+//                .stream()
+//                .map(ParticipationRequestMapper::toParticipationRequestDto).collect(Collectors.toList());
+        participationRequestRepository.findAllByRequesterId(userId)
+                .forEach(r -> participationRequestDtos.add(ParticipationRequestMapper.toParticipationRequestDto(r)));
+        return participationRequestDtos;
+
+
     }
 
     @Override
@@ -59,7 +72,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         log.info("                                                                           ");
         log.info("========================================");
-        log.info("ParticipationRequestDto addUserParticipationRequest");
+        log.info("ParticipationRequestServiceImpl addUserParticipationRequest, userId {}, eventId {}", userId, eventId);
         log.info("========================================");
         log.info("                                                                           ");
 
@@ -101,6 +114,16 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Override
     @Transactional
     public ParticipationRequestDto cancelUserParticipationRequest(Integer userId, Integer requestId) {
+
+
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl cancelUserParticipationRequest, userId {}, requestId {}", userId,
+                requestId);
+        log.info("========================================");
+        log.info("                                                                           ");
+
+
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
         ParticipationRequest participationRequest = participationRequestRepository.findById(requestId).orElseThrow(()
@@ -121,6 +144,14 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Override
     @Transactional
     public List<ParticipationRequestDto> getUserRequestsForEvent(Integer userId, Integer eventId) {
+
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl getUserRequestsForEvent, userId {}, eventId {}", userId, eventId);
+        log.info("========================================");
+        log.info("                                                                           ");
+
+
         return participationRequestRepository.findAllByEventInitiatorIdAndEventId(eventId, userId)
                 .stream().map(ParticipationRequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
@@ -131,6 +162,15 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Transactional
     public EventRequestStatusUpdateResult confirmOrRejectUserRequestForEvent(Integer userId, Integer eventId,
                                                                              EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+
+
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl confirmOrRejectUserRequestForEvent, userId {}, eventId {}, " +
+                "eventRequestStatusUpdateRequest {}", userId, eventId, eventRequestStatusUpdateRequest);
+        log.info("========================================");
+        log.info("                                                                           ");
+
 
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));

@@ -242,9 +242,15 @@ public class EventServiceImpl implements EventService {
         if (updateEventUserRequest.getTitle() != null) {
             event.setTitle(updateEventUserRequest.getTitle());
         }
-        if (event.getState().equals(EventState.CANCELED)) {
-            event.setState(EventState.PENDING);
+        if (updateEventUserRequest.getStateAction() != null
+                && ((event.getState().equals(EventState.CANCELED)) || (event.getState().equals(EventState.PENDING)))) {
+            if (updateEventUserRequest.getStateAction().equals(StateAction.SEND_TO_REVIEW)) {
+                event.setState(EventState.PENDING);
+            } else {
+                event.setState(EventState.CANCELED);
+            }
         }
+
         EventFullDto eventFullDto = EventMapper.toEventFullDto(eventRepository.save(event));
         eventFullDto.setConfirmedRequests(participationRequestRepository
                 .countParticipationByEventIdAndStatus(eventFullDto.getId(),
