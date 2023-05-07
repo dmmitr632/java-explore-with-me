@@ -1,73 +1,51 @@
 package ru.practicum.stats.statsclient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.stats.statsdto.dto.EndpointHitDto;
-import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
-@Component
+
 @Slf4j
-public class StatsClient {
-    private final String application;
+@Service
+public class StatsClient extends BaseClient {
 
-    private final String statsServiceUri;
-    private final ObjectMapper json;
-    private final HttpClient httpClient;
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
-    public StatsClient(@Value("${spring.application.name}") String application,
-                       @Value("${spring.stats-service.uri:http://localhost:9090}") String statsServiceUri,
-                       ObjectMapper json) {
-        this.application = application;
-        this.statsServiceUri = statsServiceUri;
-        this.json = json;
-        this.httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+    @Autowired
+    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+        super(builder
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
+                .requestFactory(HttpComponentsClientHttpRequestFactory::new)
+                .build()
+        );
     }
 
-    public void addHit(EndpointHitDto endpointHitDto) {
-        endpointHitDto.setApp(application);
-        try {
-            HttpRequest.BodyPublisher bodyPublisher = HttpRequest.BodyPublishers.ofString(
-                    json.writeValueAsString(endpointHitDto));
-            HttpRequest endpointHitDtoRequest = HttpRequest.newBuilder().uri(URI.create(statsServiceUri + "/hit"))
-                    .POST(bodyPublisher).header(
-                            HttpHeaders.CONTENT_TYPE, "application/json")
-                    .header(HttpHeaders.ACCEPT, "application/json").build();
+    public ResponseEntity<Object> addHit(HttpServletRequest request) {
+        log.info("StatsClient addHit(), request {}", request);
 
-            HttpResponse<Void> response = httpClient.send(endpointHitDtoRequest,
-                    HttpResponse.BodyHandlers.discarding());
-            log.info("Ответ от stats-service: {}", response);
+        EndpointHitDto endPointHitDto =
+                EndpointHitDto.builder().ip(request.getRemoteAddr()).app("$(spring.application.name)")
+                        .uri(request.getRequestURI()).timestamp(LocalDateTime.now().format(DATE_TIME_FORMATTER)).build();
 
-        } catch (Exception e) {
-            log.warn("Не получается записать EndpointHitDto");
-        }
+        return post("/hit", endPointHitDto);
     }
 
-    public List<ViewStatsDto> getStatistic(LocalDateTime start, LocalDateTime end, Collection<String> uris,
-                                           Boolean unique) {
+    public ResponseEntity<Object> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
 
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        RestTemplate restTemplate = new RestTemplate();
-        StringBuilder stringBuilder = new StringBuilder();
-        uris.forEach(uri -> stringBuilder.append("uris=").append(uri).append("&"));
-        String line = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(dateTimeFormatter),
-                end.format(dateTimeFormatter), stringBuilder, unique);
-        return List.of(Objects.requireNonNull(restTemplate.getForEntity(line, ViewStatsDto[].class).getBody()));
+        String line = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(DATE_TIME_FORMATTER),
+                end.format(DATE_TIME_FORMATTER), "", unique);
 
+        return get(line);
     }
 }

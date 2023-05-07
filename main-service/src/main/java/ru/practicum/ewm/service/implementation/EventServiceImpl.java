@@ -333,7 +333,6 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
         EndpointHitDto endpointHitDto =
                 EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
-        statsClient.addHit(endpointHitDto);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -443,7 +442,6 @@ public class EventServiceImpl implements EventService {
         eventRepository.saveAll(events);
         EndpointHitDto endpointHitDto =
                 EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
-        statsClient.addHit(endpointHitDto);
 
         return eventShortDtoList;
 
