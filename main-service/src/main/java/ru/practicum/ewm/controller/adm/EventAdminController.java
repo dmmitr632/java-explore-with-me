@@ -31,9 +31,9 @@ public class EventAdminController {
                                                      @RequestParam(defaultValue = "") List<EventState> states,
                                                      @RequestParam(defaultValue = "") List<Integer> categories,
                                                      @RequestParam(required = false) @DateTimeFormat(pattern =
-                                                        DATE_TIME_FORMATTER) LocalDateTime rangeStart,
-                                                     @RequestParam(required = false)@DateTimeFormat(pattern =
-                                                        DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
+                                                             DATE_TIME_FORMATTER) LocalDateTime rangeStart,
+                                                     @RequestParam(required = false) @DateTimeFormat(pattern =
+                                                             DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
                                                      @RequestParam(defaultValue = "0") Integer from,
                                                      @RequestParam(defaultValue = "10") Integer size) {
         log.info("                                                                           ");

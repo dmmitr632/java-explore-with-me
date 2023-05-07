@@ -43,6 +43,7 @@ public class UserAdminController {
         log.info("                                                                           ");
         return userService.addUser(newUserRequestDto);
     }
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/admin/users/{userId}")
     public void deleteUser(@PathVariable Integer userId) {

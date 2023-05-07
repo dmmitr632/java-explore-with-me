@@ -10,7 +10,8 @@ import java.util.List;
 public interface EventService {
 
     Collection<EventFullDto> getSelectedEvents(List<Integer> users, List<EventState> states, List<Integer> categories,
-                                               LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size);
+                                               LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from,
+                                               Integer size);
 
     EventFullDto approveOrRejectEvent(UpdateEventAdminRequest updateEventAdminRequest, Integer eventId);
 
@@ -25,6 +26,7 @@ public interface EventService {
     EventFullDto getEventPublic(Integer eventId, String ip, String uri);
 
     List<EventShortDto> getEventsPublic(String text, List<Integer> categories, Boolean paid, LocalDateTime rangeStart,
-                                        LocalDateTime rangeEnd, Boolean available, String sort, Integer from, Integer size,
+                                        LocalDateTime rangeEnd, Boolean available, String sort, Integer from,
+                                        Integer size,
                                         String ip, String uri);
 }

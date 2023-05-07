@@ -31,9 +31,9 @@ public class EventPublicController {
                                                @RequestParam(defaultValue = "", required = false) List<Integer> categories,
                                                @RequestParam(defaultValue = "false", required = false) Boolean paid,
                                                @RequestParam(required = false) @DateTimeFormat(pattern =
-                                                 DATE_TIME_FORMATTER) LocalDateTime rangeStart,
+                                                       DATE_TIME_FORMATTER) LocalDateTime rangeStart,
                                                @RequestParam(required = false) @DateTimeFormat(pattern =
-                                                 DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
+                                                       DATE_TIME_FORMATTER) LocalDateTime rangeEnd,
                                                @RequestParam(defaultValue = "false", required = false) Boolean onlyAvailable,
                                                @RequestParam(defaultValue = "EVENT_DATE", required = false) String sort,
                                                @PositiveOrZero @RequestParam(defaultValue = "0") Integer from,

@@ -153,7 +153,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 //        participationRequestRepository.findAllByRequesterIdAndEventId
 
 
-
         return participationRequestRepository.findAllByEventInitiatorIdAndEventId(userId, eventId)
                 .stream().map(ParticipationRequestMapper::toParticipationRequestDto)
                 .collect(Collectors.toList());
