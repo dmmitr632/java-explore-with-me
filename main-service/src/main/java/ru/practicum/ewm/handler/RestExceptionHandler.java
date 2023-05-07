@@ -26,17 +26,6 @@ public class RestExceptionHandler {
                 .build();
     }
 
-//    @ExceptionHandler({TimeException.class, PublishingException.class, FieldValidationException.class}) // 403 error
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    public ApiError handleValidationException(final BadRequestException e, WebRequest request) {
-//        return ApiError.builder()
-//                .errors(List.of(e.getClass().getName()))
-//                .message(e.getLocalizedMessage())
-//                .reason(request.getDescription(false))
-//                .status(HttpStatus.FORBIDDEN)
-//                .build();
-//    }
-
     @ExceptionHandler({PublishingException.class, FieldValidationException.class}) // 400 error
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleValidationException(final RuntimeException e, WebRequest request) {

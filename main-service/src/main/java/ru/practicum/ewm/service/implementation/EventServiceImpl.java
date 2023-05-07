@@ -295,44 +295,15 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto getEventPublic(Integer eventId, String ip, String uri) {
-//        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не
-//        найдено"));
-//        if (!event.getState().equals(EventState.PUBLISHED)) {
-//            throw new NotFoundException("Пока событие не опубликовано просмотр невозможен");
-//        }
-//        String timeNow = String.valueOf(LocalDateTime.now());
-//        statsClient.addHit(EndpointHitDto.builder()
-//                .app("${spring.application.name}")
-//                .uri(uri)
-//                .ip(ip)
-//                .timestamp(timeNow)
-//                .build());
-//        log.info("                                                                           ");
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("EventServiceImpl метод getEventPublic, statsClient.addHit(), app {}, uri {}, ip {}, timestamp {}",
-//                "$spring.application.name", uri, ip, timeNow);
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("                                                                           ");
-//
-//        EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
-//        eventFullDto.setConfirmedRequests(
-//                participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
-//                        RequestStatus.CONFIRMED));
-//        return eventFullDto;
-//    }
 
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Событие не найдено"));
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
         }
 
-//        if (event.getViews() == null) {
-//            event.setViews(0);
-//        }
         event.setViews(event.getViews() + 1);
         eventRepository.save(event);
-        EndpointHitDto endpointHitDto =
-                EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
+
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
@@ -347,52 +318,6 @@ public class EventServiceImpl implements EventService {
                                                LocalDateTime end, Boolean available, String sort, Integer from,
                                                Integer size, String ip, String uri) {
 
-//        log.info("                                                                           ");
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("EventServiceImpl getEventsPublic");
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("                                                                           ");
-//
-//        Pageable pageable = PageRequest.of(from, size);
-//
-//
-//        List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
-//                start, end, pageable);
-//
-//
-//        log.info("                                                                           ");
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("EventServiceImpl получен список events из eventRepository, {}", events);
-//        log.info("---------------------------------------------------------------------------");
-//        log.info("                                                                           ");
-//
-//        List<EventShortDto> eventShortDtoList =
-//                events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
-//
-//
-//        eventShortDtoList.forEach(e -> e.setConfirmedRequests(
-//                participationRequestRepository.countParticipationByEventIdAndStatus(
-//                        e.getId(), RequestStatus.CONFIRMED))
-//        );
-//
-//
-//        if (sort != null) {
-//            if (sort.equals("EVENT_DATE")) {
-//                events.sort((Comparator.comparing(Event::getEventDate)));
-//            } else if (sort.equals("VIEWS")) {
-//                events.sort(Comparator.comparing(Event::getViews));
-//            } else {
-//                throw new BadRequestException("Неверный тип сортировки");
-//            }
-//        }
-//
-//        eventShortDtoList.forEach(e -> {
-//            if (e.getViews() == null)
-//                e.setViews(0);
-//        });
-//        eventShortDtoList.forEach(e -> e.setViews(e.getViews() + 1));
-//
-//        return eventShortDtoList;
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl getEvents");
         log.info("---------------------------------------------------------------------------");
