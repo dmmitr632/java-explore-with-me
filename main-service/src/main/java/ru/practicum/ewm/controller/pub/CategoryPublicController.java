@@ -19,8 +19,8 @@ public class CategoryPublicController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(path = "/categories/{catId}")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/categories/{catId}")
+
     public CategoryDto getCategory(@PathVariable Integer catId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -30,8 +30,8 @@ public class CategoryPublicController {
         return categoryService.getCategory(catId);
     }
 
-    @GetMapping(path = "/categories")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/categories")
+
     public Collection<CategoryDto> getCategories(@RequestParam(defaultValue = "0") Integer from,
                                                  @RequestParam(defaultValue = "10") Integer size) {
         log.info("                                                                           ");

@@ -37,5 +37,5 @@ public class UpdateEventAdminRequest {
 
     private Boolean path;
 
-    StateAction stateAction;
+    private StateAction stateAction;
 }

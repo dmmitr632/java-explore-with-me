@@ -2,8 +2,10 @@ package ru.practicum.ewm.controller.pub;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.service.EventService;
@@ -28,8 +30,8 @@ public class EventPublicController {
         this.statsClient = statsClient;
     }
 
-    @GetMapping(path = "/events")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/events")
+
     public List<EventShortDto> getEventsPublic(@RequestParam(defaultValue = "", required = false) String text,
                                                @RequestParam(defaultValue = "", required = false) List<Integer> categories,
                                                @RequestParam(defaultValue = "false", required = false) Boolean paid,
@@ -59,8 +61,8 @@ public class EventPublicController {
                 sort, from, size, ip, uri);
     }
 
-    @GetMapping(path = "/events/{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/events/{id}")
+
     public EventFullDto getEventPublic(@PathVariable Integer id, HttpServletRequest httpServletRequest) {
         String ip = httpServletRequest.getRemoteAddr();
         String uri = httpServletRequest.getRequestURI();

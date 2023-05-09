@@ -63,10 +63,10 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Collection<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
-                                                      List<Integer> categories,
-                                                      LocalDateTime start, LocalDateTime end, Integer from,
-                                                      Integer size) {
+    public List<EventFullDto> getSelectedEvents(List<Integer> usersIds, List<EventState> states,
+                                                List<Integer> categories,
+                                                LocalDateTime start, LocalDateTime end, Integer from,
+                                                Integer size) {
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl getSelectedEventsAdmin: usersIds {}, states {}, categories {}, start {}, end {}, " +

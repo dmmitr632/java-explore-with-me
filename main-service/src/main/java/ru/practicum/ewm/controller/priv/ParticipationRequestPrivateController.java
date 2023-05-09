@@ -18,8 +18,7 @@ public class ParticipationRequestPrivateController {
         this.participationRequestService = participationRequestService;
     }
 
-    @GetMapping(path = "/users/{userId}/requests")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/{userId}/requests")
     public List<ParticipationRequestDto> getUserParticipationRequests(@PathVariable Integer userId) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -30,7 +29,7 @@ public class ParticipationRequestPrivateController {
         return new ArrayList<>(participationRequestService.getUserParticipationRequests(userId));
     }
 
-    @PostMapping(path = "/users/{userId}/requests")
+    @PostMapping("/users/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto addUserParticipationRequest(@PathVariable Integer userId,
                                                                @RequestParam Integer eventId) {
@@ -44,8 +43,7 @@ public class ParticipationRequestPrivateController {
     }
 
 
-    @PatchMapping(path = "/users/{userId}/requests/{requestId}/cancel")
-    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelUserParticipationRequest(@PathVariable Integer userId,
                                                                   @PathVariable Integer requestId) {
         log.info("                                                                           ");

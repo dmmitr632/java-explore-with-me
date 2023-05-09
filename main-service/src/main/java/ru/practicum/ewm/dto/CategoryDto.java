@@ -13,8 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Data
 public class CategoryDto {
-    Integer id;
-
+    private Integer id;
     @NotEmpty
-    String name;
+    private String name;
 }

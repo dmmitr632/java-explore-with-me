@@ -1,8 +1,10 @@
 package ru.practicum.ewm.controller.pub;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.service.CompilationService;
 
@@ -18,8 +20,8 @@ public class CompilationPublicController {
         this.compilationService = compilationService;
     }
 
-    @GetMapping(path = "/compilations")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/compilations")
+
     public List<CompilationDto> getCompilations(@RequestParam(defaultValue = "false") Boolean pinned,
                                                 @RequestParam(defaultValue = "0") Integer from,
                                                 @RequestParam(defaultValue = "10") Integer size) {
@@ -31,8 +33,8 @@ public class CompilationPublicController {
         return new ArrayList<>(compilationService.getCompilations(pinned, from, size));
     }
 
-    @GetMapping(path = "/compilations/{compId}")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/compilations/{compId}")
+
     public CompilationDto getCompilation(@PathVariable Integer compId) {
         log.info("                                                                           ");
         log.info("========================================");

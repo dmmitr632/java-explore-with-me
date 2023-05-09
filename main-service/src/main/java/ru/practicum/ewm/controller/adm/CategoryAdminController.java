@@ -21,7 +21,7 @@ public class CategoryAdminController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/admin/categories")
+    @PostMapping("/admin/categories")
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -31,8 +31,8 @@ public class CategoryAdminController {
         return categoryService.addCategory(newCategoryDto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PatchMapping(path = "/admin/categories/{catId}")
+
+    @PatchMapping("/admin/categories/{catId}")
     public CategoryDto editCategory(@PathVariable Integer catId, @RequestBody @Valid CategoryDto categoryDto) {
         log.info("                                                                           ");
         log.info("========================================");
@@ -43,7 +43,7 @@ public class CategoryAdminController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping(path = "/admin/categories/{catId}")
+    @DeleteMapping("/admin/categories/{catId}")
     public void deleteCategory(@PathVariable Integer catId) {
         log.info("                                                                           ");
         log.info("========================================");

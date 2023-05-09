@@ -2,7 +2,6 @@ package ru.practicum.ewm.controller.adm;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.UpdateEventAdminRequest;
@@ -11,7 +10,6 @@ import ru.practicum.ewm.service.EventService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
@@ -25,8 +23,7 @@ public class EventAdminController {
         this.eventService = eventService;
     }
 
-    @GetMapping(path = "/admin/events")
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/admin/events")
     public List<EventFullDto> getSelectedEventsAdmin(@RequestParam(defaultValue = "") List<Integer> users,
                                                      @RequestParam(defaultValue = "") List<EventState> states,
                                                      @RequestParam(defaultValue = "") List<Integer> categories,
@@ -42,12 +39,11 @@ public class EventAdminController {
                 rangeStart, rangeEnd, from, size);
         log.info("========================================");
         log.info("                                                                           ");
-        return new ArrayList<>(eventService.getSelectedEvents(users, states, categories, rangeStart, rangeEnd,
-                from, size));
+        return eventService.getSelectedEvents(users, states, categories, rangeStart, rangeEnd,
+                from, size);
     }
 
-    @PatchMapping(path = "/admin/events/{eventId}")
-    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/admin/events/{eventId}")
     public EventFullDto approveOrRejectEventAdmin(@RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest,
                                                   @PathVariable(name = "eventId") Integer eventId) {
         log.info("Подтверждение или отмена события администратором, eventId {}, updateEventAdminRequest {}", eventId,
