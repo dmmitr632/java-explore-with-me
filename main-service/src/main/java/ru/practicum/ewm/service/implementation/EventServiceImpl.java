@@ -1,5 +1,9 @@
 package ru.practicum.ewm.service.implementation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
@@ -22,10 +26,11 @@ import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.stats.statsclient.StatsClient;
-import ru.practicum.stats.statsdto.dto.EndpointHitDto;
+import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,7 +87,8 @@ public class EventServiceImpl implements EventService {
                         usersIds, states, categories,
                         start, end, pageable);
 
-        return events.stream().map(EventMapper::toEventFullDto).collect(Collectors.toList());
+        return events.stream().map(EventMapper::toEventFullDto).peek(e -> e.setViews((long) getStatisticFromClient(
+                "/admin/events"))).collect(Collectors.toList());
     }
 
 
@@ -145,7 +151,6 @@ public class EventServiceImpl implements EventService {
                 event.setState(EventState.CANCELED);
             } else {
                 event.setState(EventState.PUBLISHED);
-                event.setViews(0);
                 event.setPublishedOn(LocalDateTime.now());
             }
         }
@@ -185,6 +190,7 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                 RequestStatus.CONFIRMED));
+        eventFullDto.setViews((long) getStatisticFromClient("/events/" + eventId));
         return eventFullDto;
     }
 
@@ -301,13 +307,14 @@ public class EventServiceImpl implements EventService {
             throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
         }
 
-        event.setViews(event.getViews() + 1);
+
         eventRepository.save(event);
 
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                         RequestStatus.CONFIRMED));
+        eventFullDto.setViews((long) getStatisticFromClient("/events/" + eventId));
         return eventFullDto;
     }
 
@@ -319,7 +326,7 @@ public class EventServiceImpl implements EventService {
                                                Integer size, String ip, String uri) {
 
         log.info("---------------------------------------------------------------------------");
-        log.info("EventServiceImpl getEvents");
+        log.info("EventServiceImpl getEventsPublic");
         log.info("---------------------------------------------------------------------------");
 
         Pageable pageable = PageRequest.of(from, size);
@@ -328,14 +335,14 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.getEvents(text.toLowerCase(), categories, paid, EventState.PUBLISHED,
                 start, end, pageable);
 
-
         log.info("---------------------------------------------------------------------------");
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
 
 
         List<EventShortDto> eventShortDtoList =
-                events.stream().map(EventMapper::toEventShortDto).collect(Collectors.toList());
+                events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews((long) getStatisticFromClient(
+                        "/events"))).collect(Collectors.toList());
 
 
         eventShortDtoList.forEach(e -> e.setConfirmedRequests(
@@ -354,22 +361,30 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        eventShortDtoList.forEach(e -> {
-            if (e.getViews() == null)
-                e.setViews(0);
-        });
-        eventShortDtoList.forEach(e -> e.setViews(e.getViews() + 1));
-        events.forEach(e -> {
-            if (e.getViews() == null)
-                e.setViews(0);
-        });
-        events.forEach(e -> e.setViews(e.getViews() + 1));
-        eventRepository.saveAll(events);
-        EndpointHitDto endpointHitDto =
-                EndpointHitDto.builder().ip(ip).uri(uri).app("${spring.application.name}").build();
-
         return eventShortDtoList;
 
+    }
+
+    private int getStatisticFromClient(String uri) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        int hits = 0;
+        List<String> uris = Collections.singletonList(uri);
+        try {
+            Object object =
+                    statsClient.getStatistic(LocalDateTime.now().minusMonths(2),
+                            LocalDateTime.now(), uris, false).getBody();
+            ObjectWriter objectWriter = new ObjectMapper().writer();
+            String json = objectWriter.writeValueAsString(object);
+            List<ViewStatsDto> viewStats = objectMapper.readValue(json, new TypeReference<>() {
+            });
+            for (ViewStatsDto viewStatsDto : viewStats) {
+                hits = (int) (hits + viewStatsDto.getHits());
+            }
+        } catch (JsonProcessingException e) {
+            e.getMessage();
+        }
+        return hits;
     }
 
 

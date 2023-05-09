@@ -31,7 +31,6 @@ public class EventMapper {
                 .publishedOn(event.getPublishedOn())
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
-                .views(0)
                 .confirmedRequests(0)
                 .title(event.getTitle())
                 .build();

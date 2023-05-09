@@ -64,8 +64,8 @@ public class Event {
     @Column(length = 256, nullable = false)
     private String title;
 
-    @Column
-    private Integer views = 0;
+    @Transient
+    private Long views = 0L;
 
     @Column(name = "confirmed_requests")
     private Integer confirmedRequests;
