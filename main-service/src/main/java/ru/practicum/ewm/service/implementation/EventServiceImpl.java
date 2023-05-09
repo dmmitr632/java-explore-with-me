@@ -339,17 +339,9 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
 
-
         List<EventShortDto> eventShortDtoList =
                 events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews((long) getStatisticFromClient(
                         "/events"))).collect(Collectors.toList());
-
-
-        eventShortDtoList.forEach(e -> e.setConfirmedRequests(
-                participationRequestRepository.countParticipationByEventIdAndStatus(
-                        e.getId(), RequestStatus.CONFIRMED))
-        );
-
 
         if (sort != null) {
             if (sort.equals("EVENT_DATE")) {
@@ -366,7 +358,6 @@ public class EventServiceImpl implements EventService {
     }
 
     private int getStatisticFromClient(String uri) {
-
         ObjectMapper objectMapper = new ObjectMapper();
         int hits = 0;
         List<String> uris = Collections.singletonList(uri);
@@ -386,7 +377,6 @@ public class EventServiceImpl implements EventService {
         }
         return hits;
     }
-
 
 }
 
