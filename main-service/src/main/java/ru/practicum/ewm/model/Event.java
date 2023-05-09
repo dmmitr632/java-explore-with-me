@@ -1,12 +1,10 @@
 package ru.practicum.ewm.model;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 import ru.practicum.ewm.enumeration.EventState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Builder
 @Setter
@@ -70,18 +68,4 @@ public class Event {
     @Column(name = "confirmed_requests")
     private Integer confirmedRequests;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o))
-            return false;
-        Event event = (Event) o;
-        return getId() != null && Objects.equals(getId(), event.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
