@@ -87,8 +87,11 @@ public class EventServiceImpl implements EventService {
                         usersIds, states, categories,
                         start, end, pageable);
 
-        return events.stream().map(EventMapper::toEventFullDto).peek(e -> e.setViews(getStatisticFromClient(
-                "/admin/events"))).collect(Collectors.toList());
+        long views = getStatisticFromClient((Collections.singletonList("/admin/events")));
+        log.info("views {}", views);
+        return events.stream().map(EventMapper::toEventFullDto).peek(e -> e.setViews(views)).collect(Collectors.toList());
+
+
     }
 
 
@@ -190,7 +193,8 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                 RequestStatus.CONFIRMED));
-        eventFullDto.setViews(getStatisticFromClient("/events/" + eventId));
+        eventFullDto.setViews(getStatisticFromClient((Collections.singletonList("/events/" + eventId))));
+        log.info("eventFullDto getViews() {} ", eventFullDto.getViews());
         return eventFullDto;
     }
 
@@ -311,7 +315,8 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                         RequestStatus.CONFIRMED));
-        eventFullDto.setViews(getStatisticFromClient("/events/" + eventId));
+        eventFullDto.setViews(getStatisticFromClient(Collections.singletonList("/events/" + eventId)));
+        log.info("eventFullDto.getViews() {}", eventFullDto.getViews());
         return eventFullDto;
     }
 
@@ -336,9 +341,11 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
 
+        long views = getStatisticFromClient((Collections.singletonList("/events")));
+        log.info("views {}", views);
         List<EventShortDto> eventShortDtoList =
-                events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews(getStatisticFromClient(
-                        "/events"))).collect(Collectors.toList());
+                events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews(views)).collect(Collectors.toList());
+
 
         if (sort != null) {
             if (sort.equals("EVENT_DATE")) {
@@ -354,10 +361,10 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private long getStatisticFromClient(String uri) {
+
+    private long getStatisticFromClient(List<String> uris) {
         ObjectMapper objectMapper = new ObjectMapper();
         long hits = 0;
-        List<String> uris = Collections.singletonList(uri);
         try {
             Object object =
                     statsClient.getStatistic(LocalDateTime.now().minusMonths(2),
@@ -374,6 +381,7 @@ public class EventServiceImpl implements EventService {
         }
         return hits;
     }
+
 
 }
 
