@@ -378,6 +378,7 @@ public class EventServiceImpl implements EventService {
         } catch (JsonProcessingException e) {
             e.getMessage();
         }
+        log.info("hits {}", hits);
         return hits;
     }
 }
