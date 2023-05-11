@@ -361,7 +361,6 @@ public class EventServiceImpl implements EventService {
 
     }
 
-
     private long getStatisticFromClient(List<String> uris) {
         ObjectMapper objectMapper = new ObjectMapper();
         long hits = 0;
@@ -381,7 +380,5 @@ public class EventServiceImpl implements EventService {
         }
         return hits;
     }
-
-
 }
 

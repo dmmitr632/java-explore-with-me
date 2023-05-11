@@ -44,9 +44,21 @@ public class StatsClient extends BaseClient {
     public ResponseEntity<Object> getStatistic(LocalDateTime start, LocalDateTime end, List<String> uris,
                                                Boolean unique) {
 
-        String line = String.format("/stats?start=%s&end=%s&%sunique=%s}", start.format(DATE_TIME_FORMATTER),
-                end.format(DATE_TIME_FORMATTER), "", unique);
 
-        return get(line);
+        log.info("StatsClient getStatistic ()");
+        String line = String.format("/stats?start=%s&end=%s", start.format(DATE_TIME_FORMATTER),
+                end.format(DATE_TIME_FORMATTER));
+        StringBuilder stringBuilder = new StringBuilder(line);
+        if (!uris.isEmpty()) {
+            for (String s : uris) {
+                stringBuilder.append("&uris=").append(s);
+            }
+        }
+        if (unique) {
+            stringBuilder.append("&unique=").append(true);
+        }
+        String lineWithUris = stringBuilder.toString();
+        log.info("lineWithUris {}", lineWithUris);
+        return get(lineWithUris);
     }
 }
