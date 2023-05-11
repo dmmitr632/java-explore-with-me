@@ -6,8 +6,8 @@ import ru.practicum.ewm.enumeration.RequestStatus;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.ParticipationRequest;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Integer> {
     ParticipationRequest findByRequesterIdAndEventId(Integer userId, Integer eventId);
@@ -28,5 +28,5 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
             "WHERE pr.event.id IN ?1 " +
             "AND pr.status = 'CONFIRMED' " +
             "GROUP BY pr.event.id")
-    Map<Integer, Integer> getConfirmedRequests(List<Integer> eventsIds);
+    HashMap<Integer, Integer> getConfirmedRequests(List<Integer> eventsIds);
 }

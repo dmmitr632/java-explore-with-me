@@ -384,12 +384,19 @@ public class EventServiceImpl implements EventService {
 
     public void setConfirmedRequests(List<EventShortDto> eventShortDtoList) {
         List<Integer> eventsIds = eventShortDtoList.stream().map(EventShortDto::getId).collect(Collectors.toList());
-
+        log.info("                                                                           ");
+        log.info("---------------------------------------------------------------------------");
+        log.info("eventsIds {}", eventsIds);
         if (!eventsIds.isEmpty()) {
-            Map<Integer, Integer> eventIdConfirmedRequests =
+            HashMap<Integer, Integer> eventIdConfirmedRequests =
                     participationRequestRepository.getConfirmedRequests(eventsIds);
-            eventShortDtoList.forEach(e -> e.setConfirmedRequests(eventIdConfirmedRequests.get(e.getId())));
+            if (eventIdConfirmedRequests != null) {
+                eventShortDtoList.forEach(e -> e.setConfirmedRequests(eventIdConfirmedRequests.get(e.getId())));
+            }
+            log.info("eventShortDtoList {}", eventShortDtoList);
         }
+        log.info("---------------------------------------------------------------------------");
+        log.info("                                                                           ");
     }
 
 }
