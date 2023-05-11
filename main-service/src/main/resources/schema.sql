@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS events
     id                 INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY NOT NULL,
     annotation         VARCHAR(1024)                                NOT NULL,
     category_id        INT REFERENCES categories (id)               NOT NULL,
-    confirmed_requests INT,
     created_on         TIMESTAMP WITHOUT TIME ZONE                  NOT NULL,
     description        VARCHAR(1024)                                NOT NULL,
     event_date         TIMESTAMP WITHOUT TIME ZONE                  NOT NULL,

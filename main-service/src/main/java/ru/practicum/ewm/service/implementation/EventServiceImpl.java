@@ -87,7 +87,7 @@ public class EventServiceImpl implements EventService {
                         usersIds, states, categories,
                         start, end, pageable);
 
-        return events.stream().map(EventMapper::toEventFullDto).peek(e -> e.setViews((long) getStatisticFromClient(
+        return events.stream().map(EventMapper::toEventFullDto).peek(e -> e.setViews(getStatisticFromClient(
                 "/admin/events"))).collect(Collectors.toList());
     }
 
@@ -190,7 +190,7 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                 RequestStatus.CONFIRMED));
-        eventFullDto.setViews((long) getStatisticFromClient("/events/" + eventId));
+        eventFullDto.setViews(getStatisticFromClient("/events/" + eventId));
         return eventFullDto;
     }
 
@@ -307,14 +307,11 @@ public class EventServiceImpl implements EventService {
             throw new BadRequestException("Пока событие не опубликовано просмотр невозможен");
         }
 
-
-        eventRepository.save(event);
-
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                         RequestStatus.CONFIRMED));
-        eventFullDto.setViews((long) getStatisticFromClient("/events/" + eventId));
+        eventFullDto.setViews(getStatisticFromClient("/events/" + eventId));
         return eventFullDto;
     }
 
@@ -340,7 +337,7 @@ public class EventServiceImpl implements EventService {
         log.info("---------------------------------------------------------------------------");
 
         List<EventShortDto> eventShortDtoList =
-                events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews((long) getStatisticFromClient(
+                events.stream().map(EventMapper::toEventShortDto).peek(e -> e.setViews(getStatisticFromClient(
                         "/events"))).collect(Collectors.toList());
 
         if (sort != null) {
@@ -357,9 +354,9 @@ public class EventServiceImpl implements EventService {
 
     }
 
-    private int getStatisticFromClient(String uri) {
+    private long getStatisticFromClient(String uri) {
         ObjectMapper objectMapper = new ObjectMapper();
-        int hits = 0;
+        long hits = 0;
         List<String> uris = Collections.singletonList(uri);
         try {
             Object object =
@@ -370,7 +367,7 @@ public class EventServiceImpl implements EventService {
             List<ViewStatsDto> viewStats = objectMapper.readValue(json, new TypeReference<>() {
             });
             for (ViewStatsDto viewStatsDto : viewStats) {
-                hits = (int) (hits + viewStatsDto.getHits());
+                hits = (hits + viewStatsDto.getHits());
             }
         } catch (JsonProcessingException e) {
             e.getMessage();

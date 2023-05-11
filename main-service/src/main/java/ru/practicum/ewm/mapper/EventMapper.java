@@ -52,7 +52,6 @@ public class EventMapper {
                 .state(eventFullDto.getState())
                 .title(eventFullDto.getTitle())
                 .views(eventFullDto.getViews())
-                .confirmedRequests(eventFullDto.getConfirmedRequests())
                 .build();
     }
 
@@ -95,7 +94,6 @@ public class EventMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(event.getViews())
-                .confirmedRequests(event.getConfirmedRequests())
                 .build();
     }
 }
