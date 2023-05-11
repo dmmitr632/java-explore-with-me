@@ -28,5 +28,5 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
             "WHERE pr.event.id IN ?1 " +
             "AND pr.status = 'CONFIRMED' " +
             "GROUP BY pr.event.id")
-    Map<Integer, Integer> getConfirmedRequests(List<Integer> eventsId);
+    Map<Integer, Integer> getConfirmedRequests(List<Integer> eventsIds);
 }
