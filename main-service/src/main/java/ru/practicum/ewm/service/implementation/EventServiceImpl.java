@@ -29,10 +29,7 @@ import ru.practicum.stats.statsclient.StatsClient;
 import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -357,6 +354,8 @@ public class EventServiceImpl implements EventService {
             }
         }
 
+        this.setConfirmedRequests(eventShortDtoList);
+
         return eventShortDtoList;
 
     }
@@ -381,5 +380,19 @@ public class EventServiceImpl implements EventService {
         log.info("hits {}", hits);
         return hits;
     }
+
+
+    public void setConfirmedRequests(List<EventShortDto> eventShortDtoList) {
+        List<Integer> eventsId = eventShortDtoList.stream().map(EventShortDto::getId).collect(Collectors.toList());
+
+        if (!eventsId.isEmpty()) {
+            Map<Integer, Integer> eventIdConfirmedRequests =
+                    participationRequestRepository.getConfirmedRequests(eventsId);
+            eventShortDtoList.forEach(e -> e.setConfirmedRequests(eventIdConfirmedRequests.get(e.getId())));
+        }
+
+    }
+
+
 }
 
