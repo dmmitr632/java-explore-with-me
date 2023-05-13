@@ -34,12 +34,6 @@ public class CommentPrivateController {
         return commentService.editCommentUser(commentDto, userId, commentId);
     }
 
-    @GetMapping("/users/{userId}/comments/{commentId}")
-    public CommentDto getOwnCommentUser(@PathVariable Integer userId, @PathVariable Integer commentId) {
-        log.info("");
-        return commentService.getOwnCommentUser(userId, commentId);
-    }
-
     @GetMapping("/users/{userId}/comments")
     public List<CommentDto> getCommentsOfUserByUser(@PathVariable Integer userId) {
         log.info("");
@@ -48,9 +42,9 @@ public class CommentPrivateController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/{userId}/comments/{commentId}")
-    public String deleteCommentUser(@PathVariable Integer userId, @PathVariable Integer commentId) {
+    public void deleteCommentUser(@PathVariable Integer userId, @PathVariable Integer commentId) {
         log.info("");
-        return commentService.deleteCommentUser(userId, commentId);
+        commentService.deleteCommentUser(userId, commentId);
     }
 
 

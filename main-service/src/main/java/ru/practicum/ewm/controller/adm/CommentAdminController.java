@@ -7,6 +7,7 @@ import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.service.CommentService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -15,6 +16,13 @@ public class CommentAdminController {
 
     public CommentAdminController(CommentService commentService) {
         this.commentService = commentService;
+    }
+
+
+    @GetMapping("/admin/comments/")
+    public List<CommentDto> getCommentsAdmin(@RequestParam(required = false, defaultValue = "0") Integer from,
+                                             @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return commentService.getCommentsAdmin(from, size);
     }
 
     @PatchMapping("/admin/comments/{commentId}")

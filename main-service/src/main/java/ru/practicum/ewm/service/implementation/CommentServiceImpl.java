@@ -1,5 +1,7 @@
 package ru.practicum.ewm.service.implementation;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.exception.BadRequestException;
@@ -14,7 +16,11 @@ import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -32,6 +38,15 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    public ArrayList<CommentDto> getCommentsAdmin(Integer from, Integer size) {
+        Pageable pageable = PageRequest.of(from, size);
+        List<Comment> comments = commentRepository.findAll(pageable).getContent();
+        ArrayList<CommentDto> commentDtoList = new ArrayList<>();
+        comments.forEach(c -> commentDtoList.add(CommentMapper.toCommentDto(c)));
+        return commentDtoList;
+    }
+
+    @Override
     public CommentDto editCommentAdmin(CommentDto commentDto, Integer commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(""));
         comment.setText(commentDto.getText());
@@ -47,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto addComment(CommentDto commentDto, Integer userId, Integer eventId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(""));
-        Event event = eventRepository.findById(eventId).orElseThrow(()-> new NotFoundException(""));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(""));
         Comment comment = new Comment(user, event, commentDto.getText(), LocalDateTime.now());
         commentRepository.save(comment);
         return CommentMapper.toCommentDto(comment);
@@ -66,27 +81,37 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getOwnCommentUser(Integer userId, Integer commentId) {
-        return null;
-    }
-
-    @Override
     public List<CommentDto> getCommentsOfUserByUser(Integer userId) {
-        return null;
+        return commentRepository.findAllByUserId(userId)
+                .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
 
     @Override
-    public String deleteCommentUser(Integer userId, Integer commentId) {
-        return null;
+    public void deleteCommentUser(Integer userId, Integer commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(""));
+        if (!((commentRepository.findUserId(comment).getId()).equals(userId))) {
+            throw new BadRequestException("Можно удалять только свой комментарий");
+        }
+        commentRepository.deleteById(commentId);
     }
 
     @Override
     public CommentDto getCommentByIdPublic(Integer commentId) {
-        return null;
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(""));
+        return CommentMapper.toCommentDto(comment);
     }
 
     @Override
     public List<CommentDto> getCommentsByEventIdPublic(Integer eventId, String byTime, Integer from, Integer size) {
-        return null;
+        Pageable pageable = PageRequest.of(from, size);
+        eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(""));
+        List<Comment> comments = commentRepository.findAllByEventId(eventId, pageable);
+        if (Objects.equals(byTime, "asc")) {
+            comments.sort(Comparator.comparing(Comment::getCreatedOn));
+        } else if (Objects.equals(byTime, "desc")) {
+            comments.sort(Comparator.comparing(Comment::getCreatedOn).reversed());
+        }
+        return comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
 }
+
