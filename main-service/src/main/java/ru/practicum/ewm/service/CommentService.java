@@ -22,5 +22,5 @@ public interface CommentService {
 
     CommentDto getCommentByIdPublic(Integer commentId);
 
-    List<CommentDto> getCommentsByEventIdPublic(Integer eventId, String byTime, Integer from, Integer size);
+    List<CommentDto> getCommentsByEventIdPublic(Integer eventId, Integer from, Integer size);
 }

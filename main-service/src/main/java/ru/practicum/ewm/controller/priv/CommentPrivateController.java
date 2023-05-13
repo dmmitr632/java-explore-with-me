@@ -23,27 +23,45 @@ public class CommentPrivateController {
     @PostMapping("/users/{userId}/comments/{eventId}")
     public CommentDto addCommentUser(@Valid @RequestBody CommentDto commentDto, @PathVariable Integer userId,
                                      @PathVariable Integer eventId) {
-        log.info("");
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPrivateController addCommentUser, userId {}, commentDto {}, eventId {}", userId, commentDto,
+                eventId);
+        log.info("========================================");
+        log.info("                                                                           ");
         return commentService.addComment(commentDto, userId, eventId);
     }
 
     @PatchMapping("/users/{userId}/comments/{commentId}")
     public CommentDto editCommentUser(@Valid @RequestBody CommentDto commentDto, @PathVariable Integer userId,
                                       @PathVariable Integer commentId) {
-        log.info("");
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPrivateController editCommentUser, userId {}, commentDto {}, commentId {}", userId, commentDto,
+                commentId);
+        log.info("========================================");
+        log.info("                                                                           ");
         return commentService.editCommentUser(commentDto, userId, commentId);
     }
 
     @GetMapping("/users/{userId}/comments")
     public List<CommentDto> getCommentsOfUserByUser(@PathVariable Integer userId) {
-        log.info("");
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPrivateController getCommentsOfUserByUser, userId {}", userId);
+        log.info("========================================");
+        log.info("                                                                           ");
         return commentService.getCommentsOfUserByUser(userId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/users/{userId}/comments/{commentId}")
     public void deleteCommentUser(@PathVariable Integer userId, @PathVariable Integer commentId) {
-        log.info("");
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPrivateController deleteCommentUser, userId {}, commentId {}", userId, commentId);
+        log.info("========================================");
+        log.info("                                                                           ");
         commentService.deleteCommentUser(userId, commentId);
     }
 

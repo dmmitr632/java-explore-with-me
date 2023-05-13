@@ -17,9 +17,7 @@ import ru.practicum.ewm.service.CommentService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,8 +86,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteCommentUser(Integer userId, Integer commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(""));
-        if (!((commentRepository.findUserId(comment).getId()).equals(userId))) {
+        commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(""));
+        if (!((commentRepository.getUserIdOfComment(commentId)).equals(userId))) {
             throw new BadRequestException("Можно удалять только свой комментарий");
         }
         commentRepository.deleteById(commentId);
@@ -102,15 +100,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getCommentsByEventIdPublic(Integer eventId, String byTime, Integer from, Integer size) {
+    public List<CommentDto> getCommentsByEventIdPublic(Integer eventId, Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
         eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(""));
         List<Comment> comments = commentRepository.findAllByEventId(eventId, pageable);
-        if (Objects.equals(byTime, "asc")) {
-            comments.sort(Comparator.comparing(Comment::getCreatedOn));
-        } else if (Objects.equals(byTime, "desc")) {
-            comments.sort(Comparator.comparing(Comment::getCreatedOn).reversed());
-        }
         return comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
     }
 }

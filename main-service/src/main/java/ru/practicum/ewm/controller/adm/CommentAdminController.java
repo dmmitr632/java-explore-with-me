@@ -19,9 +19,14 @@ public class CommentAdminController {
     }
 
 
-    @GetMapping("/admin/comments/")
+    @GetMapping("/admin/comments")
     public List<CommentDto> getCommentsAdmin(@RequestParam(required = false, defaultValue = "0") Integer from,
                                              @RequestParam(required = false, defaultValue = "10") Integer size) {
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentAdminController getCommentsAdmin");
+        log.info("========================================");
+        log.info("                                                                           ");
         return commentService.getCommentsAdmin(from, size);
     }
 

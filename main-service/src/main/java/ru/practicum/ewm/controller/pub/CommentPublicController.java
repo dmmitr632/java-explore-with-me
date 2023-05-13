@@ -22,16 +22,23 @@ public class CommentPublicController {
 
     @GetMapping("/comments/{commentId}")
     public CommentDto getCommentByIdPublic(@PathVariable Integer commentId) {
-        log.info("");
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPublicController getCommentByIdPublic, commentId {}", commentId);
+        log.info("========================================");
+        log.info("                                                                           ");
         return commentService.getCommentByIdPublic(commentId);
     }
 
     @GetMapping("/comments/events/{eventId}")
     public List<CommentDto> getCommentsByEventIdPublic(@PathVariable Integer eventId,
-                                                       @RequestParam(defaultValue = "asc") String byTime,
                                                        @RequestParam(defaultValue = "0") Integer from,
                                                        @RequestParam(defaultValue = "10") Integer size) {
-        log.info("");
-        return commentService.getCommentsByEventIdPublic(eventId, byTime, from, size);
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("CommentPublicController getCommentsByEventIdPublic, eventId {}", eventId);
+        log.info("========================================");
+        log.info("                                                                           ");
+        return commentService.getCommentsByEventIdPublic(eventId, from, size);
     }
 }
