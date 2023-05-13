@@ -1,14 +1,11 @@
 package ru.practicum.ewm.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,4 +34,10 @@ public class Comment {
     @Column(name = "updated_on")
     private LocalDateTime updatedOn;
 
+    public Comment(User user, Event event, String text, LocalDateTime createdOn) {
+        this.user = user;
+        this.event = event;
+        this.text = text;
+        this.createdOn = createdOn;
+    }
 }
