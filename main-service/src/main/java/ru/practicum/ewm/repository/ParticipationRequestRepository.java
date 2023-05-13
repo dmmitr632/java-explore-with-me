@@ -2,11 +2,11 @@ package ru.practicum.ewm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.ewm.dto.EventConfirmedRequestDto;
 import ru.practicum.ewm.enumeration.RequestStatus;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.ParticipationRequest;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface ParticipationRequestRepository extends JpaRepository<ParticipationRequest, Integer> {
@@ -23,10 +23,11 @@ public interface ParticipationRequestRepository extends JpaRepository<Participat
 
     List<ParticipationRequest> findByIdInOrderById(List<Integer> requestIds);
 
-    @Query("SELECT pr.event.id, count(pr.id) " +
+    @Query("SELECT new ru.practicum.ewm.dto.EventConfirmedRequestDto(pr.event.id, count(pr.id)) " +
             "FROM ParticipationRequest AS pr " +
             "WHERE pr.event.id IN ?1 " +
             "AND pr.status = 'CONFIRMED' " +
             "GROUP BY pr.event.id")
-    HashMap<Integer, Integer> getConfirmedRequests(List<Integer> eventsIds);
+    List<EventConfirmedRequestDto> getConfirmedRequests(List<Integer> eventsIds);
+
 }
