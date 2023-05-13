@@ -29,7 +29,10 @@ import ru.practicum.stats.statsclient.StatsClient;
 import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -354,7 +357,7 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        this.setConfirmedRequests(eventShortDtoList);
+        this.setConfirmedRequestsByPRRepository(eventShortDtoList);
 
         return eventShortDtoList;
 
@@ -382,16 +385,26 @@ public class EventServiceImpl implements EventService {
     }
 
 
-    public void setConfirmedRequests(List<EventShortDto> eventShortDtoList) {
+    public void setConfirmedRequestsByPRRepository(List<EventShortDto> eventShortDtoList) {
         List<Integer> eventsIds = eventShortDtoList.stream().map(EventShortDto::getId).collect(Collectors.toList());
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("eventsIds {}", eventsIds);
         if (!eventsIds.isEmpty()) {
-            HashMap<Integer, Integer> eventIdConfirmedRequests =
+            List<EventConfirmedRequestDto> eventIdConfirmedRequests =
                     participationRequestRepository.getConfirmedRequests(eventsIds);
             if (eventIdConfirmedRequests != null) {
-                eventShortDtoList.forEach(e -> e.setConfirmedRequests(eventIdConfirmedRequests.get(e.getId())));
+                // eventShortDtoList.forEach(e -> e.setConfirmedRequests(eventIdConfirmedRequests.get(e.getId())));
+
+                for (EventShortDto eventShortDto : eventShortDtoList) {
+                    Long confirmedRequestsAmount =
+                            eventIdConfirmedRequests
+                                    .stream().filter(e -> e.getEventId().equals(eventShortDto.getId()))
+                                    .findFirst().orElse(null).getConfirmedRequestsAmount();
+                    eventShortDto.setConfirmedRequests(Math.toIntExact(confirmedRequestsAmount));
+
+                }
+
             }
             log.info("eventShortDtoList {}", eventShortDtoList);
         }
