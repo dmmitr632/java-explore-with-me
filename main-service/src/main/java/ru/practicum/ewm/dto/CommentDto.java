@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
@@ -17,10 +16,10 @@ import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 public class CommentDto {
     private Integer id;
 
-    @NotNull
+
     private UserShortDto user;
 
-    @NotNull
+
     private Integer event;
 
     @NotEmpty
@@ -38,5 +37,12 @@ public class CommentDto {
         this.event = event;
         this.text = text;
         this.createdOn = createdOn;
+    }
+
+    @Override
+    public String toString() {
+        return "CommentDto{" +
+                "text='" + text + '\'' +
+                '}';
     }
 }

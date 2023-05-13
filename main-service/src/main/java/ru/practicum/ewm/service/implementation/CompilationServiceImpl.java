@@ -15,7 +15,6 @@ import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
 import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.repository.EventRepository;
-import ru.practicum.ewm.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.service.CompilationService;
 
 import java.util.Collection;
@@ -29,8 +28,7 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventRepository eventRepository;
 
 
-    public CompilationServiceImpl(CompilationRepository compilationRepository, EventRepository eventRepository,
-                                  ParticipationRequestRepository participationRequestRepository) {
+    public CompilationServiceImpl(CompilationRepository compilationRepository, EventRepository eventRepository) {
         this.compilationRepository = compilationRepository;
         this.eventRepository = eventRepository;
     }
@@ -39,7 +37,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
         if (newCompilationDto.getTitle() == null) {
-            throw new FieldValidationException("Некоррректный newCompilationDto, отсутствует обязательное поле title " +
+            throw new FieldValidationException("Отсутствует обязательное поле title " +
                     newCompilationDto);
         }
         Compilation compilation = CompilationMapper.toCompilation(newCompilationDto);
@@ -67,7 +65,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto editCompilation(Integer compId, UpdateCompilationRequest updateCompilationRequest) {
 
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new NotFoundException("Компиляции не существут"));
+                .orElseThrow(() -> new NotFoundException("Компиляция не найдена"));
         if (updateCompilationRequest.getPinned() != null) {
             compilation.setPinned(updateCompilationRequest.getPinned());
         }

@@ -70,12 +70,12 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("========================================");
         log.info("                                                                           ");
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
                 "существует"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Такого события не " +
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("События не " +
                 "существует"));
         if (participationRequestRepository.findByRequesterIdAndEventId(userId, eventId) != null) {
-            throw new ConflictException("Такой запрос на участие уже существует");
+            throw new ConflictException("Запрос на участие уже существует");
         }
         ParticipationRequest participationRequest = ParticipationRequest
                 .builder()
@@ -121,7 +121,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
         ParticipationRequest participationRequest = participationRequestRepository.findById(requestId).orElseThrow(()
-                -> new NotFoundException("Такой заявки на участие не существует"));
+                -> new NotFoundException("Заявки на участие не существует"));
         if (!participationRequest.getRequester().getId().equals(userId)) {
             throw new BadRequestException("Нельзя отменить не свою заявку");
         }
@@ -173,9 +173,9 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("                                                                           ");
 
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
                 "существует"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Такого события не " +
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("События не " +
                 "существует"));
         List<ParticipationRequest> participationRequests =
                 participationRequestRepository.findByIdInOrderById(eventRequestStatusUpdateRequest.getRequestIds());

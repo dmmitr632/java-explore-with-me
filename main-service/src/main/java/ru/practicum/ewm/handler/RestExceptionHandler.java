@@ -21,7 +21,7 @@ public class RestExceptionHandler {
         return ApiError.builder()
                 .errors(List.of(e.getClass().getName()))
                 .message(e.getLocalizedMessage())
-                .reason("Не найден объект" + request.getDescription(false))
+                .reason("Not found, " + request.getDescription(false))
                 .status(HttpStatus.NOT_FOUND)
                 .build();
     }

@@ -71,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryDto getCategory(Integer catId) {
         return CategoryMapper.toCategoryDto(categoryRepository.findById(catId).orElseThrow(()
-                -> new NotFoundException("Такой категории пока не существует")));
+                -> new NotFoundException("Категории не существует")));
     }
 
     @Override
