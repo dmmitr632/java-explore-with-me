@@ -13,7 +13,6 @@ import ru.practicum.ewm.exception.FieldValidationException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.model.Compilation;
-import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.ParticipationRequestRepository;
@@ -99,17 +98,6 @@ public class CompilationServiceImpl implements CompilationService {
         return compilations.stream().map(CompilationMapper::toCompilationDto).collect(Collectors.toList());
     }
 
-
-    // Additional methods, work in progress
-
-    public void deleteCompilationEvent(Integer compId, Integer eventId) {
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(()
-                -> new NotFoundException("Компиляции не существут"));
-        Event event = eventRepository.findById(eventId).orElseThrow(()
-                -> new NotFoundException("События не существут"));
-        compilation.getEvents().remove(event);
-        compilationRepository.save(compilation);
-    }
 
 }
 
