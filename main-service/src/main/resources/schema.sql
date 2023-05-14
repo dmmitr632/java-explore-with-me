@@ -73,5 +73,5 @@ CREATE TABLE IF NOT EXISTS comments
     event_id   INT REFERENCES events (id) ON DELETE CASCADE     NOT NULL,
     text       VARCHAR                                          NOT NULL,
     created_on TIMESTAMP WITHOUT TIME ZONE                      NOT NULL,
-    updated_on TIMESTAMP WITHOUT TIME ZONE
+    edited_on TIMESTAMP WITHOUT TIME ZONE
 );

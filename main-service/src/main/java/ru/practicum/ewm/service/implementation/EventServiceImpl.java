@@ -29,8 +29,12 @@ import ru.practicum.stats.statsclient.StatsClient;
 import ru.practicum.stats.statsdto.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -84,9 +88,8 @@ public class EventServiceImpl implements EventService {
                         usersIds, states, categories,
                         start, end, pageable);
 
-        List<Integer> eventsIds = events.stream().map(Event::getId).collect(Collectors.toList());
-        List<String> eventsUris = new ArrayList<>();
-        eventsIds.forEach(e -> eventsUris.add("/events/" + e));
+        List<String> eventsUris = events.stream()
+                .map(Event::getId).map(Object::toString).map(e -> "/events/" + e).collect(Collectors.toList());
         List<Long> views = getStatisticFromClient(eventsUris);
 
         if (!views.isEmpty()) {
@@ -195,9 +198,8 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
         eventFullDto.setConfirmedRequests(participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                 RequestStatus.CONFIRMED));
-        List<Integer> eventsIds = Collections.singletonList(eventFullDto.getId());
-        List<String> eventsUris = new ArrayList<>();
-        eventsIds.forEach(e -> eventsUris.add("/events/" + e));
+        List<String> eventsUris = Stream.of(eventFullDto.getId())
+                .map(Object::toString).map(e -> "/events/" + e).collect(Collectors.toList());
         List<Long> views = getStatisticFromClient(eventsUris);
         if (!views.isEmpty()) {
             eventFullDto.setViews(views.get(0));
@@ -322,9 +324,8 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(
                 participationRequestRepository.countParticipationByEventIdAndStatus(eventFullDto.getId(),
                         RequestStatus.CONFIRMED));
-        List<Integer> eventsIds = Collections.singletonList(eventFullDto.getId());
-        List<String> eventsUris = new ArrayList<>();
-        eventsIds.forEach(e -> eventsUris.add("/events/" + e));
+        List<String> eventsUris = Stream.of(eventFullDto.getId())
+                .map(Object::toString).map(e -> "/events/" + e).collect(Collectors.toList());
         List<Long> views = getStatisticFromClient(eventsUris);
         if (!views.isEmpty()) {
             eventFullDto.setViews(views.get(0));
@@ -354,9 +355,8 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl получен список events из eventRepository, {}", events);
         log.info("---------------------------------------------------------------------------");
 
-        List<Integer> eventsIds = events.stream().map(Event::getId).collect(Collectors.toList());
-        List<String> eventsUris = new ArrayList<>();
-        eventsIds.forEach(e -> eventsUris.add("/events/" + e));
+        List<String> eventsUris = events.stream()
+                .map(Event::getId).map(Object::toString).map(e -> "/events/" + e).collect(Collectors.toList());
         List<Long> views = getStatisticFromClient(eventsUris);
         List<EventShortDto> eventShortDtoList;
         if (!views.isEmpty()) {

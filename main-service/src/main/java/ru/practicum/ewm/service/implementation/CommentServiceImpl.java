@@ -17,7 +17,6 @@ import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,11 +37,11 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public ArrayList<CommentDto> getCommentsAdmin(Integer from, Integer size) {
+    public List<CommentDto> getCommentsAdmin(Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
         List<Comment> comments = commentRepository.findAll(pageable).getContent();
-        ArrayList<CommentDto> commentDtoList = new ArrayList<>();
-        comments.forEach(c -> commentDtoList.add(CommentMapper.toCommentDto(c)));
+        List<CommentDto> commentDtoList =
+                comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
         log.info("CommentServiceImpl getCommentsAdmin, commentDtoList {}", commentDtoList);
@@ -96,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
         if (!comment.getUser().getId().equals(userId)) {
             throw new BadRequestException("Можно редактировать только свой комментарий");
         }
-        comment.setUpdatedOn(LocalDateTime.now());
+        comment.setEditedOn(LocalDateTime.now());
         comment.setText(commentDto.getText());
         commentRepository.save(comment);
         log.info("                                                                           ");

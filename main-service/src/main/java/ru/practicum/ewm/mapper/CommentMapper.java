@@ -7,8 +7,8 @@ public class CommentMapper {
     public static CommentDto toCommentDto(Comment comment) {
         CommentDto commentDto = new CommentDto(comment.getId(), UserMapper.toUserShortDto(comment.getUser()),
                 comment.getEvent().getId(), comment.getText(), comment.getCreatedOn());
-        if (comment.getUpdatedOn() != null) {
-            commentDto.setUpdatedOn(comment.getUpdatedOn());
+        if (comment.getEditedOn() != null) {
+            commentDto.setEditedOn(comment.getEditedOn());
         }
         return commentDto;
 

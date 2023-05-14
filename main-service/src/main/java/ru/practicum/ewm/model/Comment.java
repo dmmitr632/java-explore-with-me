@@ -31,8 +31,8 @@ public class Comment {
     @Column(name = "created_on")
     private LocalDateTime createdOn;
 
-    @Column(name = "updated_on")
-    private LocalDateTime updatedOn;
+    @Column(name = "edited_on")
+    private LocalDateTime editedOn;
 
     public Comment(User user, Event event, String text, LocalDateTime createdOn) {
         this.user = user;

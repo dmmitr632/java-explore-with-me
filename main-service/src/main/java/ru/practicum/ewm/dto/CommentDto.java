@@ -29,7 +29,7 @@ public class CommentDto {
     private LocalDateTime createdOn;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMATTER)
-    private LocalDateTime updatedOn;
+    private LocalDateTime editedOn;
 
     public CommentDto(Integer id, UserShortDto user, Integer event, String text, LocalDateTime createdOn) {
         this.id = id;
