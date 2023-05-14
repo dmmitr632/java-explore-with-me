@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "41795f54-f093-4c07-bc34-f68baa95f8fe",
-		"name": "Test Explore With Me - Feature v2",
+		"_postman_id": "03b45f90-51f0-4cbe-aa61-60de420eb844",
+		"name": "Test Explore With Me - Feature v3",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22607771"
 	},
@@ -226,112 +226,6 @@
 						},
 						{
 							"name": "Добавление нового пользователя Copy",
-							"event": [
-								{
-									"listen": "prerequest",
-									"script": {
-										"exec": [
-											"const main = async () => {\r",
-											"    const api = new API(pm);\r",
-											"    const rnd = new RandomUtils();\r",
-											"\r",
-											"    let user;\r",
-											"    try {\r",
-											"        user = rnd.getUser();\r",
-											"    } catch(err) {\r",
-											"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-											"    }\r",
-											"\r",
-											"    pm.request.body.update({\r",
-											"        mode: 'raw',\r",
-											"        raw: JSON.stringify(user),\r",
-											"        options: { raw: { language: 'json' } }\r",
-											"    });\r",
-											"};\r",
-											"\r",
-											"const interval = setInterval(() => {}, 1000);\r",
-											"\r",
-											"setTimeout(async () => \r",
-											"    {\r",
-											"        try {\r",
-											"            await main();\r",
-											"        } catch (e) {\r",
-											"            console.error(e);\r",
-											"        } finally {\r",
-											"            clearInterval(interval);\r",
-											"        }\r",
-											"    },  \r",
-											"    100 \r",
-											");"
-										],
-										"type": "text/javascript"
-									}
-								},
-								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);\r",
-											"    pm.response.to.be.withBody;\r",
-											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"const source = JSON.parse(pm.request.body.raw);\r",
-											"const target = pm.response.json();\r",
-											"\r",
-											"pm.test(\"Пользователь должен содержать поля: id, name, email\", function () {\r",
-											"pm.expect(target).to.have.property('id');\r",
-											"pm.expect(target).to.have.property('name');\r",
-											"pm.expect(target).to.have.property('email');\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-											"    pm.expect(target.id).to.not.be.null;\r",
-											"    pm.expect(source.name).equal(target.name, 'Имя пользователя должно соответствовать отправленному в запросе');\r",
-											"    pm.expect(source.email).equal(target.email, 'Почта пользователя должна соответствовать отправленной в запросе');\r",
-											"});"
-										],
-										"type": "text/javascript"
-									}
-								}
-							],
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "application/json"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{{request_body}}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/admin/users",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"admin",
-										"users"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Добавление нового пользователя Copy 2",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -712,7 +606,7 @@
 							"response": []
 						},
 						{
-							"name": "Добавление нового события Copy",
+							"name": "Редактирование данных события и его статуса (отклонение/публикация). Copy",
 							"event": [
 								{
 									"listen": "prerequest",
@@ -722,21 +616,22 @@
 											"    const api = new API(pm);\r",
 											"    const rnd = new RandomUtils();\r",
 											"\r",
-											"    let event;\r",
 											"    try {\r",
 											"        const user = await api.addUser(rnd.getUser());\r",
-											"        pm.collectionVariables.set(\"uid\", user.id)\r",
 											"        const category = await api.addCategory(rnd.getCategory());\r",
-											"        event = rnd.getEvent(category.id);\r",
+											"        let event = await api.addEvent(user.id, rnd.getEvent(category.id));\r",
+											"        let event2 = rnd.getEvent(category.id)\r",
+											"        event2.stateAction = \"PUBLISH_EVENT\"\r",
+											"        pm.collectionVariables.set('response', event2);\r",
+											"        pm.collectionVariables.set(1, event.id)\r",
+											"        pm.request.body.update({\r",
+											"            mode: 'raw',\r",
+											"            raw: event2,\r",
+											"            options: { raw: { language: 'json' } }\r",
+											"        });\r",
 											"    } catch(err) {\r",
 											"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
 											"    }\r",
-											"\r",
-											"    pm.request.body.update({\r",
-											"        mode: 'raw',\r",
-											"        raw: JSON.stringify(event),\r",
-											"        options: { raw: { language: 'json' } }\r",
-											"    });\r",
 											"};\r",
 											"\r",
 											"const interval = setInterval(() => {}, 1000);\r",
@@ -744,6 +639,7 @@
 											"setTimeout(async () => \r",
 											"    {\r",
 											"        try {\r",
+											"            // выполняем наш скрипт\r",
 											"            await main();\r",
 											"        } catch (e) {\r",
 											"            console.error(e);\r",
@@ -761,16 +657,17 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);  \r",
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
 											"    pm.response.to.be.withBody;\r",
 											"    pm.response.to.be.json;\r",
 											"});\r",
 											"\r",
-											"const source = JSON.parse(pm.request.body.raw);\r",
+											"const source = pm.collectionVariables.get('response');\r",
 											"const target = pm.response.json();\r",
-											"\r",
-											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
+											"console.log(source)\r",
+											"console.log(target)\r",
+											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, publishedOn, location, requestModeration\", function () {\r",
 											"pm.expect(target).to.have.property('id');\r",
 											"pm.expect(target).to.have.property('title');\r",
 											"pm.expect(target).to.have.property('annotation');\r",
@@ -782,21 +679,18 @@
 											"pm.expect(target).to.have.property('participantLimit');\r",
 											"pm.expect(target).to.have.property('state');\r",
 											"pm.expect(target).to.have.property('createdOn');\r",
+											"pm.expect(target).to.have.property('publishedOn');\r",
 											"pm.expect(target).to.have.property('location');\r",
 											"pm.expect(target).to.have.property('requestModeration');\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-											"    pm.expect(target.id).to.not.be.null;\r",
-											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
-											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
-											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
-											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
-											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
-											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
-											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
-											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
-											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
+											"    pm.expect(source.annotation).equal(target.annotation, 'Аннотация события должна соответствовать искомому событию');\r",
+											"    pm.expect(source.paid.toString()).equal(target.paid.toString(), 'Стоимость события должна соответствовать искомому событию');\r",
+											"    pm.expect(source.eventDate).equal(target.eventDate, 'Дата проведения события должна соответствовать искомому событию');\r",
+											"    pm.expect(source.description).equal(target.description, 'Описание события должно соответствовать искомому событию');\r",
+											"    pm.expect(source.title).equal(target.title, 'Название события должно соответствовать искомому событию');\r",
+											"    pm.expect(source.participantLimit.toString()).equal(target.participantLimit.toString(), 'Лимит участников события должен соответствовать искомому событию');\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -804,12 +698,8 @@
 								}
 							],
 							"request": {
-								"method": "POST",
+								"method": "PATCH",
 								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
 									{
 										"key": "Accept",
 										"value": "application/json"
@@ -817,77 +707,38 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{{request_body}}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
+									"raw": "{{request_body}}"
 								},
 								"url": {
-									"raw": "{{baseUrl}}/users/:userId/events",
+									"raw": "{{baseUrl}}/admin/events/:eventId",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
-										"users",
-										":userId",
-										"events"
+										"admin",
+										"events",
+										":eventId"
 									],
 									"variable": [
 										{
-											"key": "userId",
-											"value": "{{uid}}",
-											"description": "(Required) id текущего пользователя"
+											"key": "eventId",
+											"value": "1",
+											"description": "(Required) id события"
 										}
 									]
 								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
+								"description": "Обратите внимание:\n - дата начала события должна быть не ранее чем за час от даты публикации.\n- событие должно быть в состоянии ожидания публикации"
 							},
 							"response": []
 						},
 						{
-							"name": "Добавление нового события Copy",
+							"name": "Добавление запроса от текущего пользователя на участие в событии Copy",
 							"event": [
 								{
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const main = async () => {\r",
-											"    const api = new API(pm);\r",
-											"    const rnd = new RandomUtils();\r",
-											"\r",
-											"    let event;\r",
-											"    try {\r",
-											"        const user = await api.addUser(rnd.getUser());\r",
-											"        pm.collectionVariables.set(\"uid\", user.id)\r",
-											"        const category = await api.addCategory(rnd.getCategory());\r",
-											"        event = rnd.getEvent(category.id);\r",
-											"    } catch(err) {\r",
-											"        console.error(\"Ошибка при подготовке тестовых данных.\", err);\r",
-											"    }\r",
-											"\r",
-											"    pm.request.body.update({\r",
-											"        mode: 'raw',\r",
-											"        raw: JSON.stringify(event),\r",
-											"        options: { raw: { language: 'json' } }\r",
-											"    });\r",
-											"};\r",
-											"\r",
-											"const interval = setInterval(() => {}, 1000);\r",
-											"\r",
-											"setTimeout(async () => \r",
-											"    {\r",
-											"        try {\r",
-											"            await main();\r",
-											"        } catch (e) {\r",
-											"            console.error(e);\r",
-											"        } finally {\r",
-											"            clearInterval(interval);\r",
-											"        }\r",
-											"    },  \r",
-											"    100 \r",
-											");"
+											""
 										],
 										"type": "text/javascript"
 									}
@@ -897,41 +748,9 @@
 									"script": {
 										"exec": [
 											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(201);  \r",
+											"    pm.response.to.have.status(201);   \r",
 											"    pm.response.to.be.withBody;\r",
 											"    pm.response.to.be.json;\r",
-											"});\r",
-											"\r",
-											"const source = JSON.parse(pm.request.body.raw);\r",
-											"const target = pm.response.json();\r",
-											"\r",
-											"pm.test(\"Событие должно содержать поля: id, title, annotation, category, paid, eventDate, initiator, description, participantLimit, state, createdOn, location, requestModeration\", function () {\r",
-											"pm.expect(target).to.have.property('id');\r",
-											"pm.expect(target).to.have.property('title');\r",
-											"pm.expect(target).to.have.property('annotation');\r",
-											"pm.expect(target).to.have.property('category');\r",
-											"pm.expect(target).to.have.property('paid');\r",
-											"pm.expect(target).to.have.property('eventDate');\r",
-											"pm.expect(target).to.have.property('initiator');\r",
-											"pm.expect(target).to.have.property('description');\r",
-											"pm.expect(target).to.have.property('participantLimit');\r",
-											"pm.expect(target).to.have.property('state');\r",
-											"pm.expect(target).to.have.property('createdOn');\r",
-											"pm.expect(target).to.have.property('location');\r",
-											"pm.expect(target).to.have.property('requestModeration');\r",
-											"});\r",
-											"\r",
-											"pm.test(\"Данные в ответе должны соответствовать данным в запросе\", function () {\r",
-											"    pm.expect(target.id).to.not.be.null;\r",
-											"    pm.expect(target.title).equal(source.title, 'Название события должно соответствовать названию события в запросе');\r",
-											"    pm.expect(target.annotation).equal(source.annotation, 'Аннотация события должна соответствовать аннотации события в запросе');\r",
-											"    pm.expect(target.paid.toString()).equal(source.paid.toString(), 'Стоимость события должна соответствовать стоимости события в запросе');\r",
-											"    pm.expect(target.eventDate).equal(source.eventDate, 'Дата проведения события должна соответствовать дате проведения события в запросе');\r",
-											"    pm.expect(target.description).equal(source.description, 'Описание события должно соответствовать описание события в запросе');\r",
-											"    pm.expect(target.participantLimit.toString()).equal(source.participantLimit.toString(), 'Лимит участников события должно соответствовать лимиту участников события в запросе');\r",
-											"    pm.expect(target.location.lat.toString()).equal(source.location.lat.toString(), 'Широта локации проведения события должна соответствовать широте локации проведения события в запросе');\r",
-											"    pm.expect(target.location.lon.toString()).equal(source.location.lon.toString(), 'Долгота локации проведения события должна соответствовать долготе локации проведения события в запросе');\r",
-											"    pm.expect(target.requestModeration.toString()).equal(source.requestModeration.toString(), 'Необходимость модерации события должна соответствовать необходимости модерации события в запросе');\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -940,6 +759,133 @@
 							],
 							"request": {
 								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/requests?eventId=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"requests"
+									],
+									"query": [
+										{
+											"key": "eventId",
+											"value": "1",
+											"description": "(Required) id события"
+										}
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "1",
+											"description": "(Required) id текущего пользователя"
+										}
+									]
+								},
+								"description": "Обратите внимание:\n- нельзя добавить повторный запрос\n- инициатор события не может добавить запрос на участие в своём событии\n- нельзя участвовать в неопубликованном событии\n- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку\n- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
+							},
+							"response": []
+						},
+						{
+							"name": "Добавление запроса от текущего пользователя на участие в событии",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(201);   \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/requests?eventId=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"requests"
+									],
+									"query": [
+										{
+											"key": "eventId",
+											"value": "1",
+											"description": "(Required) id события"
+										}
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2",
+											"description": "(Required) id текущего пользователя"
+										}
+									]
+								},
+								"description": "Обратите внимание:\n- нельзя добавить повторный запрос\n- инициатор события не может добавить запрос на участие в своём событии\n- нельзя участвовать в неопубликованном событии\n- если у события достигнут лимит запросов на участие - необходимо вернуть ошибку\n- если для события отключена пре-модерация запросов на участие, то запрос должен автоматически перейти в состояние подтвержденного"
+							},
+							"response": []
+						},
+						{
+							"name": "Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
 								"header": [
 									{
 										"key": "Content-Type",
@@ -952,7 +898,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{{request_body}}",
+									"raw": "{\n    \"requestIds\": [1],\n    \"status\": \"PENDING\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -960,24 +906,107 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/users/:userId/events",
+									"raw": "{{baseUrl}}/users/:userId/events/:eventId/requests",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
 										":userId",
-										"events"
+										"events",
+										":eventId",
+										"requests"
 									],
 									"variable": [
 										{
 											"key": "userId",
-											"value": "{{uid}}",
+											"value": "1",
 											"description": "(Required) id текущего пользователя"
+										},
+										{
+											"key": "eventId",
+											"value": "1",
+											"description": "(Required) id события текущего пользователя"
 										}
 									]
 								},
-								"description": "Обратите внимание: дата и время на которые намечено событие не может быть раньше, чем через два часа от текущего момента"
+								"description": "Обратите внимание:\n- если для события лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется\n- нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие\n- статус можно изменить только у заявок, находящихся в состоянии ожидания\n- если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить"
+							},
+							"response": []
+						},
+						{
+							"name": "Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя Copy 2",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function () {\r",
+											"    pm.response.to.be.ok;    \r",
+											"    pm.response.to.be.withBody;\r",
+											"    pm.response.to.be.json;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"requestIds\": [2],\n    \"status\": \"PENDING\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users/:userId/events/:eventId/requests",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userId",
+										"events",
+										":eventId",
+										"requests"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "2",
+											"description": "(Required) id текущего пользователя"
+										},
+										{
+											"key": "eventId",
+											"value": "1",
+											"description": "(Required) id события текущего пользователя"
+										}
+									]
+								},
+								"description": "Обратите внимание:\n- если для события лимит заявок равен 0 или отключена пре-модерация заявок, то подтверждение заявок не требуется\n- нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие\n- статус можно изменить только у заявок, находящихся в состоянии ожидания\n- если при подтверждении данной заявки, лимит заявок для события исчерпан, то все неподтверждённые заявки необходимо отклонить"
 							},
 							"response": []
 						}
@@ -998,6 +1027,15 @@
 									"pm.test(\"Ответ должен содержать код статуса 404 и данные в формате json\", function(){\r",
 									"    pm.response.to.have.status(404);\r",
 									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, [1000]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1047,11 +1085,21 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"setTimeout(function(){}, [1000]);\r",
 									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function(){\r",
 									"    pm.response.to.have.status(201);\r",
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, [1000]);"
 								],
 								"type": "text/javascript"
 							}
@@ -1162,6 +1210,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"setTimeout(function(){}, [1000]);\r",
 									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function(){\r",
 									"    pm.response.to.have.status(201);\r",
 									"    pm.response.to.be.withBody;\r",
@@ -1452,6 +1501,39 @@
 					"response": []
 				},
 				{
+					"name": "Getting comments by admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Ответ должен содержать код статуса 200 и данные в формате json\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/admin/comments",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Deleting comment 1 by user 1",
 					"event": [
 						{
@@ -1533,14 +1615,14 @@
 					"response": []
 				},
 				{
-					"name": "Changing comment by different user than creator",
+					"name": "Attempt to change comment by different user than creator",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 500 и данные в формате json\", function(){\r",
-									"    pm.response.to.have.status(500);\r",
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function(){\r",
+									"    pm.response.to.have.status(409);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1591,8 +1673,8 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 500 и данные в формате json\", function(){\r",
-									"    pm.response.to.have.status(500);\r",
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function(){\r",
+									"    pm.response.to.have.status(409);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1621,6 +1703,68 @@
 								{
 									"key": "commentId",
 									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Attempt to add comment as user 3, who is not confirmed for event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"setTimeout(function(){}, [1000]);\r",
+									"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function(){\r",
+									"    pm.response.to.have.status(409);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\": \"Третий комментарий, создан пользователем 3. Не будет опубликован.\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/:userId/comments/:eventId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":userId",
+								"comments",
+								":eventId"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "3"
+								},
+								{
+									"key": "eventId",
+									"value": "1"
 								}
 							]
 						}
@@ -1876,6 +2020,10 @@
 		},
 		{
 			"key": "catId",
+			"value": ""
+		},
+		{
+			"key": 1,
 			"value": ""
 		}
 	]

@@ -9,7 +9,7 @@ import ru.practicum.ewm.enumeration.RequestStatus;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CommentMapper;
-// import ru.practicum.ewm.mapper.EventMapper;
+import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
@@ -89,12 +89,14 @@ public class CommentServiceImpl implements CommentService {
                 RequestStatus.CONFIRMED).orElseThrow(() -> new ConflictException("Участие пользователя не " +
                 "подтверждено"));
 
-        // plusDays(1) необходимо для тестирования, по условию, "дата и время на которые намечено событие не может
-        // быть раньше, чем через два часа от текущего момента".
+        // Добавленное plusDays(1) необходимо для тестирования, т.к по условию, "дата и время на которые
+        // намечено событие не может быть раньше, чем через два часа от текущего момента". Поэтому в тесте не
+        // получится создать событие, назначенное на ранее чем через 2 часа после запуска, а следовательно,
+        // пользователь не мог в нем уже участвовать.
 
-//        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now().plusDays(1)))) {
-//            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
-//        }
+        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now().plusDays(1)))) {
+            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
+        }
 
 
         Comment comment = new Comment(user, event, commentDto.getText(), LocalDateTime.now());

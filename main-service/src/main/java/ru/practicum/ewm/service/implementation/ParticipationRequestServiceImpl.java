@@ -173,7 +173,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("                                                                           ");
 
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
                 "существует"));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("События не " +
                 "существует"));
@@ -203,7 +203,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                         if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.CONFIRMED) {
                             participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.REJECTED) {
-                                participationRequest.setStatus(RequestStatus.REJECTED);
+                            participationRequest.setStatus(RequestStatus.REJECTED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.PENDING) {
                             participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else {
