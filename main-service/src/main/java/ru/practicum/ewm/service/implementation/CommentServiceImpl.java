@@ -6,11 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.enumeration.RequestStatus;
-import ru.practicum.ewm.exception.BadRequestException;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CommentMapper;
-import ru.practicum.ewm.mapper.EventMapper;
+// import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
@@ -89,7 +88,11 @@ public class CommentServiceImpl implements CommentService {
         participationRequestRepository.findFirstByRequesterIdAndEventIdAndStatus(userId, eventId,
                 RequestStatus.CONFIRMED).orElseThrow(() -> new ConflictException("Участие пользователя не " +
                 "подтверждено"));
-//        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now()))) {
+
+        // plusDays(1) необходимо для тестирования, по условию, "дата и время на которые намечено событие не может
+        // быть раньше, чем через два часа от текущего момента".
+
+//        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now().plusDays(1)))) {
 //            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
 //        }
 
@@ -109,7 +112,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Комментарий " +
                 "не найден"));
         if (!comment.getUser().getId().equals(userId)) {
-            throw new BadRequestException("Можно редактировать только свой комментарий");
+            throw new ConflictException("Можно редактировать только свой комментарий");
         }
         comment.setEditedOn(LocalDateTime.now());
         comment.setText(commentDto.getText());
@@ -138,7 +141,7 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentUser(Integer userId, Integer commentId) {
         commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Комментарий не найден"));
         if (!((commentRepository.getUserIdOfComment(commentId)).equals(userId))) {
-            throw new BadRequestException("Можно удалять только свой комментарий");
+            throw new ConflictException("Можно удалять только свой комментарий");
         }
         commentRepository.deleteById(commentId);
         log.info("                                                                           ");
