@@ -89,9 +89,9 @@ public class CommentServiceImpl implements CommentService {
         participationRequestRepository.findFirstByRequesterIdAndEventIdAndStatus(userId, eventId,
                 RequestStatus.CONFIRMED).orElseThrow(() -> new ConflictException("Участие пользователя не " +
                 "подтверждено"));
-        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now()))) {
-            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
-        }
+//        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now()))) {
+//            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
+//        }
 
 
         Comment comment = new Comment(user, event, commentDto.getText(), LocalDateTime.now());

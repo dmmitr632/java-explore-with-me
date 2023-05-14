@@ -204,13 +204,14 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.REJECTED) {
                             participationRequest.setStatus(RequestStatus.REJECTED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.PENDING) {
-                            participationRequest.setStatus(RequestStatus.PENDING);
+                            participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else {
                             throw new ConflictException("Нельзя изменить отмененный запрос на участие");
                         }
                     }
                     participationRequestRepository.save(participationRequest);
                     log.info("Сохранение в репозиторий");
+                }
                     if (participationRequest.getStatus() == RequestStatus.CONFIRMED) {
                         log.info("CONFIRMED, participationRequest {} ", participationRequest);
                         confirmedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
@@ -220,9 +221,10 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     } else {
                         log.info("Что-то не так");
                     }
-                } else {
-                    throw new ConflictException("Статус запроса должен быть PENDING");
-                }
+
+//                else {
+//                    throw new ConflictException("Статус запроса должен быть PENDING, а он" + participationRequest.getStatus());
+//                }
             }
         }
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult =
