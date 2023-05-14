@@ -182,10 +182,13 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
+        log.info("пустые массивы созданы");
+
 
         for (ParticipationRequest participationRequest : participationRequests) {
-            if (participationRequest.getEvent().equals(event) && (event.getInitiator().equals(user))) {
+            if (participationRequest.getEvent().equals(event)) {
                 if (participationRequest.getStatus() == RequestStatus.PENDING) {
+
                     List<ParticipationRequest> requestsForEvent =
                             participationRequestRepository.findByEventAndStatus(event, RequestStatus.CONFIRMED);
                     if (requestsForEvent.size() == event.getParticipantLimit()) {
@@ -194,6 +197,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     if (!event.getRequestModeration() || (event.getParticipantLimit() == 0)) {
                         participationRequest.setStatus(RequestStatus.CONFIRMED);
                     } else {
+                        log.info("eventRequestStatusUpdateRequest.getStatus() {}",
+                                eventRequestStatusUpdateRequest.getStatus());
                         if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.CONFIRMED) {
                             participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.REJECTED) {
@@ -205,17 +210,30 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                         }
                     }
                     participationRequestRepository.save(participationRequest);
+                    log.info("Сохранение в репозиторий");
                     if (participationRequest.getStatus() == RequestStatus.CONFIRMED) {
+                        log.info("CONFIRMED, participationRequest {} ", participationRequest);
                         confirmedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
                     } else if (participationRequest.getStatus() == RequestStatus.REJECTED) {
+                        log.info("REJECTED, participationRequest {} ", participationRequest);
                         rejectedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
+                    } else {
+                        log.info("Что-то не так");
                     }
                 } else {
                     throw new ConflictException("Статус запроса должен быть PENDING");
                 }
             }
         }
-        return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+        EventRequestStatusUpdateResult eventRequestStatusUpdateResult =
+                new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl confirmOrRejectUserRequestForEvent, eventRequestStatusUpdateResult " +
+                "{}", eventRequestStatusUpdateResult);
+        log.info("========================================");
+        log.info("                                                                           ");
+        return eventRequestStatusUpdateResult;
     }
 
 }

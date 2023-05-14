@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 import static ru.practicum.ewm.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 
 @Builder
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ParticipationRequestDto {

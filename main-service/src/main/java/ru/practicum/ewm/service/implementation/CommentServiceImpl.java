@@ -5,14 +5,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CommentDto;
+import ru.practicum.ewm.enumeration.RequestStatus;
 import ru.practicum.ewm.exception.BadRequestException;
+import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CommentMapper;
+import ru.practicum.ewm.mapper.EventMapper;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
+import ru.practicum.ewm.repository.ParticipationRequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
 
@@ -23,31 +27,34 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class CommentServiceImpl implements CommentService {
+    private final ParticipationRequestRepository participationRequestRepository;
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
 
     public CommentServiceImpl(CommentRepository commentRepository, UserRepository userRepository,
-                              EventRepository eventRepository) {
+                              EventRepository eventRepository,
+                              ParticipationRequestRepository participationRequestRepository) {
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
+        this.participationRequestRepository = participationRequestRepository;
     }
 
 
     @Override
     public List<CommentDto> getCommentsAdmin(Integer from, Integer size) {
         Pageable pageable = PageRequest.of(from, size);
-        List<Comment> comments = commentRepository.findAll(pageable).getContent();
-        List<CommentDto> commentDtoList =
-                comments.stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
+        List<CommentDto> commentsDtos =
+                commentRepository.findAll(pageable).getContent()
+                        .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
         log.info("                                                                           ");
         log.info("---------------------------------------------------------------------------");
-        log.info("CommentServiceImpl getCommentsAdmin, commentDtoList {}", commentDtoList);
+        log.info("CommentServiceImpl getCommentsAdmin, commentDtoList {}", commentsDtos);
         log.info("---------------------------------------------------------------------------");
         log.info("                                                                           ");
-        return commentDtoList;
+        return commentsDtos;
     }
 
     @Override
@@ -78,6 +85,15 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto addComment(CommentDto commentDto, Integer userId, Integer eventId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Собтыие не найдено"));
+
+        participationRequestRepository.findFirstByRequesterIdAndEventIdAndStatus(userId, eventId,
+                RequestStatus.CONFIRMED).orElseThrow(() -> new ConflictException("Участие пользователя не " +
+                "подтверждено"));
+        if (!(EventMapper.toEventShortDto(event).getEventDate().isBefore(LocalDateTime.now()))) {
+            throw new ConflictException("Событие еще не произошло, оставить отзыв невозможно.");
+        }
+
+
         Comment comment = new Comment(user, event, commentDto.getText(), LocalDateTime.now());
         commentRepository.save(comment);
         log.info("                                                                           ");
