@@ -70,12 +70,12 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("========================================");
         log.info("                                                                           ");
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
                 "существует"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Такого события не " +
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("События не " +
                 "существует"));
         if (participationRequestRepository.findByRequesterIdAndEventId(userId, eventId) != null) {
-            throw new ConflictException("Такой запрос на участие уже существует");
+            throw new ConflictException("Запрос на участие уже существует");
         }
         ParticipationRequest participationRequest = ParticipationRequest
                 .builder()
@@ -86,7 +86,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 .build();
 
         if (!participationRequest.getEvent().getState().equals(EventState.PUBLISHED)) {
-            throw new ConflictException("Событие еще не опублкиовано");
+            throw new ConflictException("Событие еще не опубликовано");
         }
         if (userId.equals(participationRequest.getEvent().getInitiator().getId())) {
             throw new ConflictException("Создатель заявки на участие и инициатор события не может быть одним и тем " +
@@ -121,7 +121,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
                 "существует"));
         ParticipationRequest participationRequest = participationRequestRepository.findById(requestId).orElseThrow(()
-                -> new NotFoundException("Такой заявки на участие не существует"));
+                -> new NotFoundException("Заявки на участие не существует"));
         if (!participationRequest.getRequester().getId().equals(userId)) {
             throw new BadRequestException("Нельзя отменить не свою заявку");
         }
@@ -173,49 +173,69 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         log.info("                                                                           ");
 
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Такого пользователя не " +
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователя не " +
                 "существует"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Такого события не " +
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("События не " +
                 "существует"));
         List<ParticipationRequest> participationRequests =
                 participationRequestRepository.findByIdInOrderById(eventRequestStatusUpdateRequest.getRequestIds());
 
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
+        log.info("пустые массивы созданы");
+
 
         for (ParticipationRequest participationRequest : participationRequests) {
-            if (participationRequest.getEvent().equals(event) && (event.getInitiator().equals(user))) {
+            if (participationRequest.getEvent().equals(event)) {
                 if (participationRequest.getStatus() == RequestStatus.PENDING) {
+
                     List<ParticipationRequest> requestsForEvent =
                             participationRequestRepository.findByEventAndStatus(event, RequestStatus.CONFIRMED);
                     if (requestsForEvent.size() == event.getParticipantLimit()) {
                         throw new ConflictException("Превышен лимит участников");
                     }
-                    if (!event.getRequestModeration() || (event.getParticipantLimit() == 0)) {
+                    if (((!event.getRequestModeration()) || (event.getParticipantLimit() == 0))
+                            && eventRequestStatusUpdateRequest.getStatus() == RequestStatus.CONFIRMED) {
                         participationRequest.setStatus(RequestStatus.CONFIRMED);
                     } else {
+                        log.info("eventRequestStatusUpdateRequest.getStatus() {}",
+                                eventRequestStatusUpdateRequest.getStatus());
                         if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.CONFIRMED) {
                             participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.REJECTED) {
                             participationRequest.setStatus(RequestStatus.REJECTED);
                         } else if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.PENDING) {
-                            participationRequest.setStatus(RequestStatus.PENDING);
+                            participationRequest.setStatus(RequestStatus.CONFIRMED);
                         } else {
                             throw new ConflictException("Нельзя изменить отмененный запрос на участие");
                         }
                     }
                     participationRequestRepository.save(participationRequest);
-                    if (participationRequest.getStatus() == RequestStatus.CONFIRMED) {
-                        confirmedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
-                    } else if (participationRequest.getStatus() == RequestStatus.REJECTED) {
-                        rejectedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
+                    log.info("Сохранение в репозиторий");
+                }
+                if (participationRequest.getStatus() == RequestStatus.CONFIRMED) {
+                    if (eventRequestStatusUpdateRequest.getStatus() == RequestStatus.REJECTED) {
+                        throw new ConflictException("Попытка отменить уже подтвержденную заявку");
                     }
+                    log.info("CONFIRMED, participationRequest {} ", participationRequest);
+                    confirmedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
+                } else if (participationRequest.getStatus() == RequestStatus.REJECTED) {
+                    log.info("REJECTED, participationRequest {} ", participationRequest);
+                    rejectedRequests.add(ParticipationRequestMapper.toParticipationRequestDto(participationRequest));
                 } else {
-                    throw new ConflictException("Статус запроса должен быть PENDING");
+                    log.info("Что-то не так");
                 }
             }
         }
-        return new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+        EventRequestStatusUpdateResult eventRequestStatusUpdateResult =
+                new EventRequestStatusUpdateResult(confirmedRequests, rejectedRequests);
+        log.info("                                                                           ");
+        log.info("========================================");
+        log.info("ParticipationRequestServiceImpl confirmOrRejectUserRequestForEvent, eventRequestStatusUpdateResult " +
+                "{}", eventRequestStatusUpdateResult);
+        log.info("========================================");
+        log.info("                                                                           ");
+        return eventRequestStatusUpdateResult;
     }
 
 }
