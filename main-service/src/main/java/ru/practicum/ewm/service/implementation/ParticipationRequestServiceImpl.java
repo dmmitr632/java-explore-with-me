@@ -86,7 +86,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                 .build();
 
         if (!participationRequest.getEvent().getState().equals(EventState.PUBLISHED)) {
-            throw new ConflictException("Событие еще не опублкиовано");
+            throw new ConflictException("Событие еще не опубликовано");
         }
         if (userId.equals(participationRequest.getEvent().getInitiator().getId())) {
             throw new ConflictException("Создатель заявки на участие и инициатор события не может быть одним и тем " +
